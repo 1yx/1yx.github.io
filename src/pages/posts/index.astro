@@ -1,0 +1,15 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+---
+
+<Layout title={`Posts | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pt-8 pb-6">
+    <h1 class="text-3xl font-bold">Posts</h1>
+    <p class="mt-4 text-muted">No posts yet.</p>
+  </main>
+  <Footer />
+</Layout>
