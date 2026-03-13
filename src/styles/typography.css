@@ -28,7 +28,7 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent-hover focus-visible:no-underline;
     }
 
     ul {
@@ -40,7 +40,15 @@
     }
 
     hr {
-      @apply border-border;
+      @apply my-10 w-full border-0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--border) calc(50% - 0.5rem),
+        var(--border) calc(50% + 0.5rem),
+        transparent
+      );
     }
 
     img {
