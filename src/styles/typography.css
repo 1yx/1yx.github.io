@@ -28,7 +28,23 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent-hover focus-visible:no-underline;
+      @apply wrap-break-word text-accent focus-visible:no-underline;
+      position: relative;
+      display: inline-block;
+      padding: 0 1px;
+      transition: color 0.3s ease;
+
+      /* External link style - dashed underline, 4px offset */
+      &.link-external {
+        @apply underline decoration-dashed underline-offset-4;
+        text-decoration: underline dashed !important;
+      }
+
+      /* Internal link style - wavy underline, 4px offset */
+      &.link-internal {
+        @apply underline decoration-wavy underline-offset-4;
+        text-decoration: underline wavy !important;
+      }
     }
 
     ul {

@@ -112,7 +112,19 @@ html[data-theme="dark"] {
   background-position: top;
 }
 
-.active-nav {
+/* External link style - dashed underline, 4px offset */
+.link-external {
+  @apply underline decoration-dashed underline-offset-4;
+}
+
+/* Internal link style - wavy underline, 4px offset */
+.link-internal {
+  @apply underline decoration-wavy underline-offset-4;
+}
+
+/* Header navigation links - wavy underline, 8px offset */
+header nav a,
+header ul a {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
 }
 
