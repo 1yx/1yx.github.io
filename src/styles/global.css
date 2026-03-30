@@ -122,9 +122,8 @@ html[data-theme="dark"] {
   @apply underline decoration-wavy underline-offset-4;
 }
 
-/* Header navigation links - wavy underline, 8px offset */
-header nav a,
-header ul a {
+/* Active nav link - wavy underline, 8px offset */
+.active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
 }
 

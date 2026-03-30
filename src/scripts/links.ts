@@ -44,7 +44,7 @@ function isInternalLink(href: string): boolean {
 }
 
 function addLinkClasses(): void {
-  const links = document.querySelectorAll("article a[href]");
+  const links = document.querySelectorAll(".app-prose a[href]");
 
   links.forEach(link => {
     const href = link.getAttribute("href");

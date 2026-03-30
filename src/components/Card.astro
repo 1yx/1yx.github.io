@@ -17,17 +17,18 @@ const { title, description, ...props } = data;
   <a
     href={getPath(id, filePath)}
     class:list={[
-      "inline-block text-lg font-medium text-accent",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
+      "group relative inline-block text-xl font-bold text-foreground hover:text-accent",
+      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed",
     ]}
   >
     <Heading
+      class="mb-2"
       style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
     >
       {title}
     </Heading>
+    <span class="absolute bottom-2 left-0 h-0.5 w-1/10 bg-accent transition-[width] duration-300 group-hover:w-3/5"></span>
   </a>
-  <Datetime {...props} />
+  <Datetime {...props} class="mb-2" />
   <p>{description}</p>
 </li>
