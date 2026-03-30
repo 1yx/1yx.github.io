@@ -29,6 +29,7 @@
     strong {
       @apply text-foreground;
       font-weight: inherit;
+      white-space: nowrap;
       position: relative;
 
       &::after {
