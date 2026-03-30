@@ -15,7 +15,7 @@ Since 2018, I've been struggling with severe depression, so I left the tech comp
 
 ---
 
-This site is built with [Astro](https://astro.build).
+This site is built with [Astro](https://astro.build), based on the [AstroPaper](https://github.com/satnaing/astro-paper) theme.
 
 I'd love to hear your feedback on this site and my work.
 

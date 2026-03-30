@@ -58,13 +58,9 @@
     hr {
       @apply my-10 w-full border-0;
       height: 1px;
-      background: linear-gradient(
-        to right,
-        transparent,
-        var(--border) calc(50% - 0.5rem),
-        var(--border) calc(50% + 0.5rem),
-        transparent
-      );
+      background: var(--border);
+      border-radius: 1px;
+      filter: url(#sketchy-hr);
     }
 
     img {

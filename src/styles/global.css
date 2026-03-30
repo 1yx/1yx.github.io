@@ -30,7 +30,7 @@ html[data-theme="light"] {
   --accent: oklch(42% .22 264);           /* link blue #261cc1 */
   --accent-hover: oklch(42% .22 264);     /* link blue #261cc1 */
   --muted: oklch(55% 0 0);                /* ash */
-  --border: oklch(92% 0 0);               /* mist */
+  --border: oklch(90% 0 0);               /* mist */
   --shadow-inner: oklch(93% 0 0);         /* shadow for inner box */
 }
 
@@ -86,30 +86,42 @@ html[data-theme="dark"] {
   @apply mx-auto w-full max-w-app px-4;
 }
 
-/* Reusable hr-style divider */
+/* Reusable sketchy hr-style divider */
 @utility hr-line {
   border: 0;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--border) calc(50% - 0.5rem),
-    var(--border) calc(50% + 0.5rem),
-    transparent
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 1px;
+  position: relative;
 }
 
 /* As bottom border (use with pb-px) */
 @utility hr-line-b {
   @apply hr-line;
-  background-position: bottom;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+    border-radius: 1px;
+    filter: url(#sketchy-hr);
+  }
 }
 
 /* As top border (use with pt-px) */
 @utility hr-line-t {
   @apply hr-line;
-  background-position: top;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+    border-radius: 1px;
+    filter: url(#sketchy-hr);
+  }
 }
 
 /* External link style - dashed underline, 4px offset */
