@@ -71,6 +71,11 @@
       @apply mx-auto border border-border;
     }
 
+    a:has(> img) {
+      @apply block p-0;
+      text-decoration: none;
+    }
+
     figcaption {
       @apply opacity-75;
     }

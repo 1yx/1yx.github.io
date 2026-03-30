@@ -1,0 +1,46 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  href?: string;
+  float?: "left" | "right";
+  maxWidth?: string;
+}
+
+const {
+  src,
+  alt,
+  href,
+  float = "left",
+  maxWidth = "200px",
+} = Astro.props;
+
+const marginClass = float === "left" ? "mr-5 mb-5" : "ml-5 mb-5";
+const floatStyle = `float: ${float}; max-width: ${maxWidth}`;
+---
+
+<div>
+  {href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class:list={["block border border-border p-0", marginClass]}
+      style={floatStyle}
+    >
+      <img
+        src={src}
+        alt={alt}
+        class="block w-full"
+      />
+    </a>
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      class:list={["block border border-border", marginClass]}
+      style={floatStyle}
+    />
+  )}
+  <slot />
+</div>
