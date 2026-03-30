@@ -17,7 +17,7 @@ featured: true
 
 引出另一个在自尊领域更有名的心理学家 [纳撒尼尔·布兰登](https://en.wikipedia.org/wiki/Nathaniel_Branden)（Nathaniel Branden）。他列出了两个自尊的核心支柱（The Two Pillars）：自我效能感（Self-Efficacy），以及自我尊重（Self-Respect）。两个支柱都高，自尊的水平才高。他最畅销的著作，是《[自尊的六大支柱](https://www.goodreads.com/book/show/79352.Six_Pillars_of_Self_Esteem)》（The Six Pillars of Self-Esteem）。
 
-<img src="/book-covers/six-pillars-of-self-esteem.jpg" alt="《自尊的六大支柱》(The Six Pillars of Self-Esteem) 封面 - Nathaniel Branden 著" style="float: left; margin: 0 20px 20px 0; max-width: 200px;">
+<a href="https://book.douban.com/subject/35639003/" target="_blank" rel="noopener noreferrer"><img src="/book-covers/six-pillars-of-self-esteem.jpg" alt="《自尊的六大支柱》(The Six Pillars of Self-Esteem) 封面 - Nathaniel Branden 著" style="float: left; margin: 0 20px 20px 0; max-width: 200px;"></a>
 
 他好喜欢用支柱这个词 —— The Two Pillars，The Six Pillars。
 
@@ -33,7 +33,7 @@ featured: true
 
 又联想到一本书，[斯蒂芬·普雷斯菲尔德](https://en.wikipedia.org/wiki/Steven_Pressfield)（Steven Pressfield）的《[一生之敌](https://www.goodreads.com/book/show/1319)》（The War of Art）中关于如何减弱内阻力的方法是做到职业化（Turning Pro）。
 
-<img src="/book-covers/the-war-of-art.jpg" alt="《一生之敌》(The War of Art) 封面 - Steven Pressfield 著" style="float: right; margin: 0 0 20px 20px; max-width: 200px;">
+<a href="https://book.douban.com/subject/37009766/" target="_blank" rel="noopener noreferrer"><img src="/book-covers/the-war-of-art.jpg" alt="《一生之敌》(The War of Art) 封面 - Steven Pressfield 著" style="float: right; margin: 0 0 20px 20px; max-width: 200px;"></a>
 
 其中如何做到职业化中就包含同样的”要对作品保持疏离”的观点。除了这一点，Turning Pro 还要做到 准时出摊 和 忍受单调。”忍受单调”这一点，和”把事情做对”又有相通之处，就像很多鸡汤中所说的”成功需要大量的重复”，我们要找到一个单调的动作。再结合[大卫·艾伦](https://en.wikipedia.org/wiki/David_Allen_(author))（David Allen）的 GTD 和[詹姆斯·克利尔](https://en.wikipedia.org/wiki/James_Clear)（James Clear）的《[原子习惯](https://www.goodreads.com/book/show/40121378-atomic-habits)》（Atomic Habits），这个动作应该是可度量的并且是低压力的。
 

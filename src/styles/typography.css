@@ -102,6 +102,10 @@
       @apply border-s-accent/80 wrap-break-word opacity-80;
     }
 
+    p:has(> .katex) {
+      @apply flex justify-center;
+    }
+
     details {
       @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]:my-0!;
     }
