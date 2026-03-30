@@ -12,7 +12,7 @@ featured: true
 
 今天我生日，34岁了。庆生，写篇文章梳理一下“自尊”（Self-Esteem），阐述一下34年来我对这个词的理解。在写下标题的时候，遣词还是用了“鲁棒性”，而非“稳定性”。在工程领域中，鲁棒性有容错，有弹性，会考虑极端的情况下 系统是否能够保证继续运行。而稳定性通常指常规的状态下，系统是否能保持在长期的不波动。现实生活中脆弱的自尊受损，可不是什么常规的状态。
 
-使用“稳定性”来描述自尊的，是心理学家 麦克·克尼斯（Michael Kernis）。他将自尊拆解成两个维度，”自尊的水平“与”自尊的稳定“，进而划分为四个象限，在高水平的两个象限中，他把高水平高稳定的自尊称为“最优自尊（Optimal Self-Esteem）”，把高水平低稳定的自尊称为“脆弱自尊（Fragile Self-Esteem）”，就是那种虽然自信，但极度敏感，容易因为受批评而感到受伤的自尊。在中文口语对话中，经常会听到，“这个小孩还挺有自尊心的“、”某某某自尊心挺高，挺要面儿“，这里的”自尊“都是在说”脆弱自尊“。而真正的”自尊心挺高“，是”自尊的水平高“，那这里的”水平“又是指什么呢？
+使用“稳定性”来描述自尊的，是心理学家 麦克·克尼斯（Michael Kernis）。他将自尊拆解成两个维度，”自尊的水平“与”自尊的稳定“，进而划分为四个象限，在高水平的两个象限中，他把高水平高稳定的自尊称为“最优自尊（Optimal Self-Esteem）”，把高水平低稳定的自尊称为“脆弱自尊（Fragile Self-Esteem）”，就是那种虽然自信，但极度敏感，容易因为受批评而感到受伤的自尊。在中文口语对话中，经常会听到，“这个小孩还挺有自尊心的“、”某某某自尊心挺高，挺要面儿“，这里的”自尊“指的是 Ego 并不是 Self-Esteem。而真正的”自尊心挺高“，是指”自尊的水平高“，那这里的”水平“又是指什么呢？
 
 引出另一个在自尊领域更有名的心理学家 纳撒尼尔·布兰登（Nathaniel Branden）。他列出了两个自尊的核心支柱（The Two Pillars）：自我效能感（Self-Efficacy），以及自我尊重（Self-Respect）。两个支柱都高，自尊的水平才高。他最畅销的著作，是《自尊的六根支柱》（_The Six Pillars of Self-Esteem_）。他好喜欢用支柱这个词 —— The Two Pillars，The Six Pillars。
 
@@ -30,7 +30,7 @@ featured: true
 
 电影《师父》中，咏春宗师陈识有句台词：“从15岁起，每日挥刀500下，我以这个数为约束。“ 挥刀就是这个有效动作，单调、可度量、低压力。每日挥刀500下，不让杂念干扰心性。杂念是什么？是与现实交互中产生的关于自己定义上的想法。心性是什么？心性是“自尊”，不被干扰的心性，正是我们讲的“自尊的鲁棒性”。
 
-不知你是否有疑问，无我中的“我”，是“自己” Self，还是“自我” Ego。“自我”又和“自尊”又是什么关系。口语中的“太把自己当回事”，这里的“自己”指的是 Ego，在文章开头提到的“虚假自尊” 时说的口语表达中与“自尊 Self-Esteem”方向相反的“自尊心”，也可以理解为 Ego。在我看来，巨大的 Ego 恰恰是源于贫瘠自尊的补偿性防御。如果对 Ego 过度的关注，自卑和自负将如同一枚硬币的两面出现在同一个人身上。典型的那种学校里的聪明学生，（我本人），脑子里先预设了一个聪明的自己，但又担心考试后失败，不敢全力以赴去备考，在拿到成绩后先说“我都没努力”，以此来慰藉，维护脆弱的自尊。
+不知你是否有疑问，无我中的“我”，是“自己” Self，还是“自我” Ego。“自我”又和“自尊”又是什么关系。口语中的“太把自己当回事”，这里的“自己”指的是 Ego，在文章开头提到的与“自尊（Self-Esteem）”方向相反的口语表达中的“自尊心”，也是 Ego。在我看来，巨大的 Ego 恰恰是源于贫瘠自尊的补偿性防御。如果对 Ego 过度的关注，自卑和自负将如同一枚硬币的两面出现在同一个人身上。典型的那种学校里的聪明学生，（我本人），脑子里先预设了一个聪明的自己，但又担心考试后失败，不敢全力以赴去备考，在拿到成绩后先说“我都没努力”，以此来慰藉，维护脆弱的自尊。
 
 在这里再引入两个对立的 Self 概念。无论是爱丽丝·米勒（Alice Miller）的真实自我（Authentic Self） 虚假自我（False Self），还是肖恩·加拉格尔（Shaun Gallagher）的功能自我（Functional Self） 叙事自我 （Narrative Self），或者是卡伦·霍妮（Karen Horney）的真实自我 （The Real Self）理想化自我（The Idealized Self），在我看来，定义上，前者都偏客观，是真实的自己；后者都偏主观，是被大脑加工后的自己。在此文中，Ego 的定义 可化简为 Subjective Self 减去 Objective Self，理想化自我与真实自我的差距。再举回聪明学生的例子，是他有一个高标准高要求的 Subjective Self，但担心考试后见识到那个 Objective Self，无法正视两者的差距，无法正视失败，没有勇气接受现实检验，才会用“我都没努力”的方式去抵消“自尊损耗”，浪费学业。
 
@@ -41,4 +41,5 @@ featured: true
 $$\text{Success Ratio} = \frac{\text{Ability}}{\text{Ego}}$$
 我对能力 Ability 这部分不太满意，我更喜欢 潜力 这个词，而 能力 则应该是 潜力 剔除掉 Ego 的部分。$$\text{Ability} = \text{Potential} \cdot \left( \frac{\text{Objective Self}}{\text{Subjective Self}} \right)$$在之前已经讨论过，用控制论的视角来代替成败之见，把等式左边由 Success 替换成 Result 。等式右边除了能力，还应该有作为矢量的 方向 Direction（对应“做正确的事”）、行动 Execution 和 概率 Probability，那么这个式子将变成这样$$Result = \underbrace{\left( Potential \cdot \frac{\text{Objective Self}}{\text{Subjective Self}} \right)}_{Ability} \cdot \vec{\text{Direction}} \cdot {Execution} \cdot {Probability}$$
 换个顺序我们会发现$$Result = Potential \cdot \underbrace{\left( \frac{\text{Objective Self}}{\text{Subjective Self}} \cdot \text{Execution} \right)}_{\text{Effective Action } } \cdot \vec{Direction} \cdot Probability$$当两个自我的比例和执行力结合在一起，恰好就是前文提到的无视自我的有效动作了。$$\text{Effective Action} = \text{Execution} \cdot \left( \frac{\text{Objective Self}}{\text{Subjective Self}} \right)$$
+
 很多时候我们越想努力去争取一件事情，反而越得不到结果，而当我们放下所谓执念，才能执行有效动作，真正做到 Turning Pro，偏偏老天爷就真给机会让你有所收获。像是我这几年马拉松训练的关键心得：要对自己真实的实力诚实。在我真实能力是 三小时完赛 时，那个 Subjective Self 非要认定自己为两小时四十分的选手。虽然总是在训练上很拼命（Execution 很大），但因为在用 两小时四十分 的马配速去硬顶，该练乳酸的时候练无氧，该练有氧的时候练乳酸，最终的效果反而因为训练的错位变得很低，甚至导致跑姿变形、心态焦虑，可能因为伤病变成负值。所谓“欲速则不达”。而当我们不断检验现实，勇敢地正视 Objective Self，将 Subjective Self 贴近 Objective Self，重复地去做有效动作 时，我们的效率更高，结果更好，自尊也因此获得了鲁棒性。
