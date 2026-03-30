@@ -7,40 +7,32 @@ interface Props {
   maxWidth?: string;
 }
 
-const {
-  src,
-  alt,
-  href,
-  float = "left",
-  maxWidth = "200px",
-} = Astro.props;
+const { src, alt, href, float = "left", maxWidth = "200px" } = Astro.props;
 
-const marginClass = float === "left" ? "mr-5 mb-5" : "ml-5 mb-5";
+const marginClass = float === "left" ? "mr-5 mt-5 mb-5" : "ml-5 mt-5 mb-5";
 const floatStyle = `float: ${float}; max-width: ${maxWidth}`;
 ---
 
 <div>
-  {href ? (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      class:list={["block border border-border p-0", marginClass]}
-      style={floatStyle}
-    >
+  {
+    href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={["block p-0", marginClass]}
+        style={floatStyle}
+      >
+        <img src={src} alt={alt} class="mt-0 mb-0 block w-full" />
+      </a>
+    ) : (
       <img
         src={src}
         alt={alt}
-        class="block w-full"
+        class:list={["block", marginClass]}
+        style={floatStyle}
       />
-    </a>
-  ) : (
-    <img
-      src={src}
-      alt={alt}
-      class:list={["block border border-border", marginClass]}
-      style={floatStyle}
-    />
-  )}
+    )
+  }
   <slot />
 </div>
