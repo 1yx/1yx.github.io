@@ -32,6 +32,20 @@ html[data-theme="light"] {
   --muted: oklch(55% 0 0);                /* ash */
   --border: oklch(90% 0 0);               /* mist */
   --shadow-inner: oklch(93% 0 0);         /* shadow for inner box */
+
+  /* Apple HIG System Colors */
+  --blue: #007AFF;
+  --brown: #A2845E;
+  --cyan: #32ADE6;
+  --green: #34C759;
+  --indigo: #5856D6;
+  --mint: #00C7BE;
+  --orange: #FF9500;
+  --pink: #FF2D55;
+  --purple: #AF52DE;
+  --red: #FF3B30;
+  --teal: #30B0C7;
+  --yellow: #FFCC00;
 }
 
 /* === Dark Theme === */
@@ -43,6 +57,20 @@ html[data-theme="dark"] {
   --muted: oklch(65% 0 0);                /* ash-light */
   --border: oklch(40% 0 0);               /* charcoal-light */
   --shadow-inner: oklch(35% 0 0);         /* shadow for inner box */
+
+  /* Apple HIG System Colors */
+  --blue: #0A84FF;
+  --brown: #AC8E68;
+  --cyan: #64D2FF;
+  --green: #30D158;
+  --indigo: #5E5CE6;
+  --mint: #63E6E2;
+  --orange: #FF9F0A;
+  --pink: #FF375F;
+  --purple: #BF5AF2;
+  --red: #FF453A;
+  --teal: #40CBE0;
+  --yellow: #FFD60A;
 }
 
 @theme inline {

@@ -18,13 +18,29 @@
     }
 
     p,
-    strong,
     ol,
     ul,
     figcaption,
     table,
     code {
       @apply text-foreground;
+    }
+
+    strong {
+      @apply text-foreground;
+      font-weight: inherit;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: -2px -3px;
+        border: 1.5px solid var(--border);
+        border-radius: 0.5rem;
+        filter: url(#sketchy-box);
+        pointer-events: none;
+        z-index: -1;
+      }
     }
 
     a {

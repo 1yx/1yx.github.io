@@ -8,5 +8,9 @@
       <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="4" result="noise" seed="2" />
       <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
     </filter>
+    <filter id="sketchy-box">
+      <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="4" result="noise" seed="5" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
   </defs>
 </svg>
