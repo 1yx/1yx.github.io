@@ -20,19 +20,19 @@ export const SOCIALS: Social[] = [
   {
     name: "GitHub",
     href: "https://github.com/1yx",
-    linkTitle: `${SITE.title} on GitHub`,
+    linkTitle: `${SITE.owner} on GitHub`,
     icon: IconGitHub,
   },
   {
     name: "X",
     href: "https://x.com/onewhyaxe",
-    linkTitle: `${SITE.title} on X`,
+    linkTitle: `${SITE.owner} on X`,
     icon: IconBrandX,
   },
   {
     name: "Mail",
-    href: "mailto:onewhyaxe@gmail.com",
-    linkTitle: `Send an email to ${SITE.title}`,
+    href: "https://github.com/1yx/1yx.github.io/issues/new",
+    linkTitle: `Contact ${SITE.owner} via GitHub Issues`,
     icon: IconMail,
   },
 ] as const;

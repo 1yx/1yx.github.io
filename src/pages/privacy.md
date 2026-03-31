@@ -49,8 +49,6 @@ description: "本站的隐私保护政策及内容免责声明。"
 
 ## 联系方式
 
-如果您对本站的隐私政策或内容有任何疑问，请随时与我联系。
-
-onewhyaxe\[at\]gmail.com
+如果您对本站的隐私政策或内容有任何疑问，请通过 [GitHub Issues](https://github.com/1yx/1yx.github.io/issues/new) 与我联系。
 
 *最后更新时间：2026年3月31日*

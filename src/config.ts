@@ -1,5 +1,6 @@
 export const SITE = {
   website: "https://iamlyx.com/",
+  owner: "Lyx",
   author: "Lyx (Liu Yu Xuan)",
   profile: "https://iamlyx.com/about",
   desc: "A marathoner, a programmer's personal blog.",
