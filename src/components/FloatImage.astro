@@ -71,7 +71,7 @@ const cropStyle = maxHeight
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        class:list={["block p-0", marginClass]}
+        class:list={["block p-0 hover:rotate-1", marginClass]}
         style={floatStyle}
       >
         <Image src={src} alt={alt} class="mt-0 mb-0 block w-full" />
@@ -85,9 +85,14 @@ const cropStyle = maxHeight
       />
     )
   }
-  {collapse
-    ? <div style="margin-top: -1.25rem;"><slot /></div>
-    : <slot />
+  {
+    collapse ? (
+      <div style="margin-top: -1.25rem;">
+        <slot />
+      </div>
+    ) : (
+      <slot />
+    )
   }
   {isFloating && clearFloat && <div style="clear: both;" />}
 </div>
