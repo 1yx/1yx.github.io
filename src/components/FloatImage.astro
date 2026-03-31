@@ -1,19 +1,70 @@
 ---
+import { Image } from "astro:assets";
+
 interface Props {
-  src: string;
+  src: ImageMetadata;
   alt: string;
   href?: string;
   float?: "left" | "right";
   maxWidth?: string;
+  maxHeight?: string;
+  clearFloat?: boolean;
+  bleed?: string;
+  upperLines?: number;
+  collapse?: boolean;
 }
 
-const { src, alt, href, float = "left", maxWidth = "200px" } = Astro.props;
+const {
+  src,
+  alt,
+  href,
+  float = "left",
+  maxWidth = "200px",
+  maxHeight,
+  clearFloat = true,
+  bleed,
+  upperLines = 0,
+  collapse = !upperLines,
+} = Astro.props;
 
-const marginClass = float === "left" ? "mr-5 mt-5 mb-5" : "ml-5 mt-5 mb-5";
-const floatStyle = `float: ${float}; max-width: ${maxWidth}`;
+const direction = float as "left" | "right" | undefined;
+const isFloating = direction === "left" || direction === "right";
+const isFloatDown = isFloating && !!upperLines;
+
+const marginClass = isFloating
+  ? direction === "left"
+    ? "mr-5 mt-0 mb-0"
+    : "ml-5 mt-0 mb-0"
+  : "mt-0 mb-0";
+
+const bleedStyle = bleed
+  ? isFloating
+    ? direction === "left"
+      ? `margin-left: ${bleed};`
+      : `margin-right: ${bleed};`
+    : `margin-left: ${bleed}; margin-right: calc(-1 * ${bleed.replace("-", "")});`
+  : "";
+
+// Zero-width float spacer: pushes image down N text lines, invisible to text
+// line-height: 28px, paragraph margin-bottom: 20px
+const spacerHeight =
+  isFloatDown && upperLines ? `${upperLines * 1.75 + 0.15}rem` : "";
+const spacerStyle = spacerHeight
+  ? `float: ${direction}; width: 0; height: ${spacerHeight};`
+  : "";
+
+const clearSide = isFloatDown ? `clear: ${direction};` : "";
+
+const floatStyle = isFloating
+  ? `float: ${direction}; max-width: ${maxWidth}${maxHeight ? `; max-height: ${maxHeight}` : ""}; ${bleedStyle} ${clearSide}`
+  : `width: 100%${maxHeight ? `; max-height: ${maxHeight}` : ""}; ${bleedStyle}`;
+const cropStyle = maxHeight
+  ? "overflow: hidden; display: flex; align-items: center;"
+  : "";
 ---
 
-<div>
+<div style={cropStyle}>
+  {spacerStyle && <div style={spacerStyle} />}
   {
     href ? (
       <a
@@ -23,10 +74,10 @@ const floatStyle = `float: ${float}; max-width: ${maxWidth}`;
         class:list={["block p-0", marginClass]}
         style={floatStyle}
       >
-        <img src={src} alt={alt} class="mt-0 mb-0 block w-full" />
+        <Image src={src} alt={alt} class="mt-0 mb-0 block w-full" />
       </a>
     ) : (
-      <img
+      <Image
         src={src}
         alt={alt}
         class:list={["block", marginClass]}
@@ -34,5 +85,9 @@ const floatStyle = `float: ${float}; max-width: ${maxWidth}`;
       />
     )
   }
-  <slot />
+  {collapse
+    ? <div style="margin-top: -1.25rem;"><slot /></div>
+    : <slot />
+  }
+  {isFloating && clearFloat && <div style="clear: both;" />}
 </div>
