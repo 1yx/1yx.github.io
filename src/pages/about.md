@@ -23,7 +23,8 @@ See you on the road.
 
 ---
 
-<script define:vars={{ currentYear: new Date().getFullYear() }}>
+<script>
   const startYear = 2018;
-  document.getElementById('years-since-2018').textContent = String(currentYear - startYear);
+  const el = document.getElementById('years-since-2018');
+  if (el) el.textContent = String(new Date().getFullYear() - startYear);
 </script>
