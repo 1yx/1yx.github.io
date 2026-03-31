@@ -5,23 +5,25 @@ import { slugifyStr } from "./slugify";
  * Get full path of a blog post
  * @param id - id of the blog post (aka slug)
  * @param filePath - the blog post full file location
- * @param includeBase - whether to include `/posts` in return value
+ * @param includeBase - whether to include base path in return value
+ * @param category - optional category override for the base path
  * @returns blog post path
  */
 export function getPath(
   id: string,
   filePath: string | undefined,
-  includeBase = true
+  includeBase = true,
+  category?: string
 ) {
   const pathSegments = filePath
     ?.replace(BLOG_PATH, "")
     .split("/")
     .filter(path => path !== "") // remove empty string in the segments ["", "other-path"] <- empty string will be removed
     .filter(path => !path.startsWith("_")) // exclude directories start with underscore "_"
-    .slice(0, -1) // remove the last segment_ file name_ since it's unnecessary
+    .slice(0, -1) // remove the last segment (file name) since it's unnecessary
     .map(segment => slugifyStr(segment)); // slugify each segment path
 
-  const basePath = includeBase ? "/posts" : "";
+  const basePath = includeBase ? `/${category || "posts"}` : "";
 
   // Making sure `id` does not contain the directory
   const blogId = id.split("/");

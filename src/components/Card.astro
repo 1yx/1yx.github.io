@@ -9,13 +9,14 @@ type Props = {
 } & CollectionEntry<"blog">;
 
 const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const category = data.category || "life";
 
 const { title, description, ...props } = data;
 ---
 
 <li class="my-6">
   <a
-    href={getPath(id, filePath)}
+    href={getPath(id, filePath, true, category)}
     class:list={[
       "group relative inline-block text-xl font-bold text-foreground hover:text-accent",
       "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed",
