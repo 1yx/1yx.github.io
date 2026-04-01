@@ -2,6 +2,7 @@ import type { Props } from "astro";
 import IconMail from "@/assets/icons/IconMail.svg";
 import IconGitHub from "@/assets/icons/IconGitHub.svg";
 import IconBrandX from "@/assets/icons/IconBrandX.svg";
+import IconBrandStrava from "@/assets/icons/iconBrandStrava.svg";
 
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
@@ -25,6 +26,12 @@ interface Social {
 }
 
 export const SOCIALS: Social[] = [
+  {
+    name: "Strava",
+    href: "https://www.strava.com/athletes/84101234",
+    linkTitle: `${SITE.owner} on Strava`,
+    icon: IconBrandStrava,
+  },
   {
     name: "GitHub",
     href: "https://github.com/1yx",

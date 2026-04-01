@@ -1,13 +1,34 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { DEFAULT_LOCALE } from "@/i18n";
+import { LOCALES, DEFAULT_LOCALE, isLocale } from "@/i18n";
 ---
 
 <Layout title="Redirecting...">
-  <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LOCALE}/`} />
-  <script is:inline define:vars={{ DEFAULT_LOCALE }}>
-    window.location.href = `/${DEFAULT_LOCALE}/`;
+  <script is:inline>
+    (function () {
+      // 1. Check localStorage for saved preference
+      const saved = localStorage.getItem("lang");
+      if (saved) {
+        window.location.href = `/${saved}/`;
+        return;
+      }
+
+      // 2. Detect browser language
+      const browserLangs = navigator.languages || [navigator.language];
+      for (const bl of browserLangs) {
+        if (bl.startsWith("zh")) {
+          window.location.href = "/zh-CN/";
+          return;
+        }
+      }
+
+      // 3. Fallback to default
+      window.location.href = `/${"en"}/`;
+    })();
   </script>
+  <noscript>
+    <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LOCALE}/`} />
+  </noscript>
   <div class="flex min-h-[50vh] items-center justify-center">
     <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>Home</a> page...</p>
   </div>

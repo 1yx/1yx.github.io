@@ -3,6 +3,7 @@ import IconX from "@/assets/icons/IconX.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
+import SiteIcon from "@/assets/icons/icon-4.svg";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { SITE } from "@/config";
 import { t, type Locale } from "@/i18n";
@@ -61,7 +62,9 @@ const isActive = (path: string) => {
       href={`/${lang}/`}
       class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
-      {ui.siteTitle}
+      <span class="inline-flex items-center"
+        ><SiteIcon class="h-[1.2rem] w-[1.2rem]" /></span
+      >{ui.siteTitle.slice(1)}
     </a>
     <nav
       id="nav-menu"
@@ -87,35 +90,51 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href={`/${lang}/running/`} class:list={{ "active-nav": isActive(`/${lang}/running`) }}>
+          <a
+            href={`/${lang}/running/`}
+            class:list={{ "active-nav": isActive(`/${lang}/running`) }}
+          >
             {ui.nav.running}
           </a>
         </li>
         <li class="col-span-2">
-          <a href={`/${lang}/psychology/`} class:list={{ "active-nav": isActive(`/${lang}/psychology`) }}>
+          <a
+            href={`/${lang}/psychology/`}
+            class:list={{ "active-nav": isActive(`/${lang}/psychology`) }}
+          >
             {ui.nav.psychology}
           </a>
         </li>
         <li class="col-span-2">
-          <a href={`/${lang}/tags/`} class:list={{ "active-nav": isActive(`/${lang}/tags`) }}>
+          <a
+            href={`/${lang}/tags/`}
+            class:list={{ "active-nav": isActive(`/${lang}/tags`) }}
+          >
             {ui.nav.tags}
           </a>
         </li>
         <li class="col-span-2">
-          <a href={`/${lang}/about/`} class:list={{ "active-nav": isActive(`/${lang}/about`) }}>
+          <a
+            href={`/${lang}/about/`}
+            class:list={{ "active-nav": isActive(`/${lang}/about`) }}
+          >
             {ui.nav.about}
           </a>
         </li>
         {/* Language Switcher */}
         <li class="col-span-1 flex items-center justify-center">
-          <LanguageSwitcher {lang} targetUrl={langTargetUrl} translationExists={translationExists} />
+          <LanguageSwitcher
+            {lang}
+            targetUrl={langTargetUrl}
+            translationExists={translationExists}
+          />
         </li>
         {
           SITE.lightAndDarkMode && (
             <li class="col-span-1 flex items-center justify-center">
               <button
                 id="theme-btn"
-                class="focus-outline relative size-12 p-4 sm:size-8 hover:rotate-6 hover:[&>svg]:stroke-accent-hover"
+                class="focus-outline relative size-12 p-4 hover:rotate-6 sm:size-8 hover:[&>svg]:stroke-accent-hover"
                 title="Toggles light & dark"
                 aria-label="auto"
                 aria-live="polite"
