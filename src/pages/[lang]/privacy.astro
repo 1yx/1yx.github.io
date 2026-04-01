@@ -12,56 +12,108 @@ export async function getStaticPaths() {
 const { lang } = Astro.params as { lang: Locale };
 ---
 
-<Layout title="隐私政策与免责声明 | Lyx's blog">
+<Layout title={lang === "zh-CN" ? "隐私政策与免责声明 | Lyx's blog" : "Privacy Policy & Disclaimer | Lyx's blog"}>
   <Header {lang} />
-  <Breadcrumb />
+  <Breadcrumb {lang} />
   <main id="main-content" class="app-layout">
     <section id="privacy" class="app-prose mb-28 max-w-app prose-img:border-0">
-      <h1 class="text-2xl tracking-wider sm:text-3xl">隐私政策与免责声明</h1>
-      <p>欢迎访问我的个人博客（iamlyx.com）。作为一名创作者，我深知数据隐私的重要性。本页面旨在透明地向您说明本站如何处理访客数据，以及本站内容的免责条款。</p>
+      {lang === "zh-CN" ? (
+        <>
+          <h1 class="text-2xl tracking-wider sm:text-3xl">隐私政策与免责声明</h1>
+          <p>欢迎访问我的个人博客（iamlyx.com）。作为一名创作者，我深知数据隐私的重要性。本页面旨在透明地向您说明本站如何处理访客数据，以及本站内容的免责条款。</p>
 
-      <h2>隐私政策 (Privacy Policy)</h2>
-      <p>本着"最小化数据采集"的原则，本站致力于为您提供一个干净、无追踪的阅读环境。</p>
+          <h2>隐私政策</h2>
+          <p>本着"最小化数据采集"的原则，本站致力于为您提供一个干净、无追踪的阅读环境。</p>
 
-      <h3>1. 网站统计与分析</h3>
-      <p>本站 <strong>不使用</strong> 任何侵入式的第三方追踪代码（如 Google Analytics），也 <strong>不使用</strong> 任何追踪性 Cookie 来记录您的互联网行为。因此，您在本站不会看到烦人的 Cookie 同意弹窗。</p>
-      <p>本站的访问流量统计由 <strong>Cloudflare Web Analytics</strong> 提供。这是一款极其注重隐私的分析工具，它仅收集以下匿名的聚合数据，用于评估网站的运行健康度：</p>
-      <ul>
-        <li>页面访问量 (PV) 与独立访客数 (UV)</li>
-        <li>访客的粗略地理位置（国家/地区级别）</li>
-        <li>浏览器类型与设备类型</li>
-        <li>页面加载性能核心指标 (Core Web Vitals)</li>
-      </ul>
-      <p>这些数据无法用于识别您的个人身份，也不会与任何第三方共享用于广告营销。</p>
+          <h3>1. 网站统计与分析</h3>
+          <p>本站 <strong>不使用</strong> 任何侵入式的第三方追踪代码（如 Google Analytics），也 <strong>不使用</strong> 任何追踪性 Cookie 来记录您的互联网行为。因此，您在本站不会看到烦人的 Cookie 同意弹窗。</p>
+          <p>本站的访问流量统计由 <strong>Cloudflare Web Analytics</strong> 提供。这是一款极其注重隐私的分析工具，它仅收集以下匿名的聚合数据，用于评估网站的运行健康度：</p>
+          <ul>
+            <li>页面访问量 (PV) 与独立访客数 (UV)</li>
+            <li>访客的粗略地理位置（国家/地区级别）</li>
+            <li>浏览器类型与设备类型</li>
+            <li>页面加载性能核心指标 (Core Web Vitals)</li>
+          </ul>
+          <p>这些数据无法用于识别您的个人身份，也不会与任何第三方共享用于广告营销。</p>
 
-      <h3>2. 服务器日志</h3>
-      <p>本站托管于 GitHub Pages，并由 Cloudflare 提供 CDN 加速与安全防护。为了保障服务器的稳定运行和防御恶意攻击（如 DDoS），这些基础服务提供商可能会在网络边缘节点自动记录标准的服务器日志（可能包含 IP 地址、访问时间、User-Agent 等）。这些日志仅出于网络安全目的短期保留。</p>
+          <h3>2. 服务器日志</h3>
+          <p>本站托管于 GitHub Pages，并由 Cloudflare 提供 CDN 加速与安全防护。为了保障服务器的稳定运行和防御恶意攻击（如 DDoS），这些基础服务提供商可能会在网络边缘节点自动记录标准的服务器日志（可能包含 IP 地址、访问时间、User-Agent 等）。这些日志仅出于网络安全目的短期保留。</p>
 
-      <h3>3. 第三方链接</h3>
-      <p>本博客的文章中可能会包含指向其他第三方网站的链接（如 GitHub 仓库、官方文档或其他博客）。当您点击这些链接离开本站后，您的隐私将受该第三方网站隐私政策的约束，本站对其隐私做法不承担责任。</p>
+          <h3>3. 第三方链接</h3>
+          <p>本博客的文章中可能会包含指向其他第三方网站的链接（如 GitHub 仓库、官方文档或其他博客）。当您点击这些链接离开本站后，您的隐私将受该第三方网站隐私政策的约束，本站对其隐私做法不承担责任。</p>
 
-      <hr />
+          <hr />
 
-      <h2>免责声明 (Disclaimer)</h2>
+          <h2>免责声明</h2>
 
-      <h3>1. 内容时效性与准确性</h3>
-      <p>本博客的所有内容（包括技术教程、代码片段、软件配置指南以及个人训练经验分享等）仅代表作者在撰写当时的个人认知与实践总结。</p>
-      <p>技术领域发展迅速，框架和工具的 API 随时可能发生破坏性变更。我无法保证文章中的代码、命令或配置在您阅读时依然绝对准确或有效。<strong>请在生产环境或实际应用中，自行验证相关内容的适用性和安全性。</strong></p>
+          <h3>1. 内容时效性与准确性</h3>
+          <p>本博客的所有内容（包括技术教程、代码片段、软件配置指南以及个人训练经验分享等）仅代表作者在撰写当时的个人认知与实践总结。</p>
+          <p>技术领域发展迅速，框架和工具的 API 随时可能发生破坏性变更。我无法保证文章中的代码、命令或配置在您阅读时依然绝对准确或有效。<strong>请在生产环境或实际应用中，自行验证相关内容的适用性和安全性。</strong></p>
 
-      <h3>2. 风险自担 (As-Is)</h3>
-      <p>本站提供的所有信息均按"原样 (As-Is)"提供，不作任何形式的明示或暗示保证。因参考、使用或执行本博客中的内容、代码或建议而导致的任何直接、间接的数据丢失、设备损坏或身体损伤，本站及作者概不负责。</p>
+          <h3>2. 风险自担 (As-Is)</h3>
+          <p>本站提供的所有信息均按"原样 (As-Is)"提供，不作任何形式的明示或暗示保证。因参考、使用或执行本博客中的内容、代码或建议而导致的任何直接、间接的数据丢失、设备损坏或身体损伤，本站及作者概不负责。</p>
 
-      <h3>3. 个人立场</h3>
-      <p>本博客为个人性质，所有文章的观点和立场均仅代表我个人，与我目前或曾经任职的任何组织、雇主或公司无关。</p>
+          <h3>3. 个人立场</h3>
+          <p>本博客为个人性质，所有文章的观点和立场均仅代表我个人，与我目前或曾经任职的任何组织、雇主或公司无关。</p>
 
-      <h3>4. 知识产权</h3>
-      <p>除特别标注外，本站的原创文章与内容均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)</a> 许可协议进行许可。转载请<strong>务必</strong>保留原文链接与作者署名。</p>
+          <h3>4. 知识产权</h3>
+          <p>除特别标注外，本站的原创文章与内容均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)</a> 许可协议进行许可。转载请<strong>务必</strong>保留原文链接与作者署名。</p>
 
-      <hr />
+          <hr />
 
-      <h2>联系方式</h2>
-      <p>如果您对本站的隐私政策或内容有任何疑问，请通过 <a href="https://github.com/1yx/1yx.github.io/issues/new">GitHub Issues</a> 与我联系。</p>
-      <p><em>最后更新时间：2026年3月31日</em></p>
+          <h2>联系方式</h2>
+          <p>如果您对本站的隐私政策或内容有任何疑问，请通过 <a href="https://github.com/1yx/1yx.github.io/issues/new">GitHub Issues</a> 与我联系。</p>
+          <p><em>最后更新时间：2026年3月31日</em></p>
+        </>
+      ) : (
+        <>
+          <h1 class="text-2xl tracking-wider sm:text-3xl">Privacy Policy & Disclaimer</h1>
+          <p>Welcome to my personal blog (iamlyx.com). As a creator, I understand the importance of data privacy. This page is intended to transparently explain how this site handles visitor data and the disclaimer regarding its content.</p>
+
+          <h2>Privacy Policy</h2>
+          <p>Following the principle of "minimum data collection," this site is committed to providing you with a clean, tracking-free reading experience.</p>
+
+          <h3>1. Website Analytics</h3>
+          <p>This site does <strong>not</strong> use any invasive third-party tracking code (such as Google Analytics), nor does it use any tracking cookies to record your browsing behavior. Therefore, you will not see annoying cookie consent pop-ups on this site.</p>
+          <p>Site traffic statistics are provided by <strong>Cloudflare Web Analytics</strong>, a privacy-focused analytics tool that only collects the following anonymized, aggregated data to assess site health:</p>
+          <ul>
+            <li>Page views (PV) and unique visitors (UV)</li>
+            <li>Approximate geographic location (country/region level)</li>
+            <li>Browser type and device type</li>
+            <li>Core Web Vitals performance metrics</li>
+          </ul>
+          <p>This data cannot be used to identify you personally and will not be shared with any third party for advertising purposes.</p>
+
+          <h3>2. Server Logs</h3>
+          <p>This site is hosted on GitHub Pages with CDN acceleration and security protection provided by Cloudflare. To ensure stable server operation and defense against malicious attacks (such as DDoS), these infrastructure providers may automatically record standard server logs at network edge nodes (which may include IP addresses, access times, User-Agent strings, etc.). These logs are retained for a short period solely for network security purposes.</p>
+
+          <h3>3. Third-Party Links</h3>
+          <p>Articles on this blog may contain links to third-party websites (such as GitHub repositories, official documentation, or other blogs). Once you click these links and leave this site, your privacy will be governed by the privacy policy of that third-party website. This site is not responsible for their privacy practices.</p>
+
+          <hr />
+
+          <h2>Disclaimer</h2>
+
+          <h3>1. Content Timeliness and Accuracy</h3>
+          <p>All content on this blog (including technical tutorials, code snippets, software configuration guides, and personal training experience sharing) represents only the author's personal knowledge and practical summary at the time of writing.</p>
+          <p>Technology evolves rapidly, and framework and tool APIs may undergo breaking changes at any time. I cannot guarantee that the code, commands, or configurations in articles remain absolutely accurate or effective at the time you read them. <strong>Please verify the applicability and safety of relevant content yourself before applying it in production environments.</strong></p>
+
+          <h3>2. As-Is</h3>
+          <p>All information provided on this site is provided "as is" without any express or implied warranties. The site and its author are not responsible for any direct or indirect data loss, equipment damage, or personal injury resulting from referencing, using, or executing the content, code, or suggestions on this blog.</p>
+
+          <h3>3. Personal Views</h3>
+          <p>This blog is personal in nature. The views and positions expressed in all articles represent my own and are not affiliated with any organization, employer, or company I currently or formerly work for.</p>
+
+          <h3>4. Intellectual Property</h3>
+          <p>Unless otherwise noted, original articles and content on this site are licensed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> license. Please <strong>be sure</strong> to retain the original link and author attribution when republishing.</p>
+
+          <hr />
+
+          <h2>Contact</h2>
+          <p>If you have any questions about this site's privacy policy or content, please reach out via <a href="https://github.com/1yx/1yx.github.io/issues/new">GitHub Issues</a>.</p>
+          <p><em>Last updated: March 31, 2026</em></p>
+        </>
+      )}
     </section>
   </main>
   <Footer {lang} />

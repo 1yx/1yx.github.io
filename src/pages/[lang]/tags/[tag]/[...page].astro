@@ -42,6 +42,7 @@ const ui = t(lang);
     pageTitle={[ui.tags.tagLabel, `${tagName}`]}
     titleTransition={tag}
     pageDesc={ui.tags.tagDesc(tagName)}
+    {lang}
   >
     <h1 slot="title" transition:name={tag}>{`${ui.tags.tagLabel}${tag}`}</h1>
     <ul>

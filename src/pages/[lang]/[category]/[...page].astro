@@ -39,7 +39,7 @@ const ui = t(lang);
 
 <Layout title={`${categoryName} | ${SITE.title}`}>
   <Header {lang} />
-  <Main pageTitle={categoryName} pageDesc={ui.categoryDesc(categoryName)}>
+  <Main pageTitle={categoryName} pageDesc={ui.categoryDesc(categoryName)} {lang}>
     <ul>
       {page.data.map((data: any) => <Card {...data} />)}
     </ul>

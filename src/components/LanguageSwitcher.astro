@@ -1,7 +1,7 @@
 ---
 import IconLanguage from "@/assets/icons/IconLanguage.svg";
 import IconLanguageOff from "@/assets/icons/IconLanguageOff.svg";
-import { getOtherLocale, type Locale } from "@/i18n";
+import { getOtherLocale, LOCALES, type Locale } from "@/i18n";
 
 interface Props {
   lang: Locale;
@@ -11,20 +11,32 @@ interface Props {
 
 const { lang, targetUrl, translationExists = false } = Astro.props;
 const otherLang = getOtherLocale(lang);
-const href = targetUrl || `/${otherLang}/`;
+
+// If targetUrl is explicitly provided, use it (e.g. blog posts with different slugs)
+// Otherwise, derive from current URL by swapping the locale segment
+let href: string;
+if (targetUrl) {
+  href = targetUrl;
+} else {
+  const { pathname } = Astro.url;
+  const pathWithoutTrailing = pathname.replace(/\/+$/, "");
+  const segments = pathWithoutTrailing.split("/").filter(Boolean);
+  // Replace first segment if it's a locale
+  if (LOCALES.includes(segments[0] as Locale)) {
+    segments[0] = otherLang;
+  }
+  href = "/" + segments.join("/") + "/";
+}
 ---
 
 <a
   href={href}
   class:list={[
     "focus-outline inline-flex items-center justify-center p-3 sm:p-1",
-    "hover:rotate-6",
-    translationExists
-      ? "hover:[&>svg]:stroke-accent-hover"
-      : "opacity-60 hover:opacity-100 hover:[&>svg]:stroke-accent-hover",
+    "hover:rotate-6 hover:[&>svg]:stroke-accent-hover",
   ]}
   title={`Switch to ${otherLang === "zh-CN" ? "中文" : "English"}`}
   aria-label={`Switch language to ${otherLang === "zh-CN" ? "中文" : "English"}`}
 >
-  {translationExists ? <IconLanguage class="size-5" /> : <IconLanguageOff class="size-5" />}
+  {lang === "en" ? <IconLanguage class="size-5" /> : <IconLanguageOff class="size-5" />}
 </a>

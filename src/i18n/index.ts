@@ -11,13 +11,25 @@ export function isLocale(value: string): value is Locale {
   return LOCALES.includes(value as Locale);
 }
 
+// Tag translations: canonical English ID → display name per locale
+export const TAG_TRANSLATIONS = {
+  marathon: { "zh-CN": "马拉松比赛", en: "Marathon Race" },
+  running: { "zh-CN": "跑步训练", en: "Running" },
+  psychology: { "zh-CN": "心理学", en: "Psychology" },
+  "self-esteem": { "zh-CN": "自尊", en: "Self-Esteem" },
+  self: { "zh-CN": "自我", en: "Self" },
+} as const;
+
+export type TagId = keyof typeof TAG_TRANSLATIONS;
+
 // UI translation strings
 const translations = {
   "zh-CN": {
+    siteTitle: "Lyx 的博客",
     nav: {
       home: "首页",
       running: "跑步",
-      psychology: "心理学 / 神经科学",
+      psychology: "心理学",
       tags: "标签",
       about: "关于",
       search: "搜索",
@@ -49,10 +61,11 @@ const translations = {
     categoryDesc: (name: string) => `所有${name}相关的文章。`,
   },
   en: {
+    siteTitle: "Lyx's blog",
     nav: {
       home: "Home",
       running: "Running",
-      psychology: "Psychology / Neuroscience",
+      psychology: "Psychology",
       tags: "Tags",
       about: "About",
       search: "Search",
@@ -90,4 +103,9 @@ export type Translations = (typeof translations)[Locale];
 
 export function t(locale: Locale): Translations {
   return translations[locale];
+}
+
+export function getTagDisplayName(tagId: string, locale: Locale): string {
+  const entry = TAG_TRANSLATIONS[tagId as TagId];
+  return entry ? entry[locale] : tagId;
 }

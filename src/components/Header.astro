@@ -5,7 +5,7 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { SITE } from "@/config";
-import type { Locale } from "@/i18n";
+import { t, type Locale } from "@/i18n";
 
 interface Props {
   lang?: Locale;
@@ -19,6 +19,8 @@ const {
   translationExists = false,
 } = Astro.props;
 
+const ui = t(lang);
+
 const { pathname } = Astro.url;
 
 // Remove trailing slash from current pathname if exists
@@ -31,7 +33,7 @@ const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
 
-  return currentPath === path || currentPathArray[0] === pathArray[0];
+  return currentPath === path || currentPathArray[1] === pathArray[1];
 };
 ---
 
@@ -59,7 +61,7 @@ const isActive = (path: string) => {
       href={`/${lang}/`}
       class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
-      {SITE.title}
+      {ui.siteTitle}
     </a>
     <nav
       id="nav-menu"
@@ -86,22 +88,22 @@ const isActive = (path: string) => {
       >
         <li class="col-span-2">
           <a href={`/${lang}/running/`} class:list={{ "active-nav": isActive(`/${lang}/running`) }}>
-            Running
+            {ui.nav.running}
           </a>
         </li>
         <li class="col-span-2">
           <a href={`/${lang}/psychology/`} class:list={{ "active-nav": isActive(`/${lang}/psychology`) }}>
-            Psychology
+            {ui.nav.psychology}
           </a>
         </li>
         <li class="col-span-2">
           <a href={`/${lang}/tags/`} class:list={{ "active-nav": isActive(`/${lang}/tags`) }}>
-            Tags
+            {ui.nav.tags}
           </a>
         </li>
         <li class="col-span-2">
           <a href={`/${lang}/about/`} class:list={{ "active-nav": isActive(`/${lang}/about`) }}>
-            About
+            {ui.nav.about}
           </a>
         </li>
         {/* Language Switcher */}

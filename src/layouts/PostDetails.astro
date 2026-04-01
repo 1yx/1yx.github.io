@@ -15,7 +15,7 @@ import { getLangFromId } from "@/utils/getLangFromId";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
-import { t, getOtherLocale, type Locale } from "@/i18n";
+import { t, getOtherLocale, getTagDisplayName, type Locale } from "@/i18n";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -138,7 +138,7 @@ const nextPost =
     <EditPost class="sm:hidden" {hideEditPost} {post} />
 
     <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" {lang} />)}
+      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={getTagDisplayName(tag, lang)} size="sm" {lang} />)}
     </ul>
 
     <BackToTopButton />

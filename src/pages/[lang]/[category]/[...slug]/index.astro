@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
   const paths = LOCALES.flatMap(lang =>
     posts
-      .filter(post => post.id.startsWith(`${lang}/`))
+      .filter(post => post.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`))
       .map(post => ({
         params: {
           lang,

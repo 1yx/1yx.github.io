@@ -18,7 +18,7 @@ const ui = t(lang);
 
 <Layout title={`${ui.search.title} | ${SITE.title}`}>
   <Header {lang} />
-  <Main pageTitle={ui.search.title} pageDesc={ui.search.desc}>
+  <Main pageTitle={ui.search.title} pageDesc={ui.search.desc} {lang}>
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
   </Main>
   <Footer {lang} />

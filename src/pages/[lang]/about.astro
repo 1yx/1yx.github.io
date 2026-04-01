@@ -14,19 +14,91 @@ const { lang } = Astro.params as { lang: Locale };
 
 <Layout title={`About | Lyx's blog`}>
   <Header {lang} />
-  <Breadcrumb />
+  <Breadcrumb {lang} />
   <main id="main-content" class="app-layout">
     <section id="about" class="app-prose mb-28 max-w-app prose-img:border-0">
-      <h1 class="text-2xl tracking-wider sm:text-3xl">About Me</h1>
-      <p>Hi, I'm Lyx and I live in the BeiJing. Thanks for visiting my site.</p>
-      <p>I'm a marathon runner with a personal best of 2:50. I consider myself a philosopher of marathon training. I believe in the principle of minimum effective dose and practice long-termism.</p>
-      <p>I once tried becoming a Les Mills instructor, but gave it up because the training approach conflicted with endurance running. I admit this attempt failed. But I'm still proud of it, because I recognized my limitations and followed my heart to make choices.</p>
-      <p>On the other side, I'm a programmer. I write something, but master nothing. I hope to build products the market loves, solve real problems, and get paid for it.</p>
-      <p>Since 2018, I've been struggling with severe depression, so I left the tech companies and have been at home. It's been <span id="years-since-2018">8</span> years since I last held a programming job. But I still like to call myself a programmer, cause this title means focus, diligence, and curiosity.</p>
-      <hr />
-      <p>This site is built with <a href="https://astro.build">Astro</a>, based on the <a href="https://github.com/satnaing/astro-paper">AstroPaper</a> theme.</p>
-      <p>I'd love to hear your <a href="https://github.com/1yx/1yx.github.io/issues/new">feedback</a> on this site and my work.</p>
-      <p>See you on the road.</p>
+      {
+        lang === "zh-CN" ? (
+          <>
+            <h1 class="text-2xl tracking-wider sm:text-3xl">关于我</h1>
+            <p>你好，我是 Lyx，居住在北京。感谢你访问我的网站。</p>
+            <p>
+              我是一名马拉松跑者，个人最好成绩
+              2:50。我把自己视为训练马拉松的哲学家。信奉最小有效剂量原则，践行长期主义。
+            </p>
+            <p>
+              我曾尝试成为一名莱美（Les
+              Mills）教练，但因为训练方式与耐力运动相冲突而放弃了。我坦然承认失败了，但我仍然为此感到自豪——我在其中见到了自己的局限，并遵从内心，做出选择。
+            </p>
+            <p>
+              另一方面，我是一个程序员。我写一些东西，但算不上精通。总希望能做出市场喜爱的产品，解决真实的问题，并因此获得报酬。
+            </p>
+            <p>
+              自 2018
+              年以来，我一直在与严重的抑郁症抗争，因此离开了科技大厂，宅在家里。距离我上一份编程工作已经{" "}
+              <span id="years-since-2018">8</span>{" "}
+              年了。但我仍然喜欢称自己为程序员，因为这个职位意味着专注、勤奋和好奇。
+            </p>
+            <hr />
+            <p>
+              本网站使用 <a href="https://astro.build">Astro</a> 构建，基于{" "}
+              <a href="https://github.com/satnaing/astro-paper">AstroPaper</a>{" "}
+              主题。
+            </p>
+            <p>
+              我愿意听到你对这个网站或我作品 的{" "}
+              <a href="https://github.com/1yx/1yx.github.io/issues/new">反馈</a>
+              。
+            </p>
+            <p>咱路上见。</p>
+          </>
+        ) : (
+          <>
+            <h1 class="text-2xl tracking-wider sm:text-3xl">About Me</h1>
+            <p>
+              Hi, I'm Lyx and I live in BeiJing. Thanks for visiting my site.
+            </p>
+            <p>
+              I'm a marathon runner with a personal best of 2:50. I consider
+              myself a philosopher of marathon training. I believe in the
+              principle of minimum effective dose and practice long-termism.
+            </p>
+            <p>
+              I once tried becoming a Les Mills instructor, but gave it up
+              because the training approach conflicted with endurance running. I
+              admit this attempt failed. But I'm still proud of it, because I
+              recognized my limitations and followed my heart to make choices.
+            </p>
+            <p>
+              On the other side, I'm a programmer. I write something, but master
+              nothing. I hope to build products the market loves, solve real
+              problems, and get paid for it.
+            </p>
+            <p>
+              Since 2018, I've been struggling with severe depression, so I left
+              the tech companies and have been at home. It's been{" "}
+              <span id="years-since-2018">8</span> years since I last held a
+              programming job. But I still like to call myself a programmer,
+              cause this title means focus, diligence, and curiosity.
+            </p>
+            <hr />
+            <p>
+              This site is built with <a href="https://astro.build">Astro</a>,
+              based on the{" "}
+              <a href="https://github.com/satnaing/astro-paper">AstroPaper</a>{" "}
+              theme.
+            </p>
+            <p>
+              I'd love to hear your{" "}
+              <a href="https://github.com/1yx/1yx.github.io/issues/new">
+                feedback
+              </a>{" "}
+              on this site and my work.
+            </p>
+            <p>See you on the road.</p>
+          </>
+        )
+      }
     </section>
   </main>
   <Footer {lang} />
@@ -34,6 +106,6 @@ const { lang } = Astro.params as { lang: Locale };
 
 <script>
   const startYear = 2018;
-  const el = document.getElementById('years-since-2018');
+  const el = document.getElementById("years-since-2018");
   if (el) el.textContent = String(new Date().getFullYear() - startYear);
 </script>
