@@ -4,10 +4,17 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { SITE } from "@/config";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n";
+
+// Detect language from URL path
+const pathname = Astro.url.pathname;
+const firstSegment = pathname.split("/").filter(Boolean)[0];
+const lang: Locale = isLocale(firstSegment) ? firstSegment : DEFAULT_LOCALE;
+const isZh = lang === "zh-CN";
 ---
 
 <Layout title={`404 Not Found | ${SITE.title}`} noindex>
-  <Header />
+  <Header {lang} />
 
   <main
     id="main-content"
@@ -15,16 +22,16 @@ import { SITE } from "@/config";
   >
     <div class="mb-14 flex flex-col items-center justify-center">
       <h1 class="text-9xl font-bold text-accent">404</h1>
-      <span aria-hidden="true">¯\_(ツ)_/¯</span>
-      <p class="mt-4 text-2xl sm:text-3xl">页面未找到</p>
+      <span aria-hidden="true">&mdash;\_(ツ)_/&mdash;</span>
+      <p class="mt-4 text-2xl sm:text-3xl">{isZh ? "页面未找到" : "Page not found"}</p>
       <LinkButton
-        href="/"
+        href={`/${lang}/`}
         class="my-6 text-lg underline decoration-dashed underline-offset-8"
       >
-        返回首页
+        {isZh ? "返回首页" : "Back to Home"}
       </LinkButton>
     </div>
   </main>
 
-  <Footer />
+  <Footer {lang} />
 </Layout>

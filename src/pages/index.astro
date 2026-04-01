@@ -1,13 +1,14 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { DEFAULT_LOCALE } from "@/i18n";
 ---
 
 <Layout title="Redirecting...">
-  <meta http-equiv="refresh" content="0; url=/about/" />
-  <script>
-    window.location.href = "/about/";
+  <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LOCALE}/`} />
+  <script is:inline define:vars={{ DEFAULT_LOCALE }}>
+    window.location.href = `/${DEFAULT_LOCALE}/`;
   </script>
   <div class="flex min-h-[50vh] items-center justify-center">
-    <p>Redirecting to <a href="/about/">About</a> page...</p>
+    <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>Home</a> page...</p>
   </div>
 </Layout>

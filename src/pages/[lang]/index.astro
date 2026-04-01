@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { LOCALES, type Locale } from "@/i18n";
+
+export async function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+---
+
+<Layout title="Redirecting...">
+  <meta http-equiv="refresh" content={`0; url=/${lang}/about/`} />
+  <script is:inline define:vars={{ lang }}>
+    window.location.href = `/${lang}/about/`;
+  </script>
+  <div class="flex min-h-[50vh] items-center justify-center">
+    <p>Redirecting to <a href={`/${lang}/about/`}>About</a> page...</p>
+  </div>
+</Layout>

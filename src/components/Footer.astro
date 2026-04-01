@@ -1,14 +1,16 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
+import type { Locale } from "@/i18n";
 
 const currentYear = new Date().getFullYear();
 
 type Props = {
   noMarginTop?: boolean;
+  lang?: Locale;
 } & HTMLAttributes<"footer">;
 
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+const { noMarginTop = false, lang = "zh-CN", class: className, ...attrs } = Astro.props;
 ---
 
 <footer
@@ -26,7 +28,7 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
     <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
       <span>Copyright &#169; {currentYear}</span>
       <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <a href="/privacy/" class="link">Privacy Policy</a>
+      <a href={`/${lang}/privacy/`} class="link">Privacy Policy</a>
     </div>
   </div>
 </footer>

@@ -8,12 +8,13 @@ import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import { SITE } from "@/config";
+import type { Locale } from "@/i18n";
 
-export const CATEGORIES: Record<string, string> = {
-  // stem: "科学 / 技术 / 产品工程 / 增长工程 / 数学",
-  running: "跑步",
-  psychology: "心理学 / 神经科学",
-  // life: "读书 / 生活",
+export const CATEGORIES: Record<string, Record<Locale, string>> = {
+  // stem: { "zh-CN": "科学 / 技术 / 产品工程 / 增长工程 / 数学", en: "STEM" },
+  running: { "zh-CN": "跑步", en: "Running" },
+  psychology: { "zh-CN": "心理学 / 神经科学", en: "Psychology / Neuroscience" },
+  // life: { "zh-CN": "读书 / 生活", en: "Reading / Life" },
 };
 
 interface Social {

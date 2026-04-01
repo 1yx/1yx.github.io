@@ -1,0 +1,51 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { getLangFromId } from "@/utils/getLangFromId";
+import { SITE } from "@/config";
+import { CATEGORIES } from "@/constants";
+import { LOCALES, t, type Locale } from "@/i18n";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+
+  return LOCALES.flatMap(lang =>
+    Object.keys(CATEGORIES).flatMap(category => {
+      const posts = allPosts.filter(
+        post =>
+          getLangFromId(post.id) === lang &&
+          (post.data.category || "life") === category
+      );
+      return paginate(getSortedPosts(posts), {
+        params: { lang, category },
+        pageSize: SITE.postPerPage,
+      });
+    })
+  );
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const { category, lang } = Astro.params as { category: string; lang: Locale };
+const categoryName = CATEGORIES[category]?.[lang] || category;
+const ui = t(lang);
+---
+
+<Layout title={`${categoryName} | ${SITE.title}`}>
+  <Header {lang} />
+  <Main pageTitle={categoryName} pageDesc={ui.categoryDesc(categoryName)}>
+    <ul>
+      {page.data.map((data: any) => <Card {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} {lang} />
+</Layout>

@@ -5,16 +5,23 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
+import { LOCALES, t, type Locale } from "@/i18n";
 
-const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
+export async function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : `/${lang}/`;
+const ui = t(lang);
 ---
 
-<Layout title={`Search | ${SITE.title}`}>
-  <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
+<Layout title={`${ui.search.title} | ${SITE.title}`}>
+  <Header {lang} />
+  <Main pageTitle={ui.search.title} pageDesc={ui.search.desc}>
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
   </Main>
-  <Footer />
+  <Footer {lang} />
 </Layout>
 
 <script>
@@ -32,7 +39,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Display warning inn dev mode
+      // Display warning in dev mode
       if (import.meta.env.DEV) {
         pageFindSearch.innerHTML = `
             <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
@@ -48,8 +55,8 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
-          params.set("q", term); // Update the `q` parameter in the URL
-          history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
+          params.set("q", term);
+          history.replaceState(history.state, "", "?" + params.toString());
 
           const backUrl = pageFindSearch?.dataset?.backurl;
           sessionStorage.setItem("backUrl", backUrl + "?" + params.toString());
@@ -80,10 +87,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
   document.addEventListener("astro:after-swap", () => {
     const pagefindSearch = document.querySelector("#pagefind-search");
-
-    // if pagefind search form already exists, don't initialize search component
     if (pagefindSearch && pagefindSearch.querySelector("form")) return;
-
     initSearch();
   });
   initSearch();

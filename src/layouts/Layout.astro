@@ -17,6 +17,7 @@ type Props = {
   modDatetime?: Date | null;
   scrollSmooth?: boolean;
   noindex?: boolean;
+  lang?: string;
 };
 
 const {
@@ -30,7 +31,10 @@ const {
   modDatetime,
   scrollSmooth = false,
   noindex = false,
+  lang: langProp,
 } = Astro.props;
+
+const currentLang = langProp || Astro.currentLocale || SITE.lang;
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
@@ -54,7 +58,7 @@ const structuredData = {
 <!doctype html>
 <html
   dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
+  lang={currentLang}
   class={`${scrollSmooth && "scroll-smooth"}`}
 >
   <head>
