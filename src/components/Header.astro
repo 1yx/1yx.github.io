@@ -72,39 +72,29 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href="/tech" class:list={{ "active-nav": isActive("/tech") }}>
-            Tech
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a href="/running" class:list={{ "active-nav": isActive("/running") }}>
+          <a href="/running/" class:list={{ "active-nav": isActive("/running") }}>
             Running
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/psychology" class:list={{ "active-nav": isActive("/psychology") }}>
+          <a href="/psychology/" class:list={{ "active-nav": isActive("/psychology") }}>
             Psychology
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/life" class:list={{ "active-nav": isActive("/life") }}>
-            Life
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
+          <a href="/tags/" class:list={{ "active-nav": isActive("/tags") }}>
             Tags
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
+          <a href="/about/" class:list={{ "active-nav": isActive("/about") }}>
             About
           </a>
         </li>
         {/* Search temporarily disabled */}
         {/* <li class="col-span-1 flex items-center justify-center">
           <LinkButton
-            href="/search"
+            href="/search/"
             class:list={[
               "focus-outline flex p-3 sm:p-1 hover:rotate-6",
               { "[&>svg]:stroke-accent": isActive("/search") },
