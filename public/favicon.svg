@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <style>
-        text { fill: currentColor; }
-    </style>
     <g id="Layer1" transform="matrix(2.133848,0.163968,-0.163968,2.133848,112.701188,-1193.317083)">
         <g transform="matrix(0.648484,-0.04983,-0.072403,0.657877,-42.584551,444.299637)">
-            <text x="165px" y="899px" style="font-family:'Helvetica-Oblique', 'Helvetica';font-style:italic;font-size:1146.154px;">L</text>
+            <text x="165px" y="899px" fill="currentColor" style="font-family:'Helvetica-Oblique', 'Helvetica';font-style:italic;font-size:1146.154px;">L</text>
         </g>
         <g transform="matrix(1,0,0,1,-352,-20)">
             <path d="M566,918L546,923L533,897L517,877L503,845L498,831L497,815L526,785L536,797L539,799L554,788L569,818L534,833L530,834L547,860L550,878L566,918" style="fill:rgb(227,202,186);"/>
