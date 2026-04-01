@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
-import type { Locale } from "@/i18n";
+import { getLocalePath, type Locale } from "@/i18n";
 
 const currentYear = new Date().getFullYear();
 
@@ -28,7 +28,7 @@ const { noMarginTop = false, lang = "zh-CN", class: className, ...attrs } = Astr
     <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
       <span>Copyright &#169; {currentYear}</span>
       <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <a href={`/${lang}/privacy/`} class="link">Privacy Policy</a>
+      <a href={getLocalePath(lang, "privacy/")} class="link">Privacy Policy</a>
     </div>
   </div>
 </footer>

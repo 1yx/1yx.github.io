@@ -11,6 +11,22 @@ export function isLocale(value: string): value is Locale {
   return LOCALES.includes(value as Locale);
 }
 
+/** Generate a locale-aware path. Default locale (zh-CN) has no prefix, others get /en/ etc. */
+export function getLocalePath(lang: Locale, path: string): string {
+  const p = path.startsWith("/") ? path.slice(1) : path;
+  if (lang === DEFAULT_LOCALE) return `/${p}`;
+  return `/${lang}/${p}`;
+}
+
+/** Strip the locale prefix from a pathname. "/en/running/" → "/running/", "/running/" → "/running/" */
+export function removeLocalePrefix(pathname: string): string {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length > 0 && isLocale(segments[0])) {
+    return "/" + segments.slice(1).join("/") + (pathname.endsWith("/") ? "/" : "");
+  }
+  return pathname;
+}
+
 // Tag translations: canonical English ID → display name per locale
 export const TAG_TRANSLATIONS = {
   marathon: { "zh-CN": "马拉松比赛", en: "Marathon Race" },

@@ -1,7 +1,7 @@
 ---
 import IconLanguage from "@/assets/icons/IconLanguage.svg";
 import IconLanguageOff from "@/assets/icons/IconLanguageOff.svg";
-import { getOtherLocale, LOCALES, type Locale } from "@/i18n";
+import { getOtherLocale, DEFAULT_LOCALE, type Locale } from "@/i18n";
 
 interface Props {
   lang: Locale;
@@ -13,7 +13,7 @@ const { lang, targetUrl, translationExists = false } = Astro.props;
 const otherLang = getOtherLocale(lang);
 
 // If targetUrl is explicitly provided, use it (e.g. blog posts with different slugs)
-// Otherwise, derive from current URL by swapping the locale segment
+// Otherwise, derive from current URL by adding/removing the /en/ prefix
 let href: string;
 if (targetUrl) {
   href = targetUrl;
@@ -21,16 +21,22 @@ if (targetUrl) {
   const { pathname } = Astro.url;
   const pathWithoutTrailing = pathname.replace(/\/+$/, "");
   const segments = pathWithoutTrailing.split("/").filter(Boolean);
-  // Replace first segment if it's a locale
-  if (LOCALES.includes(segments[0] as Locale)) {
-    segments[0] = otherLang;
+
+  if (lang === DEFAULT_LOCALE) {
+    // Chinese → English: add /en/ prefix
+    const path = segments.join("/");
+    href = path ? `/en/${path}/` : "/en/";
+  } else {
+    // English → Chinese: remove /en/ prefix
+    const path = segments.slice(1).join("/");
+    href = path ? `/${path}/` : "/";
   }
-  href = "/" + segments.join("/") + "/";
 }
 ---
 
 <a
   href={href}
+  onclick={`localStorage.setItem("lang","${otherLang}")`}
   class:list={[
     "focus-outline inline-flex items-center justify-center p-3 sm:p-1",
     "hover:rotate-6 hover:[&>svg]:stroke-accent-hover",

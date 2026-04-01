@@ -68,7 +68,7 @@ export default defineConfig({
     defaultLocale: "zh-CN",
     locales: [...LOCALES],
     routing: {
-      prefixDefaultLocale: true,
+      prefixDefaultLocale: false,
     },
   },
   integrations: [

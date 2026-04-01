@@ -1,0 +1,66 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n";
+
+const lang: Locale = DEFAULT_LOCALE;
+---
+
+<Layout title="隐私政策与免责声明 | Lyx's blog">
+  <Header {lang} />
+  <Breadcrumb {lang} />
+  <main id="main-content" class="app-layout">
+    <section id="privacy" class="app-prose mb-28 max-w-app prose-img:border-0">
+      <>
+        <h1 class="text-2xl tracking-wider sm:text-3xl">隐私政策与免责声明</h1>
+        <p>欢迎访问我的个人博客（iamlyx.com）。作为一名创作者，我深知数据隐私的重要性。本页面旨在透明地向您说明本站如何处理访客数据，以及本站内容的免责条款。</p>
+
+        <h2>隐私政策</h2>
+        <p>本着"最小化数据采集"的原则，本站致力于为您提供一个干净、无追踪的阅读环境。</p>
+
+        <h3>1. 网站统计与分析</h3>
+        <p>本站 <strong>不使用</strong> 任何侵入式的第三方追踪代码（如 Google Analytics），也 <strong>不使用</strong> 任何追踪性 Cookie 来记录您的互联网行为。因此，您在本站不会看到烦人的 Cookie 同意弹窗。</p>
+        <p>本站的访问流量统计由 <strong>Cloudflare Web Analytics</strong> 提供。这是一款极其注重隐私的分析工具，它仅收集以下匿名的聚合数据，用于评估网站的运行健康度：</p>
+        <ul>
+          <li>页面访问量 (PV) 与独立访客数 (UV)</li>
+          <li>访客的粗略地理位置（国家/地区级别）</li>
+          <li>浏览器类型与设备类型</li>
+          <li>页面加载性能核心指标 (Core Web Vitals)</li>
+        </ul>
+        <p>这些数据无法用于识别您的个人身份，也不会与任何第三方共享用于广告营销。</p>
+
+        <h3>2. 服务器日志</h3>
+        <p>本站托管于 GitHub Pages，并由 Cloudflare 提供 CDN 加速与安全防护。为了保障服务器的稳定运行和防御恶意攻击（如 DDoS），这些基础服务提供商可能会在网络边缘节点自动记录标准的服务器日志（可能包含 IP 地址、访问时间、User-Agent 等）。这些日志仅出于网络安全目的短期保留。</p>
+
+        <h3>3. 第三方链接</h3>
+        <p>本博客的文章中可能会包含指向其他第三方网站的链接（如 GitHub 仓库、官方文档或其他博客）。当您点击这些链接离开本站后，您的隐私将受该第三方网站隐私政策的约束，本站对其隐私做法不承担责任。</p>
+
+        <hr />
+
+        <h2>免责声明</h2>
+
+        <h3>1. 内容时效性与准确性</h3>
+        <p>本博客的所有内容（包括技术教程、代码片段、软件配置指南以及个人训练经验分享等）仅代表作者在撰写当时的个人认知与实践总结。</p>
+        <p>技术领域发展迅速，框架和工具的 API 随时可能发生破坏性变更。我无法保证文章中的代码、命令或配置在您阅读时依然绝对准确或有效。<strong>请在生产环境或实际应用中，自行验证相关内容的适用性和安全性。</strong></p>
+
+        <h3>2. 风险自担 (As-Is)</h3>
+        <p>本站提供的所有信息均按"原样 (As-Is)"提供，不作任何形式的明示或暗示保证。因参考、使用或执行本博客中的内容、代码或建议而导致的任何直接、间接的数据丢失、设备损坏或身体损伤，本站及作者概不负责。</p>
+
+        <h3>3. 个人立场</h3>
+        <p>本博客为个人性质，所有文章的观点和立场均仅代表我个人，与我目前或曾经任职的任何组织、雇主或公司无关。</p>
+
+        <h3>4. 知识产权</h3>
+        <p>除特别标注外，本站的原创文章与内容均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)</a> 许可协议进行许可。转载请<strong>务必</strong>保留原文链接与作者署名。</p>
+
+        <hr />
+
+        <h2>联系方式</h2>
+        <p>如果您对本站的隐私政策或内容有任何疑问，请通过 <a href="https://github.com/1yx/1yx.github.io/issues/new">GitHub Issues</a> 与我联系。</p>
+        <p><em>最后更新时间：2026年3月31日</em></p>
+      </>
+    </section>
+  </main>
+  <Footer {lang} />
+</Layout>

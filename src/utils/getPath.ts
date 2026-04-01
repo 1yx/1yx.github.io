@@ -1,7 +1,7 @@
 import { BLOG_PATH } from "@/content.config";
 import { slugifyStr } from "./slugify";
 import { getLangFromId } from "./getLangFromId";
-import { isLocale } from "@/i18n";
+import { getLocalePath, isLocale } from "@/i18n";
 
 /**
  * Get full path of a blog post
@@ -9,7 +9,7 @@ import { isLocale } from "@/i18n";
  * @param filePath - the blog post full file location
  * @param includeBase - whether to include base path in return value
  * @param category - optional category override for the base path
- * @returns blog post path (e.g. "/zh-CN/running/my-article/")
+ * @returns blog post path (e.g. "/running/my-article/" for zh-CN, "/en/running/my-article/" for en)
  */
 export function getPath(
   id: string,
@@ -29,7 +29,7 @@ export function getPath(
     .slice(category ? 1 : 0) // remove category segment (already in basePath)
     .map(segment => slugifyStr(segment));
 
-  const basePath = includeBase ? `/${lang}/${category || "posts"}` : "";
+  const basePath = includeBase ? getLocalePath(lang, `${category || "posts"}`) : "";
 
   // Making sure `id` does not contain the directory
   const blogId = id.split("/");

@@ -1,35 +1,54 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import { LOCALES, DEFAULT_LOCALE, isLocale } from "@/i18n";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import { LOCALES, DEFAULT_LOCALE, t } from "@/i18n";
+import { SITE } from "@/config";
+import getPostsByLang from "@/utils/getPostsByLang";
+import avatar from "@/assets/images/avatar.png";
+
+const lang = DEFAULT_LOCALE;
+const ui = t(lang);
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const posts = getPostsByLang(allPosts, lang);
 ---
 
-<Layout title="Redirecting...">
+<Layout title={`${SITE.title}`}>
+  <Header {lang} />
   <script is:inline>
-    (function () {
-      // 1. Check localStorage for saved preference
-      const saved = localStorage.getItem("lang");
-      if (saved) {
-        window.location.href = `/${saved}/`;
-        return;
-      }
-
-      // 2. Detect browser language
-      const browserLangs = navigator.languages || [navigator.language];
-      for (const bl of browserLangs) {
-        if (bl.startsWith("zh")) {
-          window.location.href = "/zh-CN/";
-          return;
+    (function() {
+      var saved = localStorage.getItem("lang");
+      if (saved === null) {
+        var nav = navigator.language || "";
+        if (!nav.startsWith("zh")) {
+          localStorage.setItem("lang", "en");
+          location.replace("/en/");
         }
+      } else if (saved === "en") {
+        location.replace("/en/");
       }
-
-      // 3. Fallback to default
-      window.location.href = `/${"en"}/`;
     })();
   </script>
-  <noscript>
-    <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LOCALE}/`} />
-  </noscript>
-  <div class="flex min-h-[50vh] items-center justify-center">
-    <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>Home</a> page...</p>
-  </div>
+  <main id="main-content" class="app-layout mb-16">
+    <section class="flex flex-col items-center pt-12 pb-16">
+      <img
+        src={avatar.src}
+        alt="Lyx"
+        class="h-44 w-44 rounded-full object-cover sm:h-56 sm:w-56 transition-transform duration-300 ease-out hover:translate-x-[10px] hover:rotate-[5deg]"
+      />
+      <h1 class="mt-6 text-2xl font-semibold sm:text-3xl">{SITE.author}</h1>
+      <p class="mt-3 text-center text-sm opacity-70 sm:text-base">
+        马拉松跑者，程序员
+      </p>
+    </section>
+
+    <section>
+      <ul>
+        {posts.map(data => <Card {...data} />)}
+      </ul>
+    </section>
+  </main>
+  <Footer noMarginTop={false} {lang} />
 </Layout>

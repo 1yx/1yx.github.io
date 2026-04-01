@@ -11,28 +11,28 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import { getLangFromId } from "@/utils/getLangFromId";
 import { SITE } from "@/config";
 import { CATEGORIES } from "@/constants";
-import { LOCALES, DEFAULT_LOCALE, t, type Locale } from "@/i18n";
+import { DEFAULT_LOCALE, t, type Locale } from "@/i18n";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+  const lang: Locale = DEFAULT_LOCALE;
 
-  return LOCALES.filter(l => l !== DEFAULT_LOCALE).flatMap(lang =>
-    Object.keys(CATEGORIES).flatMap(category => {
-      const posts = allPosts.filter(
-        post =>
-          getLangFromId(post.id) === lang &&
-          (post.data.category || "life") === category
-      );
-      return paginate(getSortedPosts(posts), {
-        params: { lang, category },
-        pageSize: SITE.postPerPage,
-      });
-    })
-  );
+  return Object.keys(CATEGORIES).flatMap(category => {
+    const posts = allPosts.filter(
+      post =>
+        getLangFromId(post.id) === lang &&
+        (post.data.category || "life") === category
+    );
+    return paginate(getSortedPosts(posts), {
+      params: { category },
+      pageSize: SITE.postPerPage,
+    });
+  });
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
-const { category, lang } = Astro.params as { category: string; lang: Locale };
+const { category } = Astro.params as { category: string };
+const lang: Locale = DEFAULT_LOCALE;
 const categoryName = CATEGORIES[category]?.[lang] || category;
 const ui = t(lang);
 ---

@@ -5,13 +5,9 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
-import { LOCALES, DEFAULT_LOCALE, t, getLocalePath, type Locale } from "@/i18n";
+import { DEFAULT_LOCALE, t, getLocalePath, type Locale } from "@/i18n";
 
-export async function getStaticPaths() {
-  return LOCALES.filter(l => l !== DEFAULT_LOCALE).map(lang => ({ params: { lang } }));
-}
-
-const { lang } = Astro.params as { lang: Locale };
+const lang: Locale = DEFAULT_LOCALE;
 const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : getLocalePath(lang, "");
 const ui = t(lang);
 ---

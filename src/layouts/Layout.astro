@@ -143,14 +143,6 @@ const structuredData = {
 
     <ClientRouter />
 
-    <!-- Save current lang to localStorage (only on locale pages, not root redirect) -->
-    <script is:inline define:vars={{ currentLang }}>
-      const seg = window.location.pathname.split("/").filter(Boolean)[0];
-      if (seg && seg === currentLang) {
-        localStorage.setItem("lang", currentLang);
-      }
-    </script>
-
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
     <script is:inline>
       (function () {
