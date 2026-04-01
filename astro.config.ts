@@ -52,7 +52,6 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: page => !["/tech/", "/life/"].some(p => page.endsWith(p)),
       serialize(item) {
         const lastmod = getGitLastMod(item.url);
         if (lastmod) item.lastmod = lastmod;

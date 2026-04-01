@@ -9,6 +9,13 @@ import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import { SITE } from "@/config";
 
+export const CATEGORIES: Record<string, string> = {
+  // stem: "科学 / 技术 / 产品工程 / 增长工程 / 数学",
+  running: "跑步",
+  psychology: "心理学 / 神经科学",
+  // life: "读书 / 生活",
+};
+
 interface Social {
   name: string;
   href: string;

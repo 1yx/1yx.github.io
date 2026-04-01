@@ -9,32 +9,21 @@ import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
+import { CATEGORIES } from "@/constants";
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const CATEGORIES: Record<string, string> = {
-    tech: "技术 / 产品 / 增长",
-    running: "跑步",
-    psychology: "心理学",
-    life: "读书与生活",
-  };
-
   const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 
   return Object.keys(CATEGORIES).flatMap(category => {
-    const posts = allPosts.filter(post => (post.data.category || "life") === category);
+    const posts = allPosts.filter(
+      post => (post.data.category || "life") === category
+    );
     return paginate(getSortedPosts(posts), {
       params: { category },
       pageSize: SITE.postPerPage,
     });
   });
 }) satisfies GetStaticPaths;
-
-const CATEGORIES: Record<string, string> = {
-  tech: "技术 / 产品 / 增长",
-  running: "跑步",
-  psychology: "心理学",
-  life: "读书与生活",
-};
 
 const { page } = Astro.props;
 const { category } = Astro.params;
