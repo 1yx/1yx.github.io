@@ -29,7 +29,7 @@ export const SOCIALS: Social[] = [
   {
     name: "Strava",
     href: "https://www.strava.com/athletes/84101234",
-    linkTitle: `${SITE.owner} on Strava`,
+    linkTitle: "Running Log on Strava",
     icon: IconBrandStrava,
   },
   {
