@@ -148,7 +148,8 @@ if (schemaType && schemaData && !noindex) {
       href={new URL("rss.xml", Astro.site)}
     />
 
-    <meta name="theme-color" content="" />
+    <!-- Theme color - will be dynamically updated by theme.ts based on actual theme -->
+    <meta name="theme-color" content="#ffffff" />
 
     {
       // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,
@@ -164,7 +165,7 @@ if (schemaType && schemaData && !noindex) {
 
     <ClientRouter />
 
-    <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
+    <!-- Minimal inline script to prevent FOUC - sets theme and theme-color immediately -->
     <script is:inline>
       (function () {
         const initialColorScheme = ""; // "light" | "dark"
@@ -182,6 +183,13 @@ if (schemaType && schemaData && !noindex) {
 
         // Set theme immediately to prevent flash
         document.firstElementChild?.setAttribute("data-theme", themeValue);
+
+        // Set initial theme-color based on detected theme
+        const initialThemeColor = themeValue === "dark" ? "#1e1e2e" : "#ffffff";
+        const themeColorMeta = document.querySelector("meta[name='theme-color']");
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute("content", initialThemeColor);
+        }
 
         // Export minimal API for external script
         window.theme = {

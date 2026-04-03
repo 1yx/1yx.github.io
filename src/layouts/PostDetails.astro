@@ -79,9 +79,10 @@ const langTargetUrl = otherLangPost
 
 // Build alternate languages for hreflang
 const alternateLanguages = (() => {
+  const postUrl = getPath(post.id, post.filePath, true, category);
   const altLangs: { lang: string; href: string }[] = [];
   if (lang === "zh-CN") {
-    altLangs.push({ lang: "zh-CN", href: canonicalURL || "https://iamlyx.com/" });
+    altLangs.push({ lang: "zh-CN", href: canonicalURL || `https://iamlyx.com${postUrl}` });
     if (translationExists && langTargetUrl) {
       altLangs.push({ lang: "en", href: `https://iamlyx.com${langTargetUrl}` });
     }
@@ -89,7 +90,7 @@ const alternateLanguages = (() => {
     if (translationExists && langTargetUrl) {
       altLangs.push({ lang: "zh-CN", href: `https://iamlyx.com${langTargetUrl}` });
     }
-    altLangs.push({ lang: "en", href: canonicalURL || "https://iamlyx.com/en/" });
+    altLangs.push({ lang: "en", href: canonicalURL || `https://iamlyx.com${postUrl}` });
   }
   return altLangs.length >= 2 ? altLangs : undefined;
 })();
