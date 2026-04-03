@@ -5,11 +5,17 @@ import { SITE } from "@/config";
 import "@/styles/global.css";
 import "katex/dist/katex.min.css";
 import SvgFilters from "@/components/SvgFilters.astro";
+import { buildSchema, type SchemaType } from "@/utils/schema";
+import type { Locale } from "@/i18n";
+
+interface AlternateLanguage {
+  lang: string;
+  href: string;
+}
 
 type Props = {
   title?: string;
   author?: string;
-  profile?: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
@@ -18,12 +24,15 @@ type Props = {
   scrollSmooth?: boolean;
   noindex?: boolean;
   lang?: string;
+  schemaType?: SchemaType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schemaData?: Record<string, any>;
+  alternateLanguages?: AlternateLanguage[];
 };
 
 const {
   title = SITE.title,
   author = SITE.author,
-  profile = SITE.profile,
   description = SITE.desc,
   ogImage = SITE.ogImage ? `/${SITE.ogImage}` : "/og.png",
   canonicalURL = new URL(Astro.url.pathname, Astro.url),
@@ -32,27 +41,23 @@ const {
   scrollSmooth = false,
   noindex = false,
   lang: langProp,
+  schemaType,
+  schemaData,
+  alternateLanguages,
 } = Astro.props;
 
-const currentLang = langProp || Astro.currentLocale || SITE.lang;
+const currentLang = (langProp || Astro.currentLocale || SITE.lang) as Locale;
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: `${title}`,
-  image: `${socialImageURL}`,
-  datePublished: `${pubDatetime?.toISOString()}`,
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
-};
+// Build structured data based on page type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let structuredData: Record<string, any> | undefined;
+
+if (schemaType && schemaData && !noindex) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  structuredData = buildSchema(schemaType as any, schemaData as any);
+}
 ---
 
 <!doctype html>
@@ -75,6 +80,22 @@ const structuredData = {
     <meta name="description" content={description} />
     <meta name="author" content={author} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Hreflang tags for bilingual pages -->
+    {
+      alternateLanguages && alternateLanguages.length > 0 && (
+        <>
+          {alternateLanguages.map(({ lang: hreflang, href }) => (
+            <link rel="alternate" hreflang={hreflang} href={href} />
+          ))}
+          <link
+            rel="alternate"
+            hreflang="x-default"
+            href={alternateLanguages.find(al => al.lang === "zh-CN")?.href || alternateLanguages[0].href}
+          />
+        </>
+      )
+    }
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />
@@ -109,7 +130,7 @@ const structuredData = {
 
     <!-- Google JSON-LD Structured data -->
     {
-      !noindex && (
+      structuredData && (
         <script
           type="application/ld+json"
           is:inline

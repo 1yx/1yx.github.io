@@ -12,7 +12,25 @@ export async function getStaticPaths() {
 const { lang } = Astro.params as { lang: Locale };
 ---
 
-<Layout title={`About | Lyx's blog`}>
+<Layout
+  title={`About | Lyx's blog`}
+  description={lang === "zh-CN" ? "关于 Lyx — 北京马拉松跑者（PB 2:50）、程序员的个人介绍与写作历程。" : "About Lyx — a Beijing-based marathoner (PB 2:50) and programmer."}
+  schemaType="Person"
+  schemaData={{
+    url: `https://iamlyx.com/${lang === "zh-CN" ? "" : `${lang}/`}about/`,
+    jobTitle: "Programmer",
+    knowsAbout: ["Marathon Running", "Software Engineering", "Psychology"],
+    sameAs: [
+      "https://www.strava.com/athletes/84101234",
+      "https://github.com/1yx",
+      "https://x.com/onewhyaxe",
+    ],
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: "https://iamlyx.com/about/" },
+    { lang: "en", href: "https://iamlyx.com/en/about/" },
+  ]}
+>
   <Header {lang} />
   <Breadcrumb {lang} />
   <main id="main-content" class="app-layout">

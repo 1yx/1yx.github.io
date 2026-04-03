@@ -16,7 +16,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : getLocalePath(la
 const ui = t(lang);
 ---
 
-<Layout title={`${ui.search.title} | ${SITE.title}`}>
+<Layout title={`${ui.search.title} | ${SITE.title}`} noindex>
   <Header {lang} />
   <Main pageTitle={ui.search.title} pageDesc={ui.search.desc} {lang}>
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>

@@ -33,3 +33,7 @@ public/pagefind/
 
 # OpenSpec
 openspec/
+
+# Claude Code
+.claude/
+CLAUDE.md

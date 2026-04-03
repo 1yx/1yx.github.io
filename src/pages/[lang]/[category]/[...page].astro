@@ -37,7 +37,20 @@ const categoryName = CATEGORIES[category]?.[lang] || category;
 const ui = t(lang);
 ---
 
-<Layout title={`${categoryName} | ${SITE.title}`}>
+<Layout
+  title={`${categoryName} | ${SITE.title}`}
+  description={ui.categoryDesc(categoryName)}
+  schemaType="CollectionPage"
+  schemaData={{
+    name: categoryName,
+    url: new URL(page.url.current, SITE.website).href,
+    description: ui.categoryDesc(categoryName),
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: new URL(page.url.current.replace(`/${lang}`, ""), SITE.website).href },
+    { lang: "en", href: new URL(page.url.current, SITE.website).href },
+  ]}
+>
   <Header {lang} />
   <Main pageTitle={categoryName} pageDesc={ui.categoryDesc(categoryName)} {lang}>
     <ul>

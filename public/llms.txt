@@ -1,0 +1,26 @@
+# Lyx's blog
+> A marathoner, a programmer's personal blog by Lyx (Liu Yu Xuan). Topics: marathon running, psychology, programming.
+
+## About the Author
+- Name: Lyx (Liu Yu Xuan)
+- Location: Beijing, China
+- Marathon PB: 2:50
+- Profiles: https://www.strava.com/athletes/84101234 | https://github.com/1yx | https://x.com/onewhyaxe
+
+## Content Categories
+- /running/ — Marathon training logs, race reports, running philosophy
+- /psychology/ — Psychology essays, self-esteem, neuroscience
+
+## Pages
+- [Homepage](https://iamlyx.com/): Blog index with latest posts
+- [English Homepage](https://iamlyx.com/en/): English version of the blog
+- [About](https://iamlyx.com/about/): Personal introduction
+- [Running](https://iamlyx.com/running/): All running-related posts
+- [Psychology](https://iamlyx.com/psychology/): All psychology-related posts
+- [Tags](https://iamlyx.com/tags/): All post tags
+- [RSS Feed](https://iamlyx.com/rss.xml): Full RSS feed
+- [Privacy Policy](https://iamlyx.com/privacy/): Privacy and disclaimer
+
+## Blog Posts
+- [2026 无锡马拉松：赛事实录](https://iamlyx.com/running/2026_wuxi_marathon_race_log/): 2026 Wuxi Marathon race log — 2:54 finish, training review and race details
+- [当我们不再去考虑自尊时，自尊反而获得了鲁棒性](https://iamlyx.com/psychology/self-esteem-robustness/): Essay on self-esteem robustness — from Michael Kernis to cybernetic perspective

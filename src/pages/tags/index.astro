@@ -15,7 +15,20 @@ const tags = getUniqueTags(posts, lang);
 const ui = t(lang);
 ---
 
-<Layout title={`${ui.tags.title} | ${SITE.title}`}>
+<Layout
+  title={`${ui.tags.title} | ${SITE.title}`}
+  description={ui.tags.desc}
+  schemaType="CollectionPage"
+  schemaData={{
+    name: ui.tags.title,
+    url: `https://iamlyx.com/tags/`,
+    description: ui.tags.desc,
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: "https://iamlyx.com/tags/" },
+    { lang: "en", href: "https://iamlyx.com/en/tags/" },
+  ]}
+>
   <Header {lang} />
   <Main pageTitle={ui.tags.title} pageDesc={ui.tags.desc} {lang}>
     <ul class="flex flex-wrap gap-6">

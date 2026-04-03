@@ -74,6 +74,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      filter: (page) => !page.includes("/zh-CN/"),
       serialize(item) {
         const lastmod = getGitLastMod(item.url);
         if (lastmod) item.lastmod = lastmod;

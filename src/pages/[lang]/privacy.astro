@@ -12,7 +12,19 @@ export async function getStaticPaths() {
 const { lang } = Astro.params as { lang: Locale };
 ---
 
-<Layout title={lang === "zh-CN" ? "隐私政策与免责声明 | Lyx's blog" : "Privacy Policy & Disclaimer | Lyx's blog"}>
+<Layout
+  title={lang === "zh-CN" ? "隐私政策与免责声明 | Lyx's blog" : "Privacy Policy & Disclaimer | Lyx's blog"}
+  description={lang === "zh-CN" ? "iamlyx.com 的隐私政策与免责声明：无追踪 Cookie、Cloudflare 匿名统计、内容按原样提供。" : "Privacy policy and disclaimer for iamlyx.com: no tracking cookies, Cloudflare anonymous analytics, content provided as-is."}
+  schemaType="WebPage"
+  schemaData={{
+    name: lang === "zh-CN" ? "隐私政策与免责声明" : "Privacy Policy & Disclaimer",
+    url: `https://iamlyx.com/${lang === "zh-CN" ? "" : `${lang}/`}privacy/`,
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: "https://iamlyx.com/privacy/" },
+    { lang: "en", href: "https://iamlyx.com/en/privacy/" },
+  ]}
+>
   <Header {lang} />
   <Breadcrumb {lang} />
   <main id="main-content" class="app-layout">

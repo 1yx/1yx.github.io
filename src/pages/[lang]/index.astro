@@ -4,22 +4,42 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
-import { LOCALES, DEFAULT_LOCALE, t, type Locale } from "@/i18n";
+import { LOCALES, DEFAULT_LOCALE, type Locale } from "@/i18n";
 import { SITE } from "@/config";
 import getPostsByLang from "@/utils/getPostsByLang";
-import avatar from "@/assets/images/avatar.png";
+import avatar from "@/assets/images/avatar.webp";
 
 export async function getStaticPaths() {
   return LOCALES.filter(l => l !== DEFAULT_LOCALE).map(lang => ({ params: { lang } }));
 }
 
 const { lang } = Astro.params as { lang: Locale };
-const ui = t(lang);
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const posts = getPostsByLang(allPosts, lang);
+
+const baseUrl = SITE.website.replace(/\/$/, "");
+const canonicalHref = `${baseUrl}/${lang}/`;
+const zhHref = `${baseUrl}/`;
+
+const homepageDesc = lang === "zh-CN"
+  ? "Lyx (Liu Yu Xuan) 的个人博客，分享马拉松训练、心理学思考与编程实践。"
+  : "Lyx (Liu Yu Xuan)'s personal blog — marathon running, psychology, and programming.";
 ---
 
-<Layout title={`${SITE.title}`}>
+<Layout
+  title={`${SITE.title}`}
+  description={homepageDesc}
+  schemaType="WebSite"
+  schemaData={{
+    url: canonicalHref,
+    description: homepageDesc,
+    inLanguage: ["zh-CN", "en"],
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: zhHref },
+    { lang: "en", href: canonicalHref },
+  ]}
+>
   <Header {lang} />
   <main id="main-content" class="app-layout mb-16">
     <!-- Avatar & Bio -->
@@ -27,6 +47,10 @@ const posts = getPostsByLang(allPosts, lang);
       <img
         src={avatar.src}
         alt="Lyx"
+        width={avatar.width}
+        height={avatar.height}
+        fetchpriority="high"
+        decoding="async"
         class="h-44 w-44 rounded-full object-cover sm:h-56 sm:w-56 transition-transform duration-300 ease-out hover:translate-x-[10px] hover:rotate-[5deg]"
       />
       <h1 class="mt-6 text-2xl font-semibold sm:text-3xl">{SITE.author}</h1>

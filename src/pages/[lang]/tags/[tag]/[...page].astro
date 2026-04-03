@@ -36,7 +36,20 @@ const { page, tagName, lang } = Astro.props as { page: any; tagName: string; lan
 const ui = t(lang);
 ---
 
-<Layout title={`${ui.tags.tagLabel} ${tagName} | ${SITE.title}`}>
+<Layout
+  title={`${ui.tags.tagLabel} ${tagName} | ${SITE.title}`}
+  description={ui.tags.tagDesc(tagName)}
+  schemaType="CollectionPage"
+  schemaData={{
+    name: `${ui.tags.tagLabel} ${tagName}`,
+    url: new URL(page.url.current, SITE.website).href,
+    description: ui.tags.tagDesc(tagName),
+  }}
+  alternateLanguages={[
+    { lang: "zh-CN", href: new URL(page.url.current.replace(`/${lang}`, ""), SITE.website).href },
+    { lang: "en", href: new URL(page.url.current, SITE.website).href },
+  ]}
+>
   <Header {lang} />
   <Main
     pageTitle={[ui.tags.tagLabel, `${tagName}`]}

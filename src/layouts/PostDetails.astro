@@ -16,6 +16,8 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import { t, getOtherLocale, getTagDisplayName, type Locale } from "@/i18n";
+import { CATEGORIES } from "@/constants";
+import { buildBreadcrumbSchema } from "@/utils/schema";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -53,24 +55,14 @@ if (typeof initOgImage === "string") {
 
 // Use dynamic OG image if enabled and no explicit ogImage
 if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `${getPath(post.id, post.filePath, true, category)}/index.png`;
+  const postPath = getPath(post.id, post.filePath, true, category).replace(/\/+$/, "");
+  ogImageUrl = `${postPath}/index.png`;
 }
 
 // Resolve OG image URL
 const ogImage = ogImageUrl
   ? new URL(ogImageUrl, Astro.url.origin).href
   : undefined;
-
-const layoutProps = {
-  title: `${title} | ${SITE.title}`,
-  author,
-  description,
-  ogImage,
-  canonicalURL,
-  pubDatetime,
-  modDatetime,
-  lang,
-};
 
 // Check if translation exists for language switcher
 const otherLang = getOtherLocale(lang);
@@ -84,6 +76,52 @@ const translationExists = !!otherLangPost;
 const langTargetUrl = otherLangPost
   ? getPath(otherLangPost.id, otherLangPost.filePath, true, otherLangPost.data.category)
   : undefined;
+
+// Build alternate languages for hreflang
+const alternateLanguages = (() => {
+  const altLangs: { lang: string; href: string }[] = [];
+  if (lang === "zh-CN") {
+    altLangs.push({ lang: "zh-CN", href: canonicalURL || "https://iamlyx.com/" });
+    if (translationExists && langTargetUrl) {
+      altLangs.push({ lang: "en", href: `https://iamlyx.com${langTargetUrl}` });
+    }
+  } else {
+    if (translationExists && langTargetUrl) {
+      altLangs.push({ lang: "zh-CN", href: `https://iamlyx.com${langTargetUrl}` });
+    }
+    altLangs.push({ lang: "en", href: canonicalURL || "https://iamlyx.com/en/" });
+  }
+  return altLangs.length >= 2 ? altLangs : undefined;
+})();
+
+// Build breadcrumb data
+const baseUrl = SITE.website.replace(/\/$/, "");
+const langPrefix = lang === "zh-CN" ? "" : `/${lang}`;
+const breadcrumbData = buildBreadcrumbSchema([
+  { name: lang === "zh-CN" ? "首页" : "Home", href: `${baseUrl}${langPrefix}/` },
+  ...(category ? [{ name: CATEGORIES[category]?.[lang] || category, href: `${baseUrl}${langPrefix}/${category}/` }] : []),
+  { name: title, href: canonicalURL || `${baseUrl}${getPath(post.id, post.filePath, true, category)}` },
+]);
+
+const layoutProps = {
+  title: `${title} | ${SITE.title}`,
+  author,
+  description,
+  ogImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  lang,
+  schemaType: "BlogPosting" as const,
+  schemaData: {
+    headline: title,
+    image: ogImage,
+    datePublished: pubDatetime,
+    dateModified: modDatetime,
+    description: description,
+  },
+  alternateLanguages,
+};
 
 /* ========== Prev/Next Posts ========== */
 
@@ -102,6 +140,7 @@ const nextPost =
 ---
 
 <Layout {...layoutProps}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbData)} />
   <Header {lang} {langTargetUrl} {translationExists} />
   <BackButton />
   <main
