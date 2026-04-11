@@ -52,14 +52,14 @@ html[data-theme="light"] {
 
 /* === Dark Theme === */
 html[data-theme="dark"] {
-  --background: oklch(30% 0 0);           /* charcoal */
+  --background: oklch(24% 0 0);           /* charcoal */
   --foreground: oklch(94% 0 0);           /* paper-light */
   --accent: oklch(65% .18 264);           /* link blue light */
   --accent-hover: oklch(72% .18 264);     /* link hover blue light */
   --muted: oklch(65% 0 0);                /* ash-light */
   --border: oklch(40% 0 0);               /* charcoal-light */
-  --shadow-inner: oklch(35% 0 0);         /* shadow for inner box */
-  --code-inline: #C5E478;                /* night-owl green accent */
+  --shadow-inner: oklch(23% 0 0);         /* shadow for inner box */
+  --code-inline: #D6DEEB;                /* night-owl light text */
   --code-inline-bg: #011627;              /* night-owl background */
 
   /* Apple HIG System Colors */
@@ -95,10 +95,10 @@ html[data-theme="dark"] {
   }
   html {
     @apply overflow-y-scroll scroll-smooth;
-    box-shadow: inset 20px 20px 60px var(--shadow-inner);
   }
   body {
     @apply flex min-h-svh flex-col bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
+    box-shadow: inset 20px 20px 60px var(--shadow-inner);
   }
   a,
   button {
