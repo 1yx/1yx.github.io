@@ -19,7 +19,7 @@ const {
   alt,
   href,
   float = "left",
-  maxWidth = "200px",
+  maxWidth = "xs",
   maxHeight,
   clearFloat = true,
   bleed,
@@ -55,9 +55,27 @@ const spacerStyle = spacerHeight
 
 const clearSide = isFloatDown ? `clear: ${direction};` : "";
 
+// Tailwind max-width lookup — maps suffix to rem value
+const tailwindMaxW: Record<string, string> = {
+  none: "none",
+  xs: "20rem",     // 320px
+  sm: "24rem",     // 384px
+  md: "28rem",     // 448px
+  lg: "32rem",     // 512px
+  xl: "36rem",     // 576px
+  "2xl": "42rem",  // 672px
+  "3xl": "48rem",  // 768px
+  "4xl": "56rem",  // 896px
+  "5xl": "64rem",  // 1024px
+  full: "100%",
+};
+
+const resolved = tailwindMaxW[maxWidth];
+const maxWStyle = `max-width: ${resolved ?? maxWidth};`;
+
 const floatStyle = isFloating
-  ? `float: ${direction}; max-width: ${maxWidth}${maxHeight ? `; max-height: ${maxHeight}` : ""}; ${bleedStyle} ${clearSide}`
-  : `width: 100%${maxHeight ? `; max-height: ${maxHeight}` : ""}; ${bleedStyle}`;
+  ? `float: ${direction}; ${maxWStyle}${maxHeight ? ` max-height: ${maxHeight};` : ""} ${bleedStyle} ${clearSide}`
+  : `width: 100%; ${maxWStyle}${maxHeight ? ` max-height: ${maxHeight};` : ""} ${bleedStyle}`;
 const cropStyle = maxHeight
   ? "overflow: hidden; display: flex; align-items: center;"
   : "";
