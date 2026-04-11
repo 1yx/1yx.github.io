@@ -1,4 +1,4 @@
-{
+# {
   "name": "astro-paper",
   "type": "module",
   "version": "5.5.1",
@@ -47,5 +47,9 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.51.0"
+  }
+  "engines": {
+    "npm": "please-use-pnpm",
+    "pnpm": ">=9.0.0"
   }
 }

@@ -34,6 +34,12 @@ export const TAG_TRANSLATIONS = {
   psychology: { "zh-CN": "心理学", en: "Psychology" },
   "self-esteem": { "zh-CN": "自尊", en: "Self-Esteem" },
   self: { "zh-CN": "自我", en: "Self" },
+  python: { "zh-CN": "Python", en: "Python" },
+  uv: { "zh-CN": "uv", en: "uv" },
+  "package-management": { "zh-CN": "包管理", en: "Package Management" },
+  macos: { "zh-CN": "macOS", en: "macOS" },
+  "ai-agents": { "zh-CN": "AI 代理", en: "AI Agents" },
+  cli: { "zh-CN": "命令行", en: "CLI" },
 } as const;
 
 export type TagId = keyof typeof TAG_TRANSLATIONS;
@@ -44,6 +50,7 @@ const translations = {
     siteTitle: "Lyx 的博客",
     nav: {
       home: "首页",
+      stem: "STEM",
       running: "跑步",
       psychology: "心理学",
       tags: "标签",
@@ -80,6 +87,7 @@ const translations = {
     siteTitle: "Lyx's blog",
     nav: {
       home: "Home",
+      stem: "STEM",
       running: "Running",
       psychology: "Psychology",
       tags: "Tags",

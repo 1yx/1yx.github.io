@@ -1,0 +1,297 @@
+---
+title: "macOS 的影子工具链：为什么 AI 代理总是生成错误的命令"
+description: "macOS 自带 BSD 工具，但 AI 编程代理生成的 GNU 命令会静默失败。包含 4 种修复方案的完整指南、速查表和代码。"
+pubDatetime: 2026-04-11T10:00:00Z
+author: Lyx (Liu Yu Xuan)
+tags:
+  - macos
+  - ai-agents
+  - cli
+draft: false
+featured: false
+category: stem
+---
+
+## 什么是 macOS 的影子工具链？
+
+"影子工具链"是指 macOS 实际自带的 BSD 工具与 AI 代理生成的 GNU 命令之间的隐形错配。在 Mac 上，你的 AI 编程助手活在一个 GNU 工具链的阴影中：它以为你的系统有 GNU 工具，但实际上没有。
+
+如果你在 Mac 上开发，你一定经历过很多次这种情况。你让 AI 助手在项目中做一个全局搜索替换。它执行了 `sed -i 's/old-name/new-name/g' **/*.ts`。命令运行完毕，没有报错。你继续工作。三小时后你才发现，文件里什么都没变，还是 `old-name`。AI 以为成功了，你也以为成功了。但 macOS 的 BSD sed 对这条命令的解读和 Linux 上的 GNU sed 完全不同。
+
+这就是影子工具链在作祟。你的 AI 代理活在 Linux 的世界里，而你活在 macOS 上。这种错配是不可见的——直到它咬你一口。
+
+### 两条 Unix 传统：BSD 与 GNU
+
+几十年前，Unix 分裂为两个竞争性的传统。伯克利软件发行版（BSD）这一支经过 FreeBSD、OpenBSD，最终通过 Apple 的 Darwin 内核进入了 macOS。GNU 项目于 1983 年启动，构建了一套完整的 Unix 兼容工具集，成为了 Linux 发行版的基础。
+
+这两条传统都实现了相同的核心工具：sed、grep、find、date、stat、xargs、awk 等等。但它们独立演化了 40 多年。命令行参数、默认行为、边界情况的处理都已分化。POSIX 标准定义了一个共同的基准线，但 GNU 和 BSD 都通过不兼容的扩展远远超越了 POSIX。
+
+### 为什么 macOS 用 BSD 而不是 GNU
+
+Apple 出于许可证原因选择了 BSD 作为 Darwin（macOS 的 Unix 核心）的用户层工具集。macOS 每台 Mac 都自带 BSD 工具。BSD 许可证是宽松的。而 GNU 工具越来越多地以 GPL v3 发布，这会施加 Apple 一直回避的要求。
+
+因此，macOS 捆绑了老版本的 BSD 工具。这些工具在基本任务上没问题，但缺少在 Linux 世界中已成为标准的 GNU 扩展。
+
+这很重要，因为大多数开发者是从 Linux 资源中学习 shell 命令的：博客文章、Stack Overflow 回答、GitHub README 和文档。这些资源默认使用 GNU 工具。你的肌肉记忆和 AI 助手的训练数据，都是 GNU 风格的。
+
+### 为什么 AI 代理默认使用 GNU
+
+AI 编程代理在生成命令之前不会检查你运行的是什么操作系统。它们根据训练数据进行模式匹配，而训练数据以 Linux 为主。
+
+GitHub 有超过 1 亿个仓库，绝大多数面向 Linux 环境。Stack Overflow 上大约有 1500 万个标记为 `linux` 的问题，而标记为 `macOS` 的只有大约 50 万个。比例是 30 比 1。
+
+当你让 Claude Code 或 Copilot "查找过去一周修改过的所有 TypeScript 文件"时，模型会选择训练数据中最常见的模式：`find . -name "*.ts" -mtime -7 -printf '%f\n'`。`-printf` 参数是 GNU 扩展，在 BSD find 中不存在。这条命令在 macOS 上会报错 `find: -printf: unknown primary`。
+
+脱离具体环境来看，模型本身并没有错——但在你的机器上，它就是错的。
+
+## 命令失败目录：macOS 上的 BSD vs GNU
+
+本节记录了 AI 代理在 macOS 上最常生成的错误命令。建议收藏本表。
+
+| 命令 | GNU 语法（AI 生成的） | BSD 实际（macOS） | 出了什么问题 |
+|------|----------------------|-------------------|-------------|
+| `sed` | `sed -i 's/foo/bar/' file` | `sed -i '' 's/foo/bar/' file` | BSD 将 `'s/foo/bar/'` 解析为备份后缀；创建备份文件，原文件不变 |
+| `date` | `date -d "next Friday" +%F` | 无 `-d` 参数；应使用 `date -j -v+5d` | 报错：`date: illegal option -- d` |
+| `grep` | `grep -P '(?<=prefix)\w+'` | 无 `-P`（Perl 正则）参数 | 报错：`grep: illegal option -- P` |
+| `find` | `find . -printf '%f\n'` | 无 `-printf` 参数 | 报错：`find: -printf: unknown primary` |
+| `readlink` | `readlink -f ./relative/path` | 无 `-f` 参数 | 报错：`readlink: illegal option -- f` |
+| `stat` | `stat -c '%s' file` | `stat -f '%z' file` | 输出错误或报错；格式参数完全不同 |
+| `xargs` | `find . -name "*.log" \| xargs -r rm` | 无 `-r` 参数（空输入不执行） | 报错：`xargs: illegal option -- r` |
+| `sort` | `sort -V file` | 无 `-V`（版本排序）参数 | 报错：`sort: unrecognized option -- V` |
+| `timeout` | `timeout 30 command` | macOS 上不存在此命令 | 报错：`timeout: command not found` |
+| `awk` | GNU awk 扩展（`strftime` 等） | 使用 BSD awk（功能有限） | 微妙的输出差异或报错 |
+| `find -regex` | `-regextype posix-extended -regex` | 在路径前使用 `-E` 参数 | 参数位置错误导致报错 |
+| `tar` | `tar --exclude='*.log'` | `tar --exclude '*.log'`（语法略有不同） | 引号和参数差异 |
+
+### 文本处理失败：sed 和 grep
+
+`sed -i` 问题是 AI 代理触发的最常见的 BSD/GNU 不兼容问题。[Stack Overflow 上关于 sed -i 在 macOS 上失败的经典问题](https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)已积累了超过 25,000 次浏览。
+
+在 GNU sed 中，`sed -i 's/foo/bar/' file` 执行就地替换。在 BSD sed（macOS）中，`-i` 参数需要一个参数：备份后缀。空字符串表示不创建备份。macOS 的正确语法是 `sed -i '' 's/foo/bar/' file`。
+
+当 AI 生成 GNU 版本时，BSD sed 将 `'s/foo/bar/'` 当作备份后缀。它会创建一个以 `s/foo/bar/` 为后缀的备份文件，而原文件完全不变。没有错误消息，没有警告，只有一个静默的空操作。
+
+`grep -P` 的失败至少是显式的。BSD grep 完全不支持 Perl 兼容正则表达式。（关于 BSD 与 GNU 在 grep、strings、sed 和 find 方面的详细技术对比，参见 [PonderTheBits 的深度分析](https://ponderthebits.com/2017/01/know-your-tools-linux-gnu-vs-mac-bsd-command-line-utilities-grep-strings-sed-and-find/)。）AI 生成 `grep -P '(?<=token)\w+'` 来提取特定标记后的文本。
+
+在 macOS 上，你会得到 `illegal option -- P`，什么都不会发生。开发者可能以为只是没有匹配到结果。这是一个危险的假阴性。
+
+### 日期、时间和文件元数据
+
+`date` 命令是一个雷区。GNU date 支持 `-d` 用于人类可读的日期输入：`date -d "next Friday" +%Y-%m-%d`。这在 AI 代理生成的构建脚本、部署流水线和调度逻辑中经常出现。
+
+BSD date 根本没有 `-d` 参数。你需要使用 `date -j -f "%Y-%m-%d" "2026-04-17" +%A` 或 `date -v+5d +%F` 来处理相对日期。
+
+`stat` 命令在 GNU 和 BSD 之间的格式参数完全不同。GNU 使用 `-c` 配合 `%s` 获取文件大小：`stat -c '%s' file`。BSD 使用 `-f` 配合 `%z`：`stat -f '%z' file`。AI 代理在 macOS 上生成 GNU 版本会报错或产生无意义的输出。
+
+### 文件系统和进程控制
+
+`readlink -f` 是一个 GNU 扩展，用于将路径解析为规范的绝对路径形式（跟随符号链接）。macOS 上不存在这个参数。AI 代理在脚本初始化和路径解析中频繁使用它。
+
+解决方法是安装 GNU coreutils（提供 `greadlink`）或使用跨平台的 POSIX 兼容替代方案，如 `cd "$(dirname "$0")" && pwd`。
+
+`timeout` 命令在 macOS 上完全不存在。AI 代理生成 `timeout 30 npm test` 在 macOS 上会得到 `command not found`。你需要 `brew install coreutils` 然后使用 `gtimeout`，或者完全重构命令。
+
+## 为什么 AI 模型会搞错：训练数据与 macOS GNU 工具链
+
+### 训练数据偏差：Linux 占据主导
+
+数字说明了一切。Linux 驱动着超过 90% 的云基础设施。GitHub 上超过 1 亿个仓库中，绝大多数面向 Linux。Stack Overflow 上 1500 万个 Linux 标签问题远超 50 万个 macOS 标签问题。Docker 容器、CI/CD 流水线、服务器配置几乎都是 Linux。
+
+在此数据上训练的 AI 模型形成了对 GNU 语法的压倒性偏好。当模型看到"替换文件中的字符串"时，它激活最常见的模式：`sed -i 's/old/new/'`。这个模式在 Linux 上是正确的，在 macOS 上则是静默错误的。
+
+### 模型不知道你的操作系统
+
+大多数开发者忽略了一个细节：Claude Code 不使用你的交互式 shell。它使用登录会话中 `$SHELL` 环境变量指定的 shell。
+
+在 macOS 上，即使你用 `chsh -s /opt/homebrew/bin/fish` 将登录 shell 改成了 fish，macOS 的登录过程仍然会先设置 `$SHELL=/bin/zsh`。Claude Code 继承这个环境变量，在 zsh 中运行命令，而不是 fish。
+
+这意味着你在 `config.fish` 中做的任何 PATH 修改对 Claude Code 的命令执行环境毫无影响。如果你通过 Homebrew 安装了 GNU 工具，但 gnubin 路径没有出现在 zsh 环境中，AI 代理就看不到这些工具。
+
+这是一个关键且文档不足的陷阱。
+
+### 静默失败 vs 显式错误
+
+最可怕的失败莫过于那些静默发生的错误。当 `sed -i` 看似成功但实际上什么都没做时，你没有任何信号表明出了问题。AI 代理继续执行，以为编辑已应用。你可能在几小时甚至几天后才发现问题——当下游流程因为替换从未发生而崩溃时。
+
+显式错误如 `grep: illegal option -- P` 反而更好，至少你知道有东西失败了。但即使是显式错误也可能误导人。开发者看到 `xargs: illegal option -- r` 可能以为 `-r` 参数只是不支持他的场景于是删掉了它，却不知道 `-r` 的含义是"输入为空时不执行"。现在 `xargs` 会在没有参数的情况下执行命令，这可能导致完全不同的问题。
+
+## 修复方案 1：通过 Homebrew 安装 GNU Coreutils
+
+最简单的修复方法是在 macOS 上安装 GNU 工具，这样 AI 代理生成的命令就能正常工作了。[GNU Coreutils 包](https://www.gnu.org/software/coreutils/manual/)提供了完整的 GNU 工具集，[Homebrew 让安装变得简单](https://formulae.brew.sh/formula/coreutils)。
+
+```bash
+brew install coreutils gnu-sed gnu-tar gnu-which grep findutils gawk
+```
+
+这会安装带 `g` 前缀的 GNU 版本：`gsed`、`ggrep`、`gfind`、`greadlink` 等等。它们能正常工作，但 AI 代理不会使用它们，因为代理调用的是 `sed` 而不是 `gsed`。
+
+要让 GNU 工具成为默认，你需要将 gnubin 目录添加到 PATH：
+
+```bash
+# 添加到 ~/.zshrc（如果你用 fish，不要加到 config.fish）
+export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+export PATH="$(brew --prefix gnu-sed)/libexec/gnubin:$PATH"
+export PATH="$(brew --prefix grep)/libexec/gnubin:$PATH"
+export PATH="$(brew --prefix findutils)/libexec/gnubin:$PATH"
+```
+
+**优点**：从根源解决问题。AI 生成的每条命令都能找到 GNU 版本。**缺点**：修改了全局 shell 环境。所有终端会话（不仅仅是 AI 代理会话）都会使用 GNU 工具。这可能会破坏期望 BSD 行为的 macOS 特定脚本。
+
+## 修复方案 2：进程级 PATH 注入
+
+这个方案解决了隔离问题。不是修改全局 shell 配置，而是将 GNU 工具链的 PATH 仅注入到 AI 代理的进程中。
+
+核心思路：封装启动 AI 代理的命令，使其继承包含 gnubin 目录的 PATH，而系统的其余部分不受影响。
+
+对于从 fish 启动 Claude Code 的用户：
+
+```fish
+function cld
+  set -l brew_prefix (brew --prefix)
+  set -l gnu_path
+
+  for pkg in coreutils gnu-sed gnu-tar gnu-which grep findutils gawk
+    set -l gnubin "$brew_prefix/opt/$pkg/libexec/gnubin"
+    if test -d $gnubin
+      set -a gnu_path $gnubin
+    end
+  end
+
+  set -lx PATH (string join ':' $gnu_path) $PATH
+  claude $argv
+end
+```
+
+`env PATH=... claude` 模式（或上面 fish 的 `set -lx` 等价写法）为 Claude Code 进程构造了一次性环境。Claude Code 启动后，其 zsh 子进程继承了 gnubin 优先的 PATH，于是 `sed -i 's/foo/bar/' file` 就能正常工作，因为它解析到了 GNU sed。
+
+关闭 Claude Code 后，PATH 修改随之消失。你的常规终端会话不会看到它。你的 shell 脚本继续使用 BSD 工具。GNU 覆盖层仅存在于代理的进程树中。
+
+**为什么有效**：Claude Code 使用 `$SHELL`（macOS 上是 zsh）来执行命令。在 Claude Code 启动前注入 gnubin PATH，它产生的每个子进程都会继承修改后的 PATH。AI 代理的 `sed` 解析到 GNU sed，`date` 解析到 GNU date，`find` 支持 `-printf`。零全局配置更改，零日常 shell 环境污染。
+
+**关键发现**：如果你使用 fish 作为交互式 shell，`config.fish` 中的修改对 Claude Code 没有任何影响。Claude Code 从 macOS 登录会话继承 `$SHELL=/bin/zsh`，无论你的 `chsh` 设置如何。只有到达 zsh 环境的 PATH 修改（通过 `.zshrc`、`.zshenv` 或进程级注入）才会影响 AI 代理的命令执行。
+
+**优点**：完美的隔离。只有 AI 代理进程获得 GNU 工具。无全局配置更改。对其他 shell 会话无风险。**缺点**：需要自定义启动函数。仅当你通过该函数启动代理时才有效。
+
+## 修复方案 3：在 CLAUDE.md 中添加 POSIX 规则
+
+如果你使用 Claude Code，可以在 `CLAUDE.md` 文件中添加指令，告诉代理使用 POSIX 兼容的命令：
+
+```markdown
+## Shell Command Rules
+- This system runs macOS with BSD utilities, not GNU/Linux
+- Never use GNU-only flags: sed -i without backup suffix, date -d, grep -P,
+  find -printf, readlink -f, stat -c, timeout, xargs -r, sort -V
+- Use POSIX-compatible alternatives:
+  - sed: use sed -i '' 's/foo/bar/' file (with empty backup suffix)
+  - date: use date -j -v+Nd for relative dates
+  - grep: use grep -E instead of grep -P
+  - find: pipe to awk or perl instead of using -printf
+  - stat: use ls -l or perl -e 'print -s "file"'
+  - timeout: use perl or gtimeout (if coreutils installed)
+- When in doubt, prefer Python one-liners over shell commands
+```
+
+**优点**：无需安装软件。立即生效。代理在提示级别调整行为。**缺点**：基于提示的修复是脆弱的。模型可能在长会话中遗忘或忽略规则。复杂的工具链可能仍然触发 GNU 假设。这种方法治标不治本。
+
+## 修复方案 4：PostToolUse 钩子自动检测
+
+Claude Code 支持在每次工具执行后运行的 PostToolUse 钩子。你可以编写一个钩子来检测 BSD/GNU 不兼容错误并将修正信息反馈给代理。
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "detect-bsd-gnu-error.sh"
+      }]
+    }]
+  }
+}
+```
+
+钩子脚本解析命令输出中的常见错误模式：`illegal option`、`unknown primary`、`timeout` 等工具的 `command not found`。当检测到 BSD/GNU 不匹配时，它返回一条修正提示，Claude Code 将其纳入下一次操作。
+
+这个方法在 [AgentPatterns.ai](https://agentpatterns.ai/tool-engineering/posttooluse-bsd-gnu-detection/) 有详细文档，是最有针对性的修复：它只在实际失败发生时激活，并教会代理你系统的正确语法。
+
+**优点**：自我纠正。代理从实时失败中学习。无需预先修改 PATH。**缺点**：需要钩子的设置和维护。只在错误发生后捕获（无法预防）。在所有边界情况下正确实现比较复杂。
+
+## 真实失败案例
+
+### 静默的 sed 替换
+
+一位开发者让 Claude Code 在 50 个源文件中重命名一个函数。代理生成了 `sed -i 's/getUserData/fetchUserData/g' src/**/*.ts` 并报告成功。在 macOS 的 BSD sed 上，`-i` 参数将 `'s/getUserData/fetchUserData/g'` 当作了备份后缀。没有发生任何替换。两天后在代码审查中，同事指出旧函数名仍然到处都是，开发者才发现问题。
+
+修复需要用 `sed -i '' 's/getUserData/fetchUserData/g'` 重新运行替换，然后逐一验证每个文件。一个静默失败浪费了三个小时的调试时间。
+
+### 部署脚本中的 date 命令
+
+一个 AI 代理生成了使用 `date -d "next Friday" +%Y-%m-%d` 计算发布日期的部署脚本。这在 Linux CI 跑者上测试时完全正常。当团队的技术负责人在 macOS 上本地运行脚本进行推送前测试时，它报错 `date: illegal option -- d`。部署延迟了半天，因为他们需要调试为什么一个"简单的 date 命令"会失败。
+
+### 安全扫描中的 grep 假阴性
+
+一个安全相关的提示让 AI 使用 `grep -rP '(?<=api_key=)\w+' .` 在代码中搜索潜在的密钥泄露。后行断言需要 Perl 正则，GNU grep 通过 `-P` 支持。在 macOS 上，BSD grep 不支持 `-P`。命令直接报错。开发者以为扫描结果是干净的——没有泄露。后来一个真实的 API 密钥被发现在公共仓库中暴露，追溯发现那次失败的扫描根本没有实际运行过。
+
+## AI 模型最终会修复这个问题吗？
+
+模型在操作系统检测方面正在改进。最新版本的 Claude Code 在系统提示中包含当前操作系统的信息，并相应调整命令生成。但这种改进是渐进且不一致的。
+
+根本问题依然存在：训练数据对 Linux 的偏向是结构性的。除非 AI 模型能够可靠地检测不仅是操作系统，还有本地机器上可用的具体工具链版本和参数，否则 GNU/BSD 不匹配将继续存在。
+
+MCP（模型上下文协议）服务器可能有所帮助。一个工具链感知的 MCP 服务器可以实时向模型提供当前系统上可用命令和参数的信息。这将把问题从"模型猜测"转变为"模型询问系统"。但用于此特定目的的 MCP 服务器仍处于早期阶段。
+
+务实的现实是：通过 Homebrew 安装 GNU coreutils 并在进程级别注入 PATH。只需要五分钟，就能消除一整类静默失败。
+
+## 快速参考：macOS vs GNU 速查表
+
+| 需求 | GNU（Linux，AI 生成的） | BSD（macOS 默认） | 解决方案 |
+|------|----------------------|-------------------|---------|
+| 就地 sed 编辑 | `sed -i 's/a/b/' file` | `sed -i '' 's/a/b/' file` | 安装 gnu-sed |
+| Perl 正则搜索 | `grep -P 'pattern'` | `grep -E 'pattern'`（有限） | 安装 grep |
+| 相对日期 | `date -d "tomorrow"` | `date -v+1d` | 安装 coreutils |
+| 文件大小 | `stat -c '%s' file` | `stat -f '%z' file` | 安装 coreutils |
+| 解析符号链接路径 | `readlink -f path` | 不可用 | 安装 coreutils |
+| 空输入跳过 xargs | `xargs -r command` | 不可用 | 安装 findutils |
+| 版本排序 | `sort -V` | 不可用 | 安装 coreutils |
+| 带超时运行 | `timeout 30 cmd` | 不可用 | 安装 coreutils |
+| 格式化 find 输出 | `find . -printf '%f\n'` | `find . \| xargs basename` | 安装 findutils |
+| 扩展正则 find | `find -regextype posix-extended -regex` | `find -E . -regex` | 安装 findutils |
+
+## 总结
+
+macOS 的 GNU 工具链阴影是一个真实的、可量化的问题，影响着每个在 Mac 上使用 AI 编程代理的开发者。代理生成的 GNU 命令与 macOS 自带的 BSD 工具之间的错配，导致从显式错误到危险的静默空操作等各种失败。
+
+最有效的修复方案结合两种方法：通过 Homebrew 安装 GNU coreutils（`brew install coreutils gnu-sed grep findutils gawk`），并在启动 AI 代理时在进程级别注入 gnubin PATH。这给你完美的隔离：AI 代理使用 GNU 工具，其他一切使用 BSD 工具，零全局配置更改。
+
+如果你使用 Claude Code，通过自定义启动函数进行进程级 PATH 注入是最干净的解决方案。在 CLAUDE.md 中添加 POSIX 规则作为安全网。如果你希望代理实时自我纠正，可以考虑 PostToolUse 钩子。
+
+收藏上面的速查表，分享给你的团队。你的团队越早理解影子工具链，就越少花时间去调试那些从来就不神秘的"神秘"命令失败。
+
+---
+
+## 常见问题
+
+### 为什么 sed -i 在 Mac 上失败但在 Linux 上正常？
+
+BSD sed（macOS）要求在 `-i` 后面提供备份后缀参数。GNU sed 将 `-i` 视为独立参数。在 macOS 上，`sed -i 's/foo/bar/' file` 将 `'s/foo/bar/'` 解析为备份后缀，而不是替换命令。正确的 macOS 语法是 `sed -i '' 's/foo/bar/' file`（注意 `-i` 后面的空字符串）。
+
+### AI 编程助手知道我用的是什么操作系统吗？
+
+部分知道。最新版本的 Claude Code 在系统提示中包含操作系统信息，但模型的行为仍然受到偏向 Linux 的训练数据的强烈影响。GitHub Copilot 和 Cursor 也有类似的局限性。模型理论上可能知道你在 macOS 上，但在实践中仍然生成 GNU 命令，因为训练数据中 GNU 命令占据压倒性多数。
+
+### 在 macOS 上安装 GNU coreutils 安全吗？
+
+是的，如果安装方式正确。Homebrew 以 `g` 前缀安装 GNU 工具（gsed、ggrep、gfind），不会与系统工具冲突。如果你将 gnubin 目录添加到 PATH，GNU 工具将优先于 BSD 工具。这对开发工作通常是安全的，但可能影响期望 BSD 行为的 shell 脚本。进程级 PATH 注入可以完全避免这个风险。
+
+### 哪个 AI 编程代理对 macOS 支持最好？
+
+Claude Code 目前对 macOS 的感知最好，因为它在系统提示中包含操作系统检测，并支持 CLAUDE.md 项目级指令。然而，所有主要的 AI 编程代理（Claude Code、Cursor、GitHub Copilot）都有相同的训练数据偏向——偏向 Linux/GNU。它们都不能在所有情况下可靠地生成 BSD 兼容的命令。
+
+### BSD 和 GNU 命令行工具有什么区别？
+
+BSD 和 GNU 是 POSIX Unix 工具的两个独立实现。两者都提供 sed、grep、find、date 和 awk 等工具，但它们各自独立演化了 40 多年。GNU 工具通常有更多功能和扩展（grep 中的 Perl 正则、人类可读的日期输入、find 中的 printf）。BSD 工具更保守，更紧密地遵循 POSIX 标准。macOS 自带 BSD 工具；Linux 发行版自带 GNU 工具。
+
+### 在 macOS 上安装 GNU coreutils 会破坏什么吗？
+
+如果你使用默认的 Homebrew 安装方式（以 `g` 前缀安装工具），不会。如果你将 gnubin 添加到系统级 PATH，一些期望 BSD 工具行为的 macOS 特定脚本或 Homebrew formula 可能表现不同。最安全的方法是进程级 PATH 注入，只有你的 AI 代理进程能看到 GNU 工具。
