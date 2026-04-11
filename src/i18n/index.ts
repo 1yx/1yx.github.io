@@ -38,8 +38,11 @@ export const TAG_TRANSLATIONS = {
   uv: { "zh-CN": "uv", en: "uv" },
   "package-management": { "zh-CN": "包管理", en: "Package Management" },
   macos: { "zh-CN": "macOS", en: "macOS" },
-  "ai-agents": { "zh-CN": "AI 代理", en: "AI Agents" },
+  "ai-agents": { "zh-CN": "AI Agents", en: "AI Agents" },
   cli: { "zh-CN": "命令行", en: "CLI" },
+  bsd: { "zh-CN": "BSD", en: "BSD" },
+  gnu: { "zh-CN": "GNU", en: "GNU" },
+  "claude-code": { "zh-CN": "Claude Code", en: "Claude Code" },
 } as const;
 
 export type TagId = keyof typeof TAG_TRANSLATIONS;
