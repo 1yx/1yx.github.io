@@ -43,6 +43,7 @@ export const TAG_TRANSLATIONS = {
   bsd: { "zh-CN": "BSD", en: "BSD" },
   gnu: { "zh-CN": "GNU", en: "GNU" },
   "claude-code": { "zh-CN": "Claude Code", en: "Claude Code" },
+  pypi: { "zh-CN": "PyPI", en: "PyPI" },
 } as const;
 
 export type TagId = keyof typeof TAG_TRANSLATIONS;
