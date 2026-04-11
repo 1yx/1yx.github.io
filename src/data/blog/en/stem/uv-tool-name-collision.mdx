@@ -24,6 +24,13 @@ When you install a Python CLI tool from a Git repository using `uv tool install 
 
 I was writing a script to update Homebrew, pnpm global packages, and uv global packages all at once. Homebrew: fine. pnpm: fine. uv: flagged a tool for a major version update that didn't exist. Here's what happened, why it happens, and how to handle it correctly.
 
+> **Key Takeaways**
+> - `uv tool list --outdated` resolves the package name against PyPI, not the original Git source
+> - If a different package with the same name exists on PyPI (name collision), you get a false positive
+> - The same issue affects `uv tool upgrade --all`, which may fail or update to the wrong package
+> - Solution: parse the `--show-version-specifiers` output to identify Git sources, then check GitHub Releases API directly
+> - Use `uv tool install --from git+...@<tag> --force` to update git-sourced tools
+
 ## How I Discovered the Problem
 
 I was building `devflow-update`, a fish shell script that checks for outdated packages across Homebrew, pnpm, and uv in a single pass. Homebrew and pnpm both have built-in subcommands for this:
@@ -38,10 +45,10 @@ For uv, the equivalent is `uv tool list --outdated`. My script parsed its output
 </FloatImage>
 
 ```
-specify-cli v0.5.1 [latest: 1.0.0]
+specify-cli v0.5.0 [latest: 1.0.0]
 ```
 
-A major version bump, from 0.5.1 to 1.0.0. For specify-cli, which is [GitHub's spec-kit](https://github.com/github/spec-kit) CLI tool. I went to check the release notes before upgrading, and found no 1.0.0 release on the repository's Release page. The latest was somewhere in the 0.x range.
+A major version bump, from 0.5.0 to 1.0.0. For specify-cli, which is [GitHub's spec-kit](https://github.com/github/spec-kit) CLI tool. I went to check the release notes before upgrading, and found no 1.0.0 release on the repository's Release page. The latest was somewhere in the 0.x range.
 
 <FloatImage src={specKitRelease} alt="spec-kit GitHub Release page — latest version is not 1.0.0" float="right" maxWidth="100%" upperLines={1} collapse="both" />
 
@@ -55,7 +62,7 @@ I searched PyPI for `specify-cli` and found [a completely different, unrelated p
 
 <FloatImage src={pypiSpecifyCli} alt="A different, unrelated specify-cli package on PyPI" float="right" maxWidth="100%" upperLines={1} collapse="both"/>
 
-The default behavior of `uv tool list --outdated` is to look up the local package name against the PyPI index. Since `1.0.0` is semantically greater than `0.5.1`, uv produced a false positive. If I had blindly run `uv tool upgrade --all`, it would have tried to replace my working spec-kit install with an entirely different PyPI package.
+The default behavior of `uv tool list --outdated` is to look up the local package name against the PyPI index. Since `1.0.0` is semantically greater than `0.5.0`, uv produced a false positive. If I had blindly run `uv tool upgrade --all`, it would have tried to replace my working spec-kit install with an entirely different PyPI package.
 
 ## Why uv tool list --outdated Gets It Wrong
 
@@ -70,10 +77,10 @@ This works perfectly for tools installed directly from PyPI. `httpie` on your ma
 When you install from a Git repository, the package name used for lookup is still the internal name defined in the repository's packaging metadata. It is not the Git URL. Two completely unrelated packages can share the same internal name.
 
 In my case:
-- My tool: `specify-cli` v0.5.1, installed from `git+https://github.com/github/spec-kit.git`
+- My tool: `specify-cli` v0.5.0, installed from `git+https://github.com/github/spec-kit.git`
 - PyPI package: `specify-cli` v1.0.0, a different project by a different author
 
-uv sees "specify-cli" and asks PyPI "what's the latest version of specify-cli?" PyPI answers "1.0.0." uv compares 1.0.0 > 0.5.1 and reports an update available. But the update doesn't exist in the source repository. It's a phantom.
+uv sees "specify-cli" and asks PyPI "what's the latest version of specify-cli?" PyPI answers "1.0.0." uv compares 1.0.0 > 0.5.0 and reports an update available. But the update doesn't exist in the source repository. It's a phantom.
 
 ### Two Failure Modes: False Positive vs. Not Found
 
@@ -99,7 +106,7 @@ This outputs something like:
 
 ```
 httpie v4.0.0 [required: httpie>=4.0.0]
-specify-cli v0.5.1 [required: git+https://github.com/github/spec-kit.git]
+specify-cli v0.5.0 [required: git+https://github.com/github/spec-kit.git]
 ruff v0.11.0 [required: ruff>=0.11.0]
 ```
 
@@ -181,6 +188,12 @@ The correct approach is to reinstall from the Git source at the new tag using `-
 uv tool install --from git+https://github.com/<owner>/<repo>.git@<tag> --force <package-name>
 ```
 
+For example:
+
+```sh
+uv tool install --from git+https://github.com/github/spec-kit.git@v0.5.0 --force specify-cli
+```
+
 The `--force` flag is required because the tool is already installed. Without it, uv skips the installation, assuming nothing needs to change. The `@<tag>` suffix pins the installation to a specific release instead of the default branch HEAD, which is what you want for reproducible, version-controlled updates.
 
 ## How pipx Handles This
@@ -203,12 +216,20 @@ Where pipx still has an edge: source tracking for Git-installed tools. pipx reme
 
 The practical takeaway: use uv as your default tool manager. It's faster and better for 95% of cases. For the rare Git-installed tool, apply the split-strategy workaround described above.
 
+## Conclusion
+
+`uv tool list --outdated` is unreliable for tools installed from Git repositories because it resolves package names against PyPI instead of the original source. When a name collision exists (a different PyPI package with the same name), you get false positives. When no PyPI package exists, you get errors.
+
+The fix is straightforward: parse `--show-version-specifiers` to identify Git-sourced tools, filter them out of the `--outdated` output, and check the GitHub Releases API directly. For updates, use `uv tool install --from git+URL@tag --force` instead of `uv tool upgrade --all`.
+
+This split strategy — PyPI tools through uv's built-in mechanism and Git tools through the GitHub API — gives you accurate version checks and correct updates across both sources.
+
 ## Complete Update Script
 
-The full implementation lives in my `tui-devflow-config` repository:
+The full implementation lives in my `Agentic-TUI` repository:
 
-- **Check script**: [devflow-update.fish](https://github.com/1yx/tui-devflow-config/blob/main/fish/.config/fish/functions/devflow-update.fish) — classifies tools, checks outdated via appropriate channels
-- **Upgrade script**: [devflow-upgrade.fish](https://github.com/1yx/tui-devflow-config/blob/main/fish/.config/fish/functions/devflow-upgrade.fish) — executes upgrades using the split strategy
+- **Check script**: [devflow-update.fish](https://github.com/1yx/Agentic-TUI/blob/main/fish/.config/fish/functions/devflow-update.fish) — classifies tools, checks outdated via appropriate channels
+- **Upgrade script**: [devflow-upgrade.fish](https://github.com/1yx/Agentic-TUI/blob/main/fish/.config/fish/functions/devflow-upgrade.fish) — executes upgrades using the split strategy
 
 The upgrade script's uv section does four things:
 

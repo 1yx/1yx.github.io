@@ -24,6 +24,13 @@ import uvToolShowVersion from "@/assets/2026/04/uv-tool-show-version.png";
 
 我正在写一个能同时更新 Homebrew、pnpm 全局包和 uv 全局包的脚本。Homebrew 没问题。pnpm 没问题。uv 却报告一个根本不存在的大版本更新。以下是发生了什么、为什么会发生、以及如何正确处理。
 
+> **要点**
+> - `uv tool list --outdated` 按包名查询 PyPI，而不是原始 Git 源
+> - 如果 PyPI 上存在同名但不同的包（名称冲突），你会得到误报
+> - 同样的问题影响 `uv tool upgrade --all`，可能失败或更新到错误的包
+> - 解决方案：解析 `--show-version-specifiers` 输出识别 Git 源，然后直接查询 GitHub Releases API
+> - 使用 `uv tool install --from git+...@<tag> --force` 更新 Git 源工具
+
 ## 问题的发现过程
 
 我在写 `devflow-update`——一个 fish shell 脚本，一次性检查 Homebrew、pnpm 和 uv 中哪些包过期了。Homebrew 和 pnpm 都有内置的子命令：
@@ -38,10 +45,10 @@ uv 对应的命令是 `uv tool list --outdated`。脚本解析输出、比较版
 </FloatImage>
 
 ```
-specify-cli v0.5.1 [latest: 1.0.0]
+specify-cli v0.5.0 [latest: 1.0.0]
 ```
 
-从 0.5.1 到 1.0.0，一个大版本更新。specify-cli 是 [GitHub spec-kit](https://github.com/github/spec-kit) 的 CLI 工具。我去查 Release Notes 准备升级，发现仓库的 Release 页面上根本没有 1.0.0。最新版本还在 0.x 的范围里。
+从 0.5.0 到 1.0.0，一个大版本更新。specify-cli 是 [GitHub spec-kit](https://github.com/github/spec-kit) 的 CLI 工具。我去查 Release Notes 准备升级，发现仓库的 Release 页面上根本没有 1.0.0。最新版本还在 0.x 的范围里。
 
 <FloatImage src={specKitRelease} alt="spec-kit GitHub Release 页面，最新版本并非 1.0.0" float="right" maxWidth="100%" upperLines={1} collapse="both" />
 
@@ -55,7 +62,7 @@ uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
 
 <FloatImage src={pypiSpecifyCli} alt="PyPI 上存在一个同名但无关的 specify-cli 包" float="right" maxWidth="100%" upperLines={1} collapse="both"/>
 
-`uv tool list --outdated` 的默认行为是拿本地包名去 PyPI 索引查询。因为 `1.0.0` 在语义化版本上确实大于 `0.5.1`，uv 产生了误报。如果我盲目执行了 `uv tool upgrade --all`，它会把我的 spec-kit 替换成一个完全不同的 PyPI 包。
+`uv tool list --outdated` 的默认行为是拿本地包名去 PyPI 索引查询。因为 `1.0.0` 在语义化版本上确实大于 `0.5.0`，uv 产生了误报。如果我盲目执行了 `uv tool upgrade --all`，它会把我的 spec-kit 替换成一个完全不同的 PyPI 包。
 
 ## 为什么 uv tool list --outdated 会搞错
 
@@ -70,16 +77,16 @@ uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
 从 Git 仓库安装时，用于查询的包名仍然是仓库打包元数据中定义的内部名称，而不是 Git URL。两个完全无关的包可以共享同一个内部名称。
 
 在我的案例中：
-- 我的工具：`specify-cli` v0.5.1，从 `git+https://github.com/github/spec-kit.git` 安装
+- 我的工具：`specify-cli` v0.5.0，从 `git+https://github.com/github/spec-kit.git` 安装
 - PyPI 上的包：`specify-cli` v1.0.0，不同作者的不同项目
 
-uv 看到 "specify-cli"，问 PyPI "specify-cli 的最新版本是什么？" PyPI 回答 "1.0.0"。uv 比较 1.0.0 > 0.5.1，报告有更新。但这个更新在源仓库中根本不存在。它是一个幻影。
+uv 看到 "specify-cli"，问 PyPI "specify-cli 的最新版本是什么？" PyPI 回答 "1.0.0"。uv 比较 1.0.0 > 0.5.0，报告有更新。但这个更新在源仓库中根本不存在。这只是一个"幽灵更新"。
 
-### 两种失败模式：假阳性 vs 未找到
+### 两种失败模式：误报 vs 未找到
 
 这个问题根据 PyPI 上是否存在同名包，有两种表现形式：
 
-**假阳性**（我遇到的情况）：PyPI 上有一个同名但不同的包，版本号更高。`uv tool list --outdated` 报告了一个在 Git 源中不存在的升级。执行 `uv tool upgrade` 可能会把你的工具替换成错误的包。
+**误报**（我遇到的情况）：PyPI 上有一个同名但不同的包，版本号更高。`uv tool list --outdated` 报告了一个在 Git 源中不存在的升级。执行 `uv tool upgrade` 可能会把你的工具替换成错误的包。
 
 **"未找到"错误**：PyPI 上根本没有这个名字的包。这在 [GitHub issue #8926](https://github.com/astral-sh/uv/issues/8926) 中有记录，当 Git 安装的包在 PyPI 上没有对应项时，`uv pip list --outdated` 会报错。
 
@@ -99,7 +106,7 @@ uv tool list --show-version-specifiers
 
 ```
 httpie v4.0.0 [required: httpie>=4.0.0]
-specify-cli v0.5.1 [required: git+https://github.com/github/spec-kit.git]
+specify-cli v0.5.0 [required: git+https://github.com/github/spec-kit.git]
 ruff v0.11.0 [required: ruff>=0.11.0]
 ```
 
@@ -129,7 +136,7 @@ end
 
 ## 正确检查 Git 安装工具的方法
 
-识别出 Git 源工具后，检查更新需要三步。以下方法假设使用 GitHub 托管的仓库。
+识别出 Git 源工具后，检查更新需要三步。以下方案假设仓库托管在 GitHub 上，这涵盖了绝大多数通过 Git 安装的 Python 工具。
 
 ### 第一步：解析仓库地址
 
@@ -179,6 +186,12 @@ end
 uv tool install --from git+https://github.com/<owner>/<repo>.git@<tag> --force <package-name>
 ```
 
+例如：
+
+```sh
+uv tool install --from git+https://github.com/github/spec-kit.git@v0.5.0 --force specify-cli
+```
+
 `--force` 是必需的，因为工具已经安装。不加的话 uv 会跳过安装，认为不需要变更。`@<tag>` 后缀将安装固定到特定 Release，而不是默认分支的 HEAD——这正是你想要的：可复现的、受版本控制的更新。
 
 ## pipx 是怎么处理的
@@ -187,7 +200,7 @@ uv tool install --from git+https://github.com/<owner>/<repo>.git@<tag> --force <
 
 这是 uv 应该有的行为，[GitHub issue #8244](https://github.com/astral-sh/uv/issues/8244) 追踪了"uv 作为 pipx 替代品"的更广泛功能请求，包括更好的 Git 源处理。
 
-uv 比 pipx 强的地方：速度。uv 用 Rust 编写，大多数操作比 pipx 快 10-100 倍。依赖解析更好，缓存更激进，工具隔离更干净。对于 PyPI 源工具，uv 严格更优。
+uv 完胜 pipx 的核心优势：速度。uv 用 Rust 编写，大多数操作比 pipx 快 10-100 倍。依赖解析更好，缓存更激进，工具隔离更干净。对于 PyPI 源工具，uv 严格更优。
 
 pipx 仍然领先的地方：Git 安装工具的来源追踪。pipx 记住你从哪里安装的并检查那个来源。uv 安装后忘记来源，回退到 PyPI 进行版本检查。在 uv 添加正式的来源追踪之前，本文的绕过方案是必要的。
 
@@ -195,18 +208,26 @@ pipx 仍然领先的地方：Git 安装工具的来源追踪。pipx 记住你从
 |------|----|------|
 | PyPI 安装速度 | 快（Rust） | 慢（Python/pip） |
 | Git 来源追踪 | 无（回退到 PyPI） | 有 |
-| Git 工具 `--outdated` | 假阳性 | 正确 |
+| Git 工具 `--outdated` | 误报 | 正确 |
 | 依赖解析 | 更优 | 基础 |
 | Git 工具 `upgrade --all` | 有问题 | 正常工作 |
 
 实际结论：把 uv 作为默认工具管理器。95% 的场景下它更快更好。对于少数 Git 安装的工具，应用本文的分离策略绕过方案。
 
+## 总结
+
+`uv tool list --outdated` 对 Git 仓库安装的工具不可靠，因为它按包名查询 PyPI 而不是原始安装源。当存在名称冲突（PyPI 上有同名但不同的包）时，你会得到误报。当 PyPI 上不存在同名包时，你会得到错误。
+
+修复方法很直接：解析 `--show-version-specifiers` 识别 Git 源工具，将它们从 `--outdated` 输出中过滤掉，然后直接查询 GitHub Releases API。更新时使用 `uv tool install --from git+URL@tag --force` 而不是 `uv tool upgrade --all`。
+
+这种分离策略——PyPI 工具走 uv 内置机制，Git 工具走 GitHub API——让你在两种来源下都能获得准确的版本检查和正确的更新。
+
 ## 完整的更新脚本
 
-完整实现在我 `tui-devflow-config` 仓库中：
+完整实现在我 `Agentic-TUI` 仓库中：
 
-- **检查脚本**：[devflow-update.fish](https://github.com/1yx/tui-devflow-config/blob/main/fish/.config/fish/functions/devflow-update.fish) — 分类工具、通过对应渠道检查过期、展示结果
-- **升级脚本**：[devflow-upgrade.fish](https://github.com/1yx/tui-devflow-config/blob/main/fish/.config/fish/functions/devflow-upgrade.fish) — 使用分离策略执行升级
+- **检查脚本**：[devflow-update.fish](https://github.com/1yx/Agentic-TUI/blob/main/fish/.config/fish/functions/devflow-update.fish) — 分类工具、通过对应渠道检查过期、展示结果
+- **升级脚本**：[devflow-upgrade.fish](https://github.com/1yx/Agentic-TUI/blob/main/fish/.config/fish/functions/devflow-upgrade.fish) — 使用分离策略执行升级
 
 升级脚本的 uv 部分做四件事：
 
@@ -227,7 +248,7 @@ uv 将包名（来自仓库的 `pyproject.toml` 或 `setup.py`）解析到 PyPI 
 
 使用带特定 tag 的 `--force` 重装方式：`uv tool install --from git+https://github.com/owner/repo.git@v1.2.3 --force package-name`。`@v1.2.3` 后缀固定版本，`--force` 覆盖已有安装。
 
-### uv 计划修复这个名称碰撞问题吗？
+### uv 计划修复这个名称冲突问题吗？
 
 目前没有确认的时间表。uv GitHub 仓库中有几个相关的开放 issue（[#8926](https://github.com/astral-sh/uv/issues/8926)、[#18522](https://github.com/astral-sh/uv/issues/18522)、[#8244](https://github.com/astral-sh/uv/issues/8244)），但截至 2026 年 4 月都未解决。本文描述的绕过方案是目前的推荐做法。
 
