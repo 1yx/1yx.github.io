@@ -32,6 +32,8 @@ html[data-theme="light"] {
   --muted: oklch(55% 0 0);                /* ash */
   --border: oklch(90% 0 0);               /* mist */
   --shadow-inner: oklch(93% 0 0);         /* shadow for inner box */
+  --code-inline: #24292EFF;              /* min-light base text */
+  --code-inline-bg: #ffffff;              /* min-light background */
 
   /* Apple HIG System Colors */
   --blue: #007AFF;
@@ -57,6 +59,8 @@ html[data-theme="dark"] {
   --muted: oklch(65% 0 0);                /* ash-light */
   --border: oklch(40% 0 0);               /* charcoal-light */
   --shadow-inner: oklch(35% 0 0);         /* shadow for inner box */
+  --code-inline: #C5E478;                /* night-owl green accent */
+  --code-inline-bg: #011627;              /* night-owl background */
 
   /* Apple HIG System Colors */
   --blue: #0A84FF;
