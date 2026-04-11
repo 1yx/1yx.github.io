@@ -88,6 +88,14 @@ const isActive = (path: string) => {
       >
         <li class="col-span-2">
           <a
+            href={getLocalePath(lang, "stem/")}
+            class:list={{ "active-nav": isActive(getLocalePath(lang, "stem")) }}
+          >
+            {ui.nav.stem}
+          </a>
+        </li>
+        <li class="col-span-2">
+          <a
             href={getLocalePath(lang, "running/")}
             class:list={{ "active-nav": isActive(getLocalePath(lang, "running")) }}
           >

@@ -12,7 +12,7 @@ import { SITE } from "@/config";
 import type { Locale } from "@/i18n";
 
 export const CATEGORIES: Record<string, Record<Locale, string>> = {
-  // stem: { "zh-CN": "科学 / 技术 / 产品工程 / 增长工程 / 数学", en: "STEM" },
+  stem: { "zh-CN": "科学 / 技术 / 产品工程 / 增长工程 / 数学", en: "STEM" },
   running: { "zh-CN": "跑步", en: "Running" },
   psychology: { "zh-CN": "心理学 / 神经科学", en: "Psychology / Neuroscience" },
   // life: { "zh-CN": "读书 / 生活", en: "Reading / Life" },
