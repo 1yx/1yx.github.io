@@ -80,6 +80,11 @@ if (schemaType && schemaData && !noindex) {
     <meta name="author" content={author} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    <!-- Maple Mono NF CN (CJK subset) for zh-CN pages only -->
+    {currentLang === "zh-CN" && (
+      <link rel="stylesheet" href="https://fontsapi.zeoseven.com/442/main/result.css" />
+    )}
+
     <!-- Hreflang tags for bilingual pages -->
     {
       alternateLanguages && alternateLanguages.length > 0 && (

@@ -14,7 +14,9 @@ category: stem
 
 import KeyTakeaways from "@/components/KeyTakeaways.astro";
 
-Terminal keyboard input flows through three layers before reaching your application: ASCII control character encoding at the bottom, the **TTY** driver (configured via termios) in the middle, and application-level processing (GNU Readline, <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code) at the top. Understanding this stack explains why `Ctrl+M` is identical to `Enter`, why `Ctrl+C` can't be rebound in most tools, and why <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> implements its own line editor instead of using Readline.
+When you bind `Ctrl+M` to a custom action in Claude Code running inside Ghostty, it works. Open the same Claude Code in GNOME Terminal, and the binding silently breaks — `Ctrl+M` behaves like `Enter` instead. The difference isn't in Claude Code or your configuration. It's in the bytes. Ghostty transmits `\x1b[109;5u` for `Ctrl+M` via the Kitty Keyboard Protocol, while GNOME Terminal sends `0x0D` — the exact same byte as `Enter`. Your shortcut works in one terminal and vanishes in another because the underlying byte sequences are fundamentally different.
+
+Terminal keyboard input flows through three layers before reaching your application: ASCII control character encoding, the kernel's **TTY** driver (configured via termios), and application-level processing (GNU Readline, <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code). Understanding this stack explains why `Ctrl+M` is identical to `Enter` at the ASCII level, why `Ctrl+C` can't be rebound in most tools, and why modern terminals like Ghostty and Kitty can break free from 1960s constraints that GNOME Terminal still enforces. This article traces a single keypress from your keyboard through all three layers — explaining what each layer does, what it doesn't, and where the gaps between standards and reality live.
 
 <KeyTakeaways>
 - Terminal input processing has three layers: ASCII encoding → **TTY** driver (termios) → Application (Readline or custom)
@@ -335,12 +337,54 @@ try:
     tty.setraw(fd)
     while True:
         ch = sys.stdin.read(1)
-        print(f"byte: {ord(ch):02x} ({repr(ch)})", file=sys.stderr)
+        print('byte: %02x (%r)' % (ord(ch), ch), file=sys.stderr)
 finally:
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
 ```
 
 In **Raw Mode**, you'll see `Ctrl+M` as `0d` and `Ctrl+J` as `0a` — confirming they're distinct bytes when `icrnl` is off.
+
+### Answering the Opening Question
+
+Run the script above in Ghostty and press `Ctrl+M`. You won't see `0x0D` — you'll see:
+
+```
+byte: 1b ('\x1b')  byte: 5b ('[')  byte: 31 ('1')  byte: 30 ('0')  byte: 39 ('9')  byte: 3b (';')  byte: 35 ('5')  byte: 75 ('u')
+```
+
+This is `\x1b[109;5u` — the Kitty Keyboard Protocol encoding for "key m + Ctrl modifier." Decoded:
+
+```
+\x1b  [  1  0  9  ;  5  u
+ESC  CSI ├─────┘  ├──┘  └─ CSI u format terminator
+│        │        │
+│        │        └─ modifier 5 = Ctrl
+│        └─ Unicode codepoint 109 = 'm'
+└─ ASCII code 0x1b, Same as Ctrl+[
+```
+
+Ghostty doesn't compress `Ctrl+M` into the legacy `0x0D`. So Claude Code can tell `Ctrl+M` apart from `Enter`.
+
+Press `Enter` and `Ctrl+J` for comparison:
+
+| Key | Legacy byte | Ghostty sends |
+|-----|-------------|---------------|
+| `Enter` | `0x0D` | `0x0D` — legacy byte |
+| `Ctrl+M` | `0x0D` (same) | `\x1b[109;5u` — completely different |
+| `Ctrl+J` | `0x0A` | `0x0A` — legacy byte |
+
+Which terminals can distinguish them depends on protocol support:
+
+| Terminal | `Enter` | `Ctrl+M` | Distinguishable? |
+|----------|---------|----------|-------------------|
+| Ghostty | `0x0D` | `\x1b[109;5u` | Yes |
+| Kitty | `0x0D` | `\x1b[109;5u` | Yes (protocol creator) |
+| WezTerm | `0x0D` | `\x1b[109;5u` | Yes |
+| Alacritty | Partial | Depends on version | Partial |
+| GNOME Terminal (VTE) | `0x0D` | `0x0D` | No |
+| xterm | `0x0D` | `0x0D` | No |
+
+This is why your `Ctrl+M` binding works in Ghostty but silently breaks in GNOME Terminal. The three-layer stack — ASCII, TTY driver, application — hasn't changed. But the terminal emulator has inserted a fourth layer: the keyboard protocol. And that layer determines whether `Ctrl+M` and `Enter` are the same byte or not.
 
 ## Frequently Asked Questions
 

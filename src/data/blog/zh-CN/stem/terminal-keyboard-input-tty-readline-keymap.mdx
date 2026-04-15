@@ -14,7 +14,9 @@ category: stem
 
 import KeyTakeaways from "@/components/KeyTakeaways.astro";
 
-终端键盘输入在到达应用程序之前会流经三个层级：底层的 ASCII 控制字符编码、中间的 **TTY** 驱动（通过 termios 配置）以及顶层的应用程序处理（GNU Readline, <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>, Claude Code）。理解这个堆栈结构可以解释为什么 `Ctrl+M` 与 `Enter` 相同，为什么大多数工具中无法重新绑定 `Ctrl+C`，以及为什么 <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span> 实现了自己的行编辑器而不是使用 Readline。
+当你在 Ghostty 的 Claude Code 中将 `Ctrl+M` 绑定到一个自定义操作，它正常工作。换到 GNOME Terminal 打开同一个 Claude Code，这个绑定就失效了——`Ctrl+M` 变成了 `Enter`。差异不在 Claude Code，也不在你的配置，而在终端发送的字节。Ghostty 通过 Kitty Keyboard Protocol 为 `Ctrl+M` 发送 `\x1b[109;5u`，而 GNOME Terminal 发送 `0x0D`——和 `Enter` 完全相同的字节。你的快捷键在一个终端里生效，在另一个里消失，因为底层的字节序列根本不同。
+
+终端键盘输入在到达应用程序之前会流经三个层级：底层的 ASCII 控制字符编码、中间的 **TTY** 驱动（通过 termios 配置）以及顶层的应用程序处理（GNU Readline, <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>, Claude Code）。理解这个堆栈可以解释为什么 `Ctrl+M` 在 ASCII 层面等同于 `Enter`，为什么大多数工具中无法重新绑定 `Ctrl+C`，以及为什么 Ghostty 和 Kitty 等现代终端可以突破 GNOME Terminal 仍然遵循的 1960 年代约束。本文追踪单次按键从键盘流经全部三层的过程——解释每一层做了什么、没做什么，以及标准与现实之间的鸿沟在哪里。
 
 <KeyTakeaways>
 - 终端输入处理分为三层：ASCII 编码 → **TTY** 驱动 (termios) → 应用程序 (Readline 或自定义)
@@ -308,10 +310,52 @@ try:
     tty.setraw(fd)
     while True:
         ch = sys.stdin.read(1)
-        print(f"byte: {ord(ch):02x} ({repr(ch)})", file=sys.stderr)
+        print('byte: %02x (%r)' % (ord(ch), ch), file=sys.stderr)
 finally:
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
 ```
+
+### 回答引言的问题
+
+在 Ghostty 里运行上面的脚本，按下 `Ctrl+M`，你不会看到 `0x0D`——你会看到：
+
+```
+byte: 1b ('\x1b')  byte: 5b ('[')  byte: 31 ('1')  byte: 30 ('0')  byte: 39 ('9')  byte: 3b (';')  byte: 35 ('5')  byte: 75 ('u')
+```
+
+这是 `\x1b[109;5u`——Kitty Keyboard Protocol 对"按键 m + Ctrl 修饰符"的编码。解码这个序列：
+
+```
+\x1b  [  1  0  9  ;  5  u
+ESC  CSI ├─────┘  ├──┘  └─ CSI u 格式结束符
+│        │        │
+│        │        └─ 修饰符 5 = Ctrl
+│        └─ Unicode codepoint 109 = 'm'
+└─ ASCII 编码 0x1b，等同于 Ctrl+[
+```
+
+Ghostty 没有把 `Ctrl+M` 压缩成遗留的 `0x0D`。所以 Claude Code 能区分 `Ctrl+M` 和 `Enter`。
+
+再按 `Enter` 和 `Ctrl+J` 对比：
+
+| 按键 | 遗留字节 | Ghostty 实际发送 |
+|------|----------|------------------|
+| `Enter` | `0x0D` | `0x0D` — 遗留字节 |
+| `Ctrl+M` | `0x0D`（相同） | `\x1b[109;5u` — 完全不同 |
+| `Ctrl+J` | `0x0A` | `0x0A` — 遗留字节 |
+
+哪些终端能区分两者，取决于协议支持：
+
+| 终端 | `Enter` | `Ctrl+M` | 可区分？ |
+|------|---------|----------|----------|
+| Ghostty | `0x0D` | `\x1b[109;5u` | 可以 |
+| Kitty | `0x0D` | `\x1b[109;5u` | 可以（协议的创建者） |
+| WezTerm | `0x0D` | `\x1b[109;5u` | 可以 |
+| Alacritty | 部分支持 | 取决于版本 | 部分 |
+| GNOME Terminal (VTE) | `0x0D` | `0x0D` | 不可以 |
+| xterm | `0x0D` | `0x0D` | 不可以 |
+
+这就是为什么你的 `Ctrl+M` 绑定在 Ghostty 里生效，在 GNOME Terminal 里却静默失效。三层架构——ASCII、**TTY** 驱动、应用程序——没有变。但终端模拟器在中间插入了一层：键盘协议。这一层决定了 `Ctrl+M` 和 `Enter` 是同一个字节，还是两个不同的字节。
 
 ## 常见问题
 
