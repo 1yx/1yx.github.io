@@ -211,11 +211,11 @@ Readline 并不是一个标准。它是 GNU Readline —— 最初由 Brian Fox 
 ### 标准化鸿沟
 
 ```
-POSIX termios          — TTY 驱动行为 (标准化)
+POSIX termios           — TTY 驱动行为 (标准化)
     ↑ 没有任何标准涵盖 ↑
 BSD tcsh / GNU Readline — 行编辑键绑定 (事实标准，非正式规范)
     ↑ 每个工具自行实现 ↑
-Fish / Claude Code — 不使用 GNU Readline；独立实现行编辑
+Fish / Claude Code      — 不使用 GNU Readline；独立实现行编辑
 ```
 
 关键点：
@@ -252,7 +252,7 @@ Linux 和 BSD 系统提供了 `cfmakeraw()` 便捷函数，一次调用即可切
         ↓
 TTY 驱动 (内核)                —  PTY Slave 端，根据 termios 设置拦截或传递字节
         ↓
-应用程序 (Fish, Claude Code)  —  调用 tcsetattr() 切换至 Raw Mode，接管所有按键处理
+应用程序 (Fish, Claude Code)   —  调用 tcsetattr() 切换至 Raw Mode，接管所有按键处理
 ```
 
 终端模拟器不参与 **Raw Mode** 的切换。它只将键盘事件转换为字节并通过 PTY 传输。真正调用 `tcsetattr()` 修改 termios 标志并接管按键处理的是应用程序——<span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>、Claude Code。

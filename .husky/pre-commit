@@ -1,0 +1,1 @@
+pnpm exec bash scripts/check-smart-quotes.sh
