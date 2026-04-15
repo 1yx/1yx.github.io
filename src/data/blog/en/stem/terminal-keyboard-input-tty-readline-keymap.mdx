@@ -14,16 +14,14 @@ category: stem
 
 import KeyTakeaways from "@/components/KeyTakeaways.astro";
 
-# How Terminal Keyboard Input Works: TTY, Readline & Keymap Explained
-
-Terminal keyboard input flows through three layers before reaching your application: ASCII control character encoding at the bottom, the TTY driver (configured via termios) in the middle, and application-level processing (GNU Readline, <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code) at the top. Understanding this stack explains why `Ctrl+M` is identical to `Enter`, why `Ctrl+C` can't be rebound in most tools, and why <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> implements its own line editor instead of using Readline.
+Terminal keyboard input flows through three layers before reaching your application: ASCII control character encoding at the bottom, the **TTY** driver (configured via termios) in the middle, and application-level processing (GNU Readline, <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code) at the top. Understanding this stack explains why `Ctrl+M` is identical to `Enter`, why `Ctrl+C` can't be rebound in most tools, and why <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> implements its own line editor instead of using Readline.
 
 <KeyTakeaways>
-- Terminal input processing has three layers: ASCII encoding → TTY driver (termios) → Application (Readline or custom)
+- Terminal input processing has three layers: ASCII encoding → **TTY** driver (termios) → Application (Readline or custom)
 - `Ctrl+M` and `Enter` produce the same byte (`0x0D`) at the ASCII level — this is a 1960s standard, not a tool configuration
 - Canonical mode line editing was designed for physical teletypewriters where paper couldn't be erased
 - GNU Readline keybindings are a de facto standard from Emacs conventions, not defined by any POSIX specification
-- Modern tools (<span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code) bypass Readline entirely but keep Emacs keybindings as muscle-memory convention
+- Modern tools (<span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code) bypass Readline entirely but keep Emacs keybindings as muscle-memory convention
 </KeyTakeaways>
 
 ## The Terminal Input Pipeline: From Keyboard to Application
@@ -38,33 +36,33 @@ TTY Driver (kernel)          →  PTY slave side, intercepts or passes bytes per
 Application (Fish, etc.)     →  in raw mode, handles all keypresses itself
 ```
 
-The terminal emulator is the modern equivalent of a physical teletypewriter. The PTY (pseudo-TTY) pair is the modern equivalent of the serial cable. The TTY driver is the same kernel module that processed serial data from physical teletypewriters in the 1970s.
+The terminal emulator is the modern equivalent of a physical teletypewriter. The PTY (Pseudo-TTY) pair is the modern equivalent of the serial cable. The **TTY** driver is the same kernel module that processed serial data from physical teletypewriters in the 1970s.
 
-## 1. TTY and Terminal: A History of Names
+## 1. **TTY** and Terminal: A History of Names
 
-**TTY** stands for TeleTYpewriter — a physical electromechanical device with a keyboard and a print head, connected to a computer via serial cable. **Terminal** is its successor concept. Early terminals were also hardware (like the DEC VT100), replacing paper with a CRT screen.
+**TTY** stands for TeleTYpewriter — a physical electromechanical device with a keyboard and a print head, connected to a computer via serial cable. Terminal is its successor concept. Early terminals were also hardware (like the DEC VT100), replacing paper with a CRT screen.
 
 ### Hardware Evolution
 
 | Era | Device | Interface | Display |
 |-----|--------|-----------|---------|
-| 1960s | Physical teletypewriter (TTY) | Serial port | Paper |
+| 1960s | Physical teletypewriter (**TTY**) | Serial port | Paper |
 | 1970s | Video terminal (VT100) | Serial port | CRT screen |
-| 1980s | Terminal emulator (xterm) | PTY (pseudo-TTY) | X11 window |
+| 1980s | Terminal emulator (xterm) | PTY (Pseudo-TTY) | X11 window |
 | 2020s | Ghostty / Kitty / Alacritty | PTY | GPU-accelerated window |
 
-The kernel's TTY driver and PTY interface were designed for physical teletypewriters and have been carried forward unchanged. Today, Ghostty is "the emulated teletypewriter," the PTY is "the serial cable," and the TTY driver is "the kernel module that processes serial data."
+The kernel's **TTY** driver and PTY interface were designed for physical teletypewriters and have been carried forward unchanged. Today, Ghostty is "the emulated teletypewriter," the PTY is "the serial cable," and the **TTY** driver is "the kernel module that processes serial data."
 
 ### Name Legacy
 
 | Name | Original meaning | Current meaning |
 |------|-----------------|-----------------|
-| TTY | Teletypewriter | Kernel terminal driver module |
-| PTY | Pseudo-teletypewriter | Software-emulated TTY (master/slave pair) |
+| **TTY** | Teletypewriter | Kernel terminal driver module |
+| PTY | Pseudo-teletypewriter | Software-emulated **TTY** (master/slave pair) |
 | terminal | Physical terminal device | Terminal emulator software (Ghostty) |
 | console | System console (directly connected terminal) | TUI or system primary terminal |
-| `stty` | Set teletype | Configure TTY driver parameters |
-| `/dev/tty` | TTY device file | Current terminal's device file |
+| `stty` | Set teletype | Configure **TTY** driver parameters |
+| `/dev/tty` | **TTY** device file | Current terminal's device file |
 
 ## 2. ASCII Control Character Encoding
 
@@ -74,7 +72,7 @@ The encoding rule for Ctrl-modified keys was defined in the 1960s ASCII standard
 Ctrl + key = key & 0x1F  (clear bits 5 and 6, i.e., AND with 0b00011111)
 ```
 
-This rule applies to characters in the ASCII range `0x40`–`0x5F` (uppercase letters `A`–`Z` and symbols `@`, `[`, `\`, `]`, `^`, `_`). It does **not** apply to lowercase letters or characters outside this range. The equivalent subtraction shorthand `ASCII − 64` only holds within this range.
+This rule applies to characters in the ASCII range `0x40`–`0x5F` (uppercase letters `A`–`Z` and symbols `@`, `[`, `\`, `]`, `^`, `_`). It does not apply to lowercase letters or characters outside this range. The equivalent subtraction shorthand `ASCII − 64` only holds within this range.
 
 | Key | Calculation | Byte | ASCII name | Meaning |
 |-----|-------------|------|------------|---------|
@@ -87,9 +85,9 @@ This rule applies to characters in the ASCII range `0x40`–`0x5F` (uppercase le
 
 `Ctrl+M = Enter` and `Ctrl+I = Tab` are not tool configurations. At the byte level, they are the same value. This was defined by the ASCII standard (ANSI X3.4-1963) and cannot be changed by any application.
 
-## 3. The TTY Driver (termios)
+## 3. The **TTY** Driver (termios)
 
-The TTY driver is a kernel-level software layer that sits between the terminal and the process. POSIX (IEEE 1003.1 / ISO/IEC 9945) defines its behavior through the `termios` structure:
+The **TTY** driver is a kernel-level software layer that sits between the terminal and the process. POSIX (IEEE 1003.1 / ISO/IEC 9945) defines its behavior through the `termios` structure:
 
 ```c
 struct termios {
@@ -105,19 +103,19 @@ struct termios {
 
 | Index | stty name | Default | Meaning |
 |-------|-----------|---------|---------|
-| VINTR | `intr` | `^C` | Send SIGINT |
-| VQUIT | `quit` | `^\` | Send SIGQUIT |
-| VERASE | `erase` | `^?` | Delete previous character |
-| VKILL | `kill` | `^U` | Delete entire line |
-| VEOF | `eof` | `^D` | EOF marker / Flush buffer |
+| VINTR | `intr` | <span title="^（caret）represents the Ctrl modifier">`^C`</span> | Send SIGINT |
+| VQUIT | `quit` | <span title="^（caret）represents the Ctrl modifier">`^\`</span> | Send SIGQUIT |
+| VERASE | `erase` | <span title="^? is a special stty convention: ^ followed by ? represents DEL">`^?`</span> | Delete previous character |
+| VKILL | `kill` | <span title="^（caret）represents the Ctrl modifier">`^U`</span> | Delete entire line |
+| VEOF | `eof` | <span title="^（caret）represents the Ctrl modifier">`^D`</span> | EOF marker / Flush buffer |
 | VSTART | `start` | `^Q` | Resume output (XON) |
 | VSTOP | `stop` | `^S` | Suspend output (XOFF) |
-| VSUSP | `susp` | `^Z` | Send SIGTSTP |
+| VSUSP | `susp` | <span title="^（caret）represents the Ctrl modifier">`^Z`</span> | Send SIGTSTP |
 | VEOL | `eol` | `<undef>` | End-of-line character |
 | VMIN | `min` | `1` | Minimum characters for `read()` (non-canonical only) |
 | VTIME | `time` | `0` | `read()` timeout (non-canonical only) |
 
-In the POSIX `termios` structure, Canonical and Non-canonical modes are mutually exclusive, so the driver reuses memory slots in the `c_cc` array. `VMIN` typically shares the same index as `VEOF` (`^D`), and `VTIME` shares with `VEOL`. This is why system programmers must be careful when switching modes.
+In the POSIX `termios` structure, Canonical and Non-canonical modes are mutually exclusive, so the driver reuses memory slots in the `c_cc` array. `VMIN` typically shares the same index as `VEOF` (<span title="^（caret）represents the Ctrl modifier">`^D`</span>), and `VTIME` shares with `VEOL`. This is why system programmers must be careful when switching modes.
 
 ### The `stty` Command
 
@@ -133,30 +131,30 @@ kill = ^U     →  Delete entire line
 eof = ^D      →  Flush buffer / EOF marker
 ```
 
-Note that `Ctrl+D` (VEOF) is not a signal. In Canonical mode, it instructs the TTY driver to immediately "flush" its internal buffer and return all collected bytes to the waiting `read()` system call. If the buffer is empty (i.e., you press `^D` on a new line), `read()` returns 0 bytes. By POSIX convention, an application interprets a 0-byte return from `read()` as an End-of-File (EOF) condition.
+Note that `Ctrl+D` (VEOF) is not a signal. In Canonical mode, it instructs the **TTY** driver to immediately "flush" its internal buffer and return all collected bytes to the waiting `read()` system call. If the buffer is empty (i.e., you press <span title="^（caret）represents the Ctrl modifier"><span title="^（caret）represents the Ctrl modifier">`^D`</span></span> on a new line), `read()` returns 0 bytes. By POSIX convention, an application interprets a 0-byte return from `read()` as an End-of-File (EOF) condition.
 
 ## 4. Canonical Mode: Line Editing for Teletypewriters
 
-Canonical mode (also called cooked mode) is the TTY driver's default line-editing mode. The TTY driver maintains an internal input buffer on behalf of the user — the application only receives the complete line after Enter is pressed.
+Canonical mode (also called cooked mode) is the **TTY** driver's default line-editing mode. The **TTY** driver maintains an internal input buffer on behalf of the user — the application only receives the complete line after Enter is pressed.
 
-This design was built for physical teletypewriters, where paper cannot be erased. Editing could only happen in the TTY driver's internal buffer. What appeared on paper was a separate, irreversible record.
+This design was built for physical teletypewriters, where paper cannot be erased. Editing could only happen in the **TTY** driver's internal buffer. What appeared on paper was a separate, irreversible record.
 
-On early 1960s teletypewriters, the erase character was `^H` (BS, `0x08`), and the convention for marking a deletion on paper was to print `#`. The `^?` (DEL, `0x7F`) became the standard erase character later, established by DEC VT-series terminals in the 1970s.
+On early 1960s teletypewriters, the erase character was <span title="^（caret）represents the Ctrl modifier">`^H`</span> (BS, `0x08`), and the convention for marking a deletion on paper was to print `#`. The <span title="^? is a special stty convention: ^ followed by ? represents DEL">`^?`</span> (DEL, `0x7F`) became the standard erase character later, established by DEC VT-series terminals in the 1970s.
 
-The origin of `^?` (DEL) is physical: in the era of **punched paper tape**, a character was recorded by punching holes into a tape. Once a hole was punched, it couldn't be "un-punched." The binary representation of `0x7F` is `1111111` (seven holes punched). If an operator made a mistake, they would back up the tape and punch all seven holes (the "Rubout" character), which the computer was then programmed to ignore. This physical constraint is why `DEL` became the standard for erasing.
+The origin of <span title="^? is a special stty convention: ^ followed by ? represents DEL">`^?`</span> (DEL) is physical: in the era of punched paper tape, a character was recorded by punching holes into a tape. Once a hole was punched, it couldn't be "un-punched." The binary representation of `0x7F` is `1111111` (seven holes punched). If an operator made a mistake, they would back up the tape and punch all seven holes (the "Rubout" character), which the computer was then programmed to ignore. This physical constraint is why `DEL` became the standard for erasing.
 
-Modern Linux systems default to `^?` for `VERASE`, while some older BSD-derived systems still default to `^H`.
+Modern Linux systems default to <span title="^? is a special stty convention: ^ followed by ? represents DEL">`^?`</span> for `VERASE`, while some older BSD-derived systems still default to <span title="^（caret）represents the Ctrl modifier">`^H`</span>.
 
-| Key | TTY buffer operation | Effect on paper (1960s TTY era) |
+| Key | **TTY** buffer operation | Effect on paper (1960s **TTY** era) |
 |-----|---------------------|-----------------|
-| `^H` (erase, early TTYs) | Delete last character | Back up one position, print `#` to mark deletion |
-| `^W` (werase) | Delete last word | Overwrite characters one by one |
-| `^U` (kill) | Clear entire line | Print `@` to mark line as void, newline to retype |
-| `^R` (reprint) | Re-output buffer contents | Reprint the clean current buffer |
+| <span title="^（caret）represents the Ctrl modifier">`^H`</span> (erase, early **TTY**s) | Delete last character | Back up one position, print `#` to mark deletion |
+| <span title="^（caret）represents the Ctrl modifier">`^W`</span> (werase) | Delete last word | Overwrite characters one by one |
+| <span title="^（caret）represents the Ctrl modifier">`^U`</span> (kill) | Clear entire line | Print `@` to mark line as void, newline to retype |
+| <span title="^（caret）represents the Ctrl modifier">`^R`</span> (reprint) | Re-output buffer contents | Reprint the clean current buffer |
 
-Consider this input sequence: `fix the bu` + `^W` + `^W` + `the bug`
+Consider this input sequence: `fix the bu` + <span title="^（caret）represents the Ctrl modifier">`^W`</span> + <span title="^（caret）represents the Ctrl modifier">`^W`</span> + `the bug`
 
-**What appears on paper** (with strikeouts):
+What appears on paper (with strikeouts):
 
 ```
 fix the bu####the bug
@@ -164,7 +162,7 @@ fix the bu####the bug
          Two ^W strikeouts covering "bu" and "the"
 ```
 
-**TTY buffer** (invisible to the operator, evolving step by step):
+**TTY** buffer (invisible to the operator, evolving step by step):
 
 ```
 fix the bu          ← typed up to here
@@ -175,16 +173,16 @@ fix the bug         ← typed "the bug"
 
 There's a critical distinction here:
 
-- **Paper** = display (irreversible, can only strike over)
-- **TTY buffer** = data (freely modifiable, invisible to user)
+- Paper = display (irreversible, can only strike over)
+- **TTY** buffer = data (freely modifiable, invisible to user)
 
-The paper and the buffer are **not synchronized**. The paper shows the full history with strikeouts. The buffer holds only the clean current state. This is why `^R` (reprint) exists — the operator forgets what's actually in the buffer and needs a clean reprint.
+The paper and the buffer are not synchronized. The paper shows the full history with strikeouts. The buffer holds only the clean current state. This is why <span title="^（caret）represents the Ctrl modifier">`^R`</span> (reprint) exists — the operator forgets what's actually in the buffer and needs a clean reprint.
 
-When video terminals (VT100) arrived with cursor movement and screen erase capabilities, the TTY driver could send `BS SPACE BS` sequences to actually erase characters on screen. Paper and buffer finally became visually synchronized. Modern terminal emulators (Ghostty) inherit this mechanism.
+When video terminals (VT100) arrived with cursor movement and screen erase capabilities, the **TTY** driver could send `BS SPACE BS` sequences to actually erase characters on screen. Paper and buffer finally became visually synchronized. Modern terminal emulators (Ghostty) inherit this mechanism.
 
-## 5. TTY Interception vs Application Handling
+## 5. **TTY** Interception vs Application Handling
 
-The TTY driver intercepts bytes it recognizes and handles them itself (sending signals, editing the line). Bytes it doesn't recognize are passed through to the application:
+The **TTY** driver intercepts bytes it recognizes and handles them itself (sending signals, editing the line). Bytes it doesn't recognize are passed through to the application:
 
 ```
 Keyboard Ctrl+C → 0x03 → TTY intercepts → sends SIGINT → process receives signal
@@ -193,24 +191,24 @@ Keyboard Ctrl+A → 0x01 → TTY passes through → reaches readline/fish → ap
 
 This means:
 
-- `Ctrl+C` (SIGINT), `Ctrl+Z` (SIGTSTP), `Ctrl+\` (SIGQUIT) — handled by the TTY layer
+- `Ctrl+C` (SIGINT), `Ctrl+Z` (SIGTSTP), `Ctrl+\` (SIGQUIT) — handled by the **TTY** layer
 - `Ctrl+A` (beginning of line), `Ctrl+E` (end of line), `Ctrl+K` (kill to end of line) — handled by Readline or the application layer
-- `Ctrl+U`, `Ctrl+W`, `Ctrl+D` — handled by the TTY in canonical mode, but typically redefined by applications like Readline (e.g., `Ctrl+U` becomes "delete to beginning of line" instead of "delete entire line")
+- `Ctrl+U`, `Ctrl+W`, `Ctrl+D` — handled by the **TTY** in canonical mode, but typically redefined by applications like Readline (e.g., `Ctrl+U` becomes "delete to beginning of line" instead of "delete entire line")
 
 ## 6. Readline and POSIX: What's Standardized and What Isn't
 
-Readline is not a standard. It's **GNU Readline** — a line-editing library originally written by Brian Fox for the GNU Project (publicly released with <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span> around 1988–1989). Its keybindings come from Emacs conventions, not from any specification.
+Readline is not a standard. It's GNU Readline — a line-editing library originally written by Brian Fox for the GNU Project (publicly released with <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span> around 1988–1989). Its keybindings come from Emacs conventions, not from any specification.
 
 ### Historical Timeline
 
 | Year | Milestone | Editing capability |
 |------|-----------|-------------------|
-| 1970s | Unix `sh` | termios cooked mode only (`^U` kill line, `^W` kill word, `^H`/`^?` backspace). No cursor movement. |
+| 1970s | Unix `sh` | termios cooked mode only (<span title="^（caret）represents the Ctrl modifier">`^U`</span> kill line, <span title="^（caret）represents the Ctrl modifier">`^W`</span> kill word, <span title="^（caret）represents the Ctrl modifier">`^H`</span>/<span title="^? is a special stty convention: ^ followed by ? represents DEL">`^?`</span> backspace). No cursor movement. |
 | 1978 | BSD <span title="C Shell — a Unix shell with C-like syntax">csh</span> | Bill Joy introduces command history substitution (`!!`, `!$`), but still no interactive line editing |
 | ~1981 | <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span> | Ken Greer adds Emacs-style interactive line editing (`Ctrl+A` home, `Ctrl+E` end) to <span title="C Shell — a Unix shell with C-like syntax">csh</span> |
 | ~1983 | <span title="KornShell — a Unix shell by David Korn at AT&T">ksh</span> (AT&T) | David Korn independently adds emacs-mode and vi-mode line editing; developed separately from <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span> |
 | 1988–89 | GNU Readline | Brian Fox creates reusable line-editing library for <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span>. Adopts Emacs key conventions established by <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span>/<span title="KornShell — a Unix shell by David Korn at AT&T">ksh</span>. Chet Ramey becomes primary maintainer ~1990. |
-| 1990s | POSIX (IEEE 1003.1) | Standardizes termios interface and `sh` command language syntax. Does **not** standardize line-editing keybindings. |
+| 1990s | POSIX (IEEE 1003.1) | Standardizes termios interface and `sh` command language syntax. Does not standardize line-editing keybindings. |
 
 ### The Standardization Gap
 
@@ -222,12 +220,12 @@ BSD tcsh / GNU Readline — Line-editing keybindings (de facto standard, not a f
 Fish / Helix / Claude Code — Don't use GNU Readline; implement line editing independently
 ```
 
-**Key points:**
+Key points:
 
-- **POSIX does not define** `Ctrl+A` = beginning of line or `Ctrl+E` = end of line. POSIX only specifies the semantics of `c_cc` entries like `VERASE`, `VKILL`, and `VWERASE`.
-- **Emacs keybindings are a de facto standard**, propagated through <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span>/<span title="KornShell — a Unix shell by David Korn at AT&T">ksh</span> → GNU Readline → <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span>. No specification defines them.
-- **<span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> doesn't use GNU Readline.** It implements its own line editor but follows the same Emacs key conventions (`Ctrl+A/E/B/F/N/P`) because they're muscle memory at this point.
-- **Helix and Claude Code do the same** — each implements input processing independently, following Emacs conventions rather than any formal specification.
+- POSIX does not define `Ctrl+A` = beginning of line or `Ctrl+E` = end of line. POSIX only specifies the semantics of `c_cc` entries like `VERASE`, `VKILL`, and `VWERASE`.
+- Emacs keybindings are a de facto standard, propagated through <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span>/<span title="KornShell — a Unix shell by David Korn at AT&T">ksh</span> → GNU Readline → <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span>. No specification defines them.
+- <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> doesn't use GNU Readline. It implements its own line editor but follows the same Emacs key conventions (`Ctrl+A/E/B/F/N/P`) because they're muscle memory at this point.
+- Helix and Claude Code do the same — each implements input processing independently, following Emacs conventions rather than any formal specification.
 
 The keybindings you see in terminal tools are the product of 40 years of convention propagated from Emacs → <span title="TENEX C Shell — an enhanced csh with interactive editing">tcsh</span> → GNU Readline. They are not the product of any ISO or POSIX specification.
 
@@ -235,19 +233,19 @@ The keybindings you see in terminal tools are the product of 40 years of convent
 
 ### Cooked Mode vs Raw Mode
 
-Raw mode is a termios configuration that disables all TTY driver processing, letting the application receive raw bytes directly. Cooked mode (canonical mode) is the default where the TTY driver handles everything:
+**Raw Mode** is a termios configuration that disables all **TTY** driver processing, letting the application receive raw bytes directly. **Cooked Mode** (canonical mode) is the default where the **TTY** driver handles everything:
 
-| Behavior | Cooked mode (default) | Raw mode |
+| Behavior | **Cooked Mode** (default) | **Raw Mode** |
 |----------|----------------------|----------|
 | Line buffering | Input delivered to app after Enter | Each byte delivered immediately |
-| `^C` → SIGINT | TTY intercepts, sends signal | Byte `0x03` passed to app directly |
-| `^U` / `^W` | TTY performs line/word deletion | Bytes passed to app directly |
-| `^D` EOF | TTY triggers EOF condition | Byte `0x04` passed to app directly |
-| `^S` / `^Q` | TTY suspends/resumes output | Bytes passed to app directly |
-| Echo | TTY auto-echoes input | Application decides whether to echo |
-| `^V` | TTY escapes next character | Byte passed to app directly |
+| <span title="^（caret）represents the Ctrl modifier">`^C`</span> → SIGINT | **TTY** intercepts, sends signal | Byte `0x03` passed to app directly |
+| <span title="^（caret）represents the Ctrl modifier">`^U`</span> / <span title="^（caret）represents the Ctrl modifier">`^W`</span> | **TTY** performs line/word deletion | Bytes passed to app directly |
+| <span title="^（caret）represents the Ctrl modifier">`^D`</span> EOF | **TTY** triggers EOF condition | Byte `0x04` passed to app directly |
+| `^S` / `^Q` | **TTY** suspends/resumes output | Bytes passed to app directly |
+| Echo | **TTY** auto-echoes input | Application decides whether to echo |
+| `^V` | **TTY** escapes next character | Byte passed to app directly |
 
-Linux and BSD systems provide `cfmakeraw()` as a convenience function to switch to raw mode in one call. Under the hood, it disables `icanon`, `echo`, `ISIG`, `IXON`, and other flag bits in the termios structure. Note that `cfmakeraw()` is **not** part of the POSIX standard — it originated as a BSD extension and was later adopted by Linux glibc. On strictly POSIX-only environments, you must set the flags manually via `tcsetattr()`.
+Linux and BSD systems provide `cfmakeraw()` as a convenience function to switch to **Raw Mode** in one call. Under the hood, it disables `icanon`, `echo`, `ISIG`, `IXON`, and other flag bits in the termios structure. Note that `cfmakeraw()` is not part of the POSIX standard — it originated as a BSD extension and was later adopted by Linux glibc. On strictly POSIX-only environments, you must set the flags manually via `tcsetattr()`.
 
 ### The Three Roles
 
@@ -260,20 +258,20 @@ Application (Fish/Helix/     —  Calls tcsetattr() to switch raw mode, handles 
   Claude Code)
 ```
 
-The terminal emulator doesn't participate in raw mode switching. It only converts keyboard events to bytes and sends them through the PTY. It's the applications — <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code — that call `tcsetattr()` to modify termios flags and take over keypress handling.
+The terminal emulator doesn't participate in **Raw Mode** switching. It only converts keyboard events to bytes and sends them through the PTY. It's the applications — <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code — that call `tcsetattr()` to modify termios flags and take over keypress handling.
 
 ### Overlap with `c_cc` Definitions
 
-| TTY `c_cc` | TTY behavior | Application behavior | Conflict? |
+| **TTY** `c_cc` | **TTY** behavior | Application behavior | Conflict? |
 |-------------|--------------|---------------------|-----------|
-| `^C` | SIGINT | <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>: cancel, Helix: normal mode | No — tools preserve TTY handling |
-| `^D` | VEOF (exit) | <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>: exit | No — same semantics |
-| `^U` | VKILL (delete entire line) | Delete to line start | No — semantic refinement |
-| `^W` | VWERASE (delete previous word) | Delete previous word | No — same semantics, app handles in raw mode |
-| `^S` | VSTOP (suspend output) | Helix: save, Claude Code: stash | No — `IXON` disabled in raw mode |
-| `^R` | VREPRINT | Claude Code: search history | No — app handles in raw mode |
+| <span title="^（caret）represents the Ctrl modifier">`^C`</span> | SIGINT | <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>: cancel, Helix: normal mode | No — tools preserve **TTY** handling |
+| <span title="^（caret）represents the Ctrl modifier">`^D`</span> | VEOF (exit) | <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>: exit | No — same semantics |
+| <span title="^（caret）represents the Ctrl modifier">`^U`</span> | VKILL (delete entire line) | Delete to line start | No — semantic refinement |
+| <span title="^（caret）represents the Ctrl modifier">`^W`</span> | VWERASE (delete previous word) | Delete previous word | No — same semantics, app handles in **Raw Mode** |
+| `^S` | VSTOP (suspend output) | Helix: save, Claude Code: stash | No — `IXON` disabled in **Raw Mode** |
+| <span title="^（caret）represents the Ctrl modifier">`^R`</span> | VREPRINT | Claude Code: search history | No — app handles in **Raw Mode** |
 
-**No actual conflicts.** In raw mode, the application takes over all keypress handling. The `c_cc` definitions stop applying. The keybindings are semantically consistent with TTY defaults by deliberate design.
+No actual conflicts. In **Raw Mode**, the application takes over all keypress handling. The `c_cc` definitions stop applying. The keybindings are semantically consistent with **TTY** defaults by deliberate design.
 
 ## 8. Ctrl+J vs Ctrl+M: A Deep Dive
 
@@ -281,22 +279,22 @@ The difference between these two keys reveals how termios flags affect what appl
 
 | Key | Byte | Terminal default | Can be bound separately? |
 |-----|------|-----------------|--------------------------|
-| `Ctrl+M` | `0x0D` (CR) | Identical to Enter | **No in cooked mode**; **Only with modern protocols in raw mode** |
+| `Ctrl+M` | `0x0D` (CR) | Identical to Enter | No in **Cooked Mode**; Only with modern protocols in **Raw Mode** |
 | `Ctrl+J` | `0x0A` (LF) | Different from Enter | Yes — different byte |
 
 ### In Cooked Mode
 
-The TTY driver enables the `icrnl` (Input CR to NL) flag by default. This translates incoming `0x0D` (CR) to `0x0A` (LF). To the application, `Ctrl+M` and `Ctrl+J` both produce byte `0x0A` — they are indistinguishable.
+The **TTY** driver enables the `icrnl` (Input CR to NL) flag by default. This translates incoming `0x0D` (CR) to `0x0A` (LF). To the application, `Ctrl+M` and `Ctrl+J` both produce byte `0x0A` — they are indistinguishable.
 
 ### In Raw Mode
 
-When an application switches to raw mode, `icrnl` is disabled. This allows the application to distinguish between `Ctrl+J` (`0x0A`) and `Enter/Ctrl+M` (`0x0D`).
+When an application switches to **Raw Mode**, `icrnl` is disabled. This allows the application to distinguish between `Ctrl+J` (`0x0A`) and `Enter/Ctrl+M` (`0x0D`).
 
-However, there is a common misconception that raw mode alone allows you to distinguish `Ctrl+M` from `Enter`. In standard terminal configurations, both keys send the exact same byte (`0x0D`). If the bytes are identical, the application cannot distinguish them even in raw mode. To truly separate `Enter` from `Ctrl+M`, you must use a terminal emulator that supports modern keyboard protocols.
+However, there is a common misconception that **Raw Mode** alone allows you to distinguish `Ctrl+M` from `Enter`. In standard terminal configurations, both keys send the exact same byte (`0x0D`). If the bytes are identical, the application cannot distinguish them even in **Raw Mode**. To truly separate `Enter` from `Ctrl+M`, you must use a terminal emulator that supports modern keyboard protocols.
 
 ## 9. Modern Solutions: Kitty Keyboard Protocol & CSI u
 
-The reason we struggle with `Shift+Enter` or distinguishing `Tab` from `Ctrl+I` is the rigid 1963 ASCII encoding. To solve this without breaking backward compatibility, modern terminal emulators like **Ghostty**, **Kitty**, and **Alacritty** support enhanced keyboard protocols (like the **Kitty Keyboard Protocol** or the **CSI u** standard).
+The reason we struggle with `Shift+Enter` or distinguishing `Tab` from `Ctrl+I` is the rigid 1963 ASCII encoding. To solve this without breaking backward compatibility, modern terminal emulators like Ghostty, Kitty, and Alacritty support enhanced keyboard protocols (like the Kitty Keyboard Protocol or the CSI u standard).
 
 Instead of sending a single legacy byte like `0x0D` (CR) for Enter, these protocols can send a rich escape sequence:
 
@@ -309,7 +307,7 @@ The application (if it supports these protocols) can then parse these escape seq
 
 You can observe terminal input processing at each layer using standard Unix tools.
 
-### View Current TTY Settings
+### View Current **TTY** Settings
 
 ```bash
 stty -a
@@ -342,19 +340,19 @@ finally:
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
 ```
 
-In raw mode, you'll see `Ctrl+M` as `0d` and `Ctrl+J` as `0a` — confirming they're distinct bytes when `icrnl` is off.
+In **Raw Mode**, you'll see `Ctrl+M` as `0d` and `Ctrl+J` as `0a` — confirming they're distinct bytes when `icrnl` is off.
 
 ## Frequently Asked Questions
 
 ### Why can't I rebind Ctrl+M independently from Enter?
 
-In **cooked mode**, you can't: `Ctrl+M` produces `0x0D` (CR), and the TTY driver's `icrnl` flag translates it to `0x0A` (LF) — same as `Ctrl+J` — before it reaches the application. The bytes are identical by the time any application sees them.
+In cooked mode, you can't: `Ctrl+M` produces `0x0D` (CR), and the **TTY** driver's `icrnl` flag translates it to `0x0A` (LF) — same as `Ctrl+J` — before it reaches the application. The bytes are identical by the time any application sees them.
 
-In **raw mode** (used by <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code), `icrnl` is disabled, but `Ctrl+M` and `Enter` still typically send the same byte (`0x0D`). To distinguish them, you need a terminal emulator and an application that both support modern protocols like **Kitty Keyboard Protocol** or **CSI u**, which send unique escape sequences for different key combinations.
+In **Raw Mode** (used by <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code), `icrnl` is disabled, but `Ctrl+M` and `Enter` still typically send the same byte (`0x0D`). To distinguish them, you need a terminal emulator and an application that both support modern protocols like Kitty Keyboard Protocol or CSI u, which send unique escape sequences for different key combinations.
 
 ### What's the difference between Ctrl+J and Ctrl+M?
 
-`Ctrl+J` produces `0x0A` (Line Feed) and `Ctrl+M` produces `0x0D` (Carriage Return) — they are different bytes. However, in cooked mode, the TTY driver's `icrnl` flag translates `0x0D` to `0x0A`, making them indistinguishable to applications. In raw mode (used by <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code), `icrnl` is disabled and the bytes arrive separately, allowing independent keybindings.
+`Ctrl+J` produces `0x0A` (Line Feed) and `Ctrl+M` produces `0x0D` (Carriage Return) — they are different bytes. However, in cooked mode, the **TTY** driver's `icrnl` flag translates `0x0D` to `0x0A`, making them indistinguishable to applications. In **Raw Mode** (used by <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Claude Code), `icrnl` is disabled and the bytes arrive separately, allowing independent keybindings.
 
 ### Do <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, and Claude Code use GNU Readline?
 
@@ -362,23 +360,23 @@ No. Each implements its own line editing and input processing. However, they all
 
 ### What does `stty raw` actually do?
 
-It disables all TTY driver processing: turns off `icanon` (canonical mode line editing), `echo` (automatic character display), `ISIG` (signal generation for `^C`, `^Z`, `^\`), `IXON` (XON/XOFF flow control), and the `icrnl` flag (CR-to-NL translation). The application then receives every byte exactly as typed. On Linux and BSD systems, the `cfmakeraw()` function does this in one call — note that `cfmakeraw()` is a BSD/Linux extension, not part of the POSIX standard.
+It disables all **TTY** driver processing: turns off `icanon` (canonical mode line editing), `echo` (automatic character display), `ISIG` (signal generation for <span title="^（caret）represents the Ctrl modifier">`^C`</span>, <span title="^（caret）represents the Ctrl modifier">`^Z`</span>, `^\`), `IXON` (XON/XOFF flow control), and the `icrnl` flag (CR-to-NL translation). The application then receives every byte exactly as typed. On Linux and BSD systems, the `cfmakeraw()` function does this in one call — note that `cfmakeraw()` is a BSD/Linux extension, not part of the POSIX standard.
 
 ### Why does `Ctrl+U` delete to line start instead of the whole line?
 
-In POSIX termios, `VKILL` (`Ctrl+U`) is defined as "delete entire line." But when an application like <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span> (via GNU Readline) or <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> switches to raw mode, the TTY's `c_cc` handling is bypassed. The application redefines `Ctrl+U` as "kill to beginning of line" (keeping characters after the cursor), which is more useful in practice. This is a semantic refinement, not a conflict.
+In POSIX termios, `VKILL` (`Ctrl+U`) is defined as "delete entire line." But when an application like <span title="Bourne Again SHell — the default Unix shell on most Linux distributions">Bash</span> (via GNU Readline) or <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> switches to **Raw Mode**, the **TTY**'s `c_cc` handling is bypassed. The application redefines `Ctrl+U` as "kill to beginning of line" (keeping characters after the cursor), which is more useful in practice. This is a semantic refinement, not a conflict.
 
 ## Conclusion
 
-Terminal keyboard input processing is a three-layer system: ASCII defines the byte-level encoding (unchanged since 1963), the TTY driver (configured via termios) provides line editing and signal handling inherited from teletypewriter design, and the application layer (Readline or custom) handles everything else.
+Terminal keyboard input processing is a three-layer system: ASCII defines the byte-level encoding (unchanged since 1963), the **TTY** driver (configured via termios) provides line editing and signal handling inherited from teletypewriter design, and the application layer (Readline or custom) handles everything else.
 
-The keybindings in modern terminal tools — `Ctrl+A` for beginning of line, `Ctrl+E` for end, `Ctrl+K` to kill forward — come from 40 years of Emacs convention, not from POSIX or any formal standard. Applications in raw mode bypass the TTY driver's `c_cc` definitions entirely, but preserve their semantics by design.
+The keybindings in modern terminal tools — `Ctrl+A` for beginning of line, `Ctrl+E` for end, `Ctrl+K` to kill forward — come from 40 years of Emacs convention, not from POSIX or any formal standard. Applications in **Raw Mode** bypass the **TTY** driver's `c_cc` definitions entirely, but preserve their semantics by design.
 
-Understanding this stack demystifies why some shortcuts can't be rebound (they're the same byte at the ASCII level), why `Shift+Enter` requires raw mode to work, and why every terminal tool independently implements the same Emacs keybindings.
+Understanding this stack demystifies why some shortcuts can't be rebound (they're the same byte at the ASCII level), why `Shift+Enter` requires **Raw Mode** to work, and why every terminal tool independently implements the same Emacs keybindings.
 
 ### Further Reading
 
-- [The TTY Demystified](https://www.linusakesson.net/programming/tty/) — Linus Akesson's canonical reference on TTY architecture
+- [The TTY Demystified](https://www.linusakesson.net/programming/tty/) — Linus Akesson's canonical reference on **TTY** architecture
 - [A Brief Introduction to termios](https://blog.nelhage.net/2009/12/a-brief-introduction-to-termios-termios3-and-stty/) — Nelson Elhage's deep dive on the termios API
-- [A History of the TTY](https://computer.rip/2024-02-25-a-history-of-the-tty.html) — Historical context from physical teletypewriters to modern terminals
+- [A History of the **TTY**](https://computer.rip/2024-02-25-a-history-of-the-tty.html) — Historical context from physical teletypewriters to modern terminals
 - [termios(3) man page](https://man7.org/linux/man-pages/man3/termios.3.html) — Complete POSIX termios reference
