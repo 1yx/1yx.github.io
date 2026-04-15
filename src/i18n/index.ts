@@ -44,6 +44,12 @@ export const TAG_TRANSLATIONS = {
   gnu: { "zh-CN": "GNU", en: "GNU" },
   "claude-code": { "zh-CN": "Claude Code", en: "Claude Code" },
   pypi: { "zh-CN": "PyPI", en: "PyPI" },
+  tty: { "zh-CN": "电传打字机（TTY）", en: "TTY" },
+  termios: { "zh-CN": "termios", en: "termios" },
+  readline: { "zh-CN": "Readline", en: "Readline" },
+  terminal: { "zh-CN": "终端", en: "Terminal" },
+  posix: { "zh-CN": "POSIX", en: "POSIX" },
+  "keyboard-input": { "zh-CN": "快捷键", en: "Keyboard Shortcuts" },
 } as const;
 
 export type TagId = keyof typeof TAG_TRANSLATIONS;

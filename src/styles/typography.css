@@ -126,6 +126,12 @@
       @apply flex justify-center;
     }
 
+    span[title] {
+      cursor: help;
+      text-decoration: underline dotted;
+      text-underline-offset: 2px;
+    }
+
     details {
       @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]:my-0!;
     }
