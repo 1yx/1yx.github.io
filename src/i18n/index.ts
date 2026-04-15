@@ -92,6 +92,7 @@ const translations = {
       privacy: "隐私政策",
     },
     categoryDesc: (name: string) => `所有${name}相关的文章。`,
+    keyTakeaways: "核心要点",
   },
   en: {
     siteTitle: "Lyx's blog",
@@ -130,6 +131,7 @@ const translations = {
       privacy: "Privacy Policy",
     },
     categoryDesc: (name: string) => `All articles related to ${name}.`,
+    keyTakeaways: "Key Takeaways",
   },
 } as const;
 

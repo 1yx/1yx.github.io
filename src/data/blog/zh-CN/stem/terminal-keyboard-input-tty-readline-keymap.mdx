@@ -12,14 +12,17 @@ featured: false
 category: stem
 ---
 
+import KeyTakeaways from "@/components/KeyTakeaways.astro";
+
 终端键盘输入在到达应用程序之前会流经三个层级：底层的 ASCII 控制字符编码、中间的 TTY 驱动（通过 termios 配置）以及顶层的应用程序处理（GNU Readline, <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>, Helix, Claude Code）。理解这个堆栈结构可以解释为什么 `Ctrl+M` 与 `Enter` 相同，为什么大多数工具中无法重新绑定 `Ctrl+C`，以及为什么 <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span> 实现了自己的行编辑器而不是使用 Readline。
 
-> **核心要点**
-> - 终端输入处理分为三层：ASCII 编码 → TTY 驱动 (termios) → 应用程序 (Readline 或自定义)
-> - `Ctrl+M` 和 `Enter` 在 ASCII 层面产生相同的字节 (`0x0D`) —— 这是 1960 年代的标准，而非工具配置
-> - 标准模式 (Canonical Mode) 的行编辑是为物理电传打字机 (Teletypewriter) 设计的，因为纸张上的内容无法擦除
-> - GNU Readline 键绑定是源自 Emacs 惯例的业界标准，而非任何 POSIX 规范定义
-> - 现代工具（<span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>, Helix, Claude Code）绕过了 Readline，但保留了 Emacs 键绑定作为肌肉记忆惯例
+<KeyTakeaways>
+- 终端输入处理分为三层：ASCII 编码 → TTY 驱动 (termios) → 应用程序 (Readline 或自定义)
+- `Ctrl+M` 和 `Enter` 在 ASCII 层面产生相同的字节 (`0x0D`) —— 这是 1960 年代的标准，而非工具配置
+- 标准模式 (Canonical Mode) 的行编辑是为物理电传打字机 (Teletypewriter) 设计的，因为纸张上的内容无法擦除
+- GNU Readline 键绑定是源自 Emacs 惯例的业界标准，而非任何 POSIX 规范定义
+- 现代工具（<span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span>, Helix, Claude Code）绕过了 Readline，但保留了 Emacs 键绑定作为肌肉记忆惯例
+</KeyTakeaways>
 
 ## 终端输入流水线：从键盘到应用程序
 

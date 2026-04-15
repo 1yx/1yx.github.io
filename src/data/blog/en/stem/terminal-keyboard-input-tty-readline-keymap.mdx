@@ -12,16 +12,19 @@ featured: false
 category: stem
 ---
 
+import KeyTakeaways from "@/components/KeyTakeaways.astro";
+
 # How Terminal Keyboard Input Works: TTY, Readline & Keymap Explained
 
 Terminal keyboard input flows through three layers before reaching your application: ASCII control character encoding at the bottom, the TTY driver (configured via termios) in the middle, and application-level processing (GNU Readline, <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code) at the top. Understanding this stack explains why `Ctrl+M` is identical to `Enter`, why `Ctrl+C` can't be rebound in most tools, and why <span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span> implements its own line editor instead of using Readline.
 
-> **Key Takeaways**
-> - Terminal input processing has three layers: ASCII encoding → TTY driver (termios) → Application (Readline or custom)
-> - `Ctrl+M` and `Enter` produce the same byte (`0x0D`) at the ASCII level — this is a 1960s standard, not a tool configuration
-> - Canonical mode line editing was designed for physical teletypewriters where paper couldn't be erased
-> - GNU Readline keybindings are a de facto standard from Emacs conventions, not defined by any POSIX specification
-> - Modern tools (<span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code) bypass Readline entirely but keep Emacs keybindings as muscle-memory convention
+<KeyTakeaways>
+- Terminal input processing has three layers: ASCII encoding → TTY driver (termios) → Application (Readline or custom)
+- `Ctrl+M` and `Enter` produce the same byte (`0x0D`) at the ASCII level — this is a 1960s standard, not a tool configuration
+- Canonical mode line editing was designed for physical teletypewriters where paper couldn't be erased
+- GNU Readline keybindings are a de facto standard from Emacs conventions, not defined by any POSIX specification
+- Modern tools (<span title="Friendly Interactive SHell — a user-friendly Unix shell">Fish</span>, Helix, Claude Code) bypass Readline entirely but keep Emacs keybindings as muscle-memory convention
+</KeyTakeaways>
 
 ## The Terminal Input Pipeline: From Keyboard to Application
 

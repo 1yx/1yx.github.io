@@ -1,0 +1,44 @@
+---
+import { t, type Locale } from "@/i18n";
+
+const locale = (Astro.currentLocale ?? "zh-CN") as Locale;
+const title = t(locale).keyTakeaways;
+---
+
+<aside class="key-takeaways">
+  <span class="key-takeaways-title">{title}</span>
+  <slot />
+</aside>
+
+<style>
+  .key-takeaways {
+    position: relative;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  /* Sketchy border only — content unaffected */
+  .key-takeaways::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--border);
+    filter: url(#sketchy-box);
+    pointer-events: none;
+  }
+
+  .key-takeaways-title {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    transform: translateY(-50%);
+    z-index: 1;
+    padding: 0 0.5rem;
+    background: var(--background);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--foreground);
+  }
+</style>

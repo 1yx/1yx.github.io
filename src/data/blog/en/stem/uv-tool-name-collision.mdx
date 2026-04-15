@@ -15,6 +15,7 @@ category: stem
 ---
 
 import FloatImage from "@/components/FloatImage.astro";
+import KeyTakeaways from "@/components/KeyTakeaways.astro";
 import specKitRelease from "@/assets/2026/04/spec-kit-release.png";
 import pypiSpecifyCli from "@/assets/2026/04/pypi-specify-cli.png";
 import uvToolOutdated from "@/assets/2026/04/uv-tool-outdated.png";
@@ -24,12 +25,13 @@ When you install a Python CLI tool from a Git repository using `uv tool install 
 
 I was writing a script to update Homebrew, pnpm global packages, and uv global packages all at once. Homebrew: fine. pnpm: fine. uv: flagged a tool for a major version update that didn't exist. Here's what happened, why it happens, and how to handle it correctly.
 
-> **Key Takeaways**
-> - `uv tool list --outdated` resolves the package name against PyPI, not the original Git source
-> - If a different package with the same name exists on PyPI (name collision), you get a false positive
-> - The same issue affects `uv tool upgrade --all`, which may fail or update to the wrong package
-> - Solution: parse the `--show-version-specifiers` output to identify Git sources, then check GitHub Releases API directly
-> - Use `uv tool install --from git+...@<tag> --force` to update git-sourced tools
+<KeyTakeaways>
+- `uv tool list --outdated` resolves the package name against PyPI, not the original Git source
+- If a different package with the same name exists on PyPI (name collision), you get a false positive
+- The same issue affects `uv tool upgrade --all`, which may fail or update to the wrong package
+- Solution: parse the `--show-version-specifiers` output to identify Git sources, then check GitHub Releases API directly
+- Use `uv tool install --from git+...@<tag> --force` to update git-sourced tools
+</KeyTakeaways>
 
 ## How I Discovered the Problem
 
