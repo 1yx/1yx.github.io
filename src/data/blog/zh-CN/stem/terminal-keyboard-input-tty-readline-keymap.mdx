@@ -401,9 +401,9 @@ Ghostty 没有把 `Ctrl+M` 压缩成遗留的 `0x0D`。所以 Claude Code 能区
 
 ### 为什么 `Ctrl+U` 是删至行首而非整行？
 
-在 POSIX termios 中，`VKILL` (`Ctrl+U`) 定义为”删除整行”。但当 <span title=”Bourne Again SHell — 大多数 Linux 发行版的默认 shell”>Bash</span>（通过 GNU Readline）或 <span title=”Friendly Interactive SHell — 用户友好的交互式 shell”>Fish</span> 切换到 **Raw Mode** 时，**TTY** 的 `c_cc` 处理被绕过。应用程序将 `Ctrl+U` 重新定义为”删除至行首”（保留光标后的字符），这在实践中更实用。这是语义细化，而非冲突。
+在 POSIX termios 中，`VKILL` (`Ctrl+U`) 定义为”删除整行”。但当 <span title="Bourne Again SHell — 大多数 Linux 发行版的默认 shell">Bash</span>（通过 GNU Readline）或 <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span> 切换到 **Raw Mode** 时，**TTY** 的 `c_cc` 处理被绕过。应用程序将 `Ctrl+U` 重新定义为”删除至行首”（保留光标后的字符），这在实践中更实用。这是语义细化，而非冲突。
 
-### <span title=”Friendly Interactive SHell — 用户友好的交互式 shell”>Fish</span> 和 Claude Code 使用 GNU Readline 吗？
+### <span title="Friendly Interactive SHell — 用户友好的交互式 shell">Fish</span> 和 Claude Code 使用 GNU Readline 吗？
 
 不。它们各自实现了自己的行编辑和输入处理。但两者都遵循相同的 Emacs 键绑定惯例（`Ctrl+A` 跳到行首、`Ctrl+E` 跳到行尾等），因为这些是 40 年的肌肉记忆标准，而非 Readline 特有的功能。
 
