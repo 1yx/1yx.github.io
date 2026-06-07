@@ -10,7 +10,7 @@ type Props = {
 };
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const posts = await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft);
   const lang: Locale = DEFAULT_LOCALE;
 
   return posts

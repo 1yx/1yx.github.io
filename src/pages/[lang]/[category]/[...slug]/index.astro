@@ -10,7 +10,7 @@ type Props = {
 };
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const posts = await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft);
 
   console.log("[slug] Total non-draft posts:", posts.length);
   console.log("[slug] Post IDs:", posts.map(p => p.id));
