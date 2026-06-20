@@ -30,7 +30,8 @@ export function removeLocalePrefix(pathname: string): string {
 // Tag translations: canonical English ID → display name per locale
 export const TAG_TRANSLATIONS = {
   marathon: { "zh-CN": "马拉松比赛", en: "Marathon Race" },
-  running: { "zh-CN": "跑步训练", en: "Running" },
+  running: { "zh-CN": "跑步", en: "Running" },
+  "marathon-training": { "zh-CN": "马拉松训练", en: "Marathon Training" },
   psychology: { "zh-CN": "心理学", en: "Psychology" },
   "self-esteem": { "zh-CN": "自尊", en: "Self-Esteem" },
   self: { "zh-CN": "自我", en: "Self" },
