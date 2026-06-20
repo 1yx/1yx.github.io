@@ -12,6 +12,7 @@ import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { getLangFromId } from "@/utils/getLangFromId";
+import postFilter from "@/utils/postFilter";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
@@ -66,7 +67,7 @@ const ogImage = ogImageUrl
 
 // Check if translation exists for language switcher
 const otherLang = getOtherLocale(lang);
-const allDraftless = await getCollection("blog", ({ data }) => !data.draft);
+const allDraftless = await getCollection("blog", postFilter);
 const postSlug = post.id.split("/").slice(2).join("/");
 const otherLangPost = allDraftless.find(p => {
   const pSlug = p.id.split("/").slice(2).join("/");

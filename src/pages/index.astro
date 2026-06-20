@@ -7,10 +7,11 @@ import Card from "@/components/Card.astro";
 import { DEFAULT_LOCALE } from "@/i18n";
 import { SITE } from "@/config";
 import getPostsByLang from "@/utils/getPostsByLang";
+import postFilter from "@/utils/postFilter";
 import avatar from "@/assets/images/avatar.webp";
 
 const lang = DEFAULT_LOCALE;
-const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const allPosts = await getCollection("blog", postFilter);
 const posts = getPostsByLang(allPosts, lang);
 
 const baseUrl = SITE.website.replace(/\/$/, "");

@@ -8,13 +8,14 @@ import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
+import postFilter from "@/utils/postFilter";
 import { getLangFromId } from "@/utils/getLangFromId";
 import { SITE } from "@/config";
 import { CATEGORIES } from "@/constants";
 import { DEFAULT_LOCALE, t, type Locale } from "@/i18n";
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+  const allPosts = await getCollection("blog", postFilter);
   const lang: Locale = DEFAULT_LOCALE;
 
   return Object.keys(CATEGORIES).flatMap(category => {

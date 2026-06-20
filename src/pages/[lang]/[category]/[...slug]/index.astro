@@ -12,9 +12,6 @@ type Props = {
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => import.meta.env.DEV || !data.draft);
 
-  console.log("[slug] Total non-draft posts:", posts.length);
-  console.log("[slug] Post IDs:", posts.map(p => p.id));
-
   const paths = LOCALES.filter(l => l !== DEFAULT_LOCALE).flatMap(lang =>
     posts
       .filter(post => post.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`))
@@ -28,7 +25,6 @@ export async function getStaticPaths() {
       }))
   );
 
-  console.log("[slug] Generated paths:", JSON.stringify(paths.map(p => p.params)));
   return paths;
 }
 
