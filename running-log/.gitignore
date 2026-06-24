@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.pyc
+
+# Strava activity-detail cache (regenerated when credentials are configured)
+strava_activity_details.json

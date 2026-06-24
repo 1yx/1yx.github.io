@@ -40,3 +40,6 @@ CLAUDE.md
 
 # SEO audit screenshots (Chrome DevTools / Playwright)
 screenshots/
+
+# Scratch / staging
+.tmp/
