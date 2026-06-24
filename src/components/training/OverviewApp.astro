@@ -1,0 +1,210 @@
+---
+// Server-rendered overview (the /running/calendar/ landing page).
+// Uses only the build-time plan (no runtime Strava data), so it renders to
+// static HTML with real <a> links into the day/block views — better for SEO
+// and accessibility than a client-rendered shell.
+import "@/styles/training.css";
+import { translations, getLocalePath, type Locale } from "@/i18n";
+import {
+  phases,
+  allMicrocycles,
+  microcycleIndex,
+  phaseKm,
+  dayPlannedKm,
+  categoryClass,
+  fmtShort,
+  type Block,
+  type Microcycle,
+  type Phase,
+  type PlanDay,
+  type Workout,
+} from "@/utils/training";
+
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const ui = translations[lang].training;
+const phaseList = phases();
+
+const blockPath = getLocalePath(lang, "running/calendar/block/");
+const dayPath = getLocalePath(lang, "running/calendar/day/");
+const blockHref = (pi: number, bi: number, day: number) =>
+  `${blockPath}?phase=${pi}&block=${bi}&day=${day}`;
+
+const cycleTotal = (microcycle: Microcycle): string => {
+  if (!microcycle.total_km) {
+    return ui.plannedKm(
+      (microcycle.days || []).reduce((s, d) => s + dayPlannedKm(d), 0)
+    );
+  }
+  const parsed = parseFloat(microcycle.total_km);
+  return Number.isNaN(parsed) ? microcycle.total_km : ui.plannedKm(parsed);
+};
+
+const cellText = (w: Workout | null) => (w && w.text ? w.text : ui.rest);
+
+// Microcycles of a single block, each tagged with its day offset (deep-link target).
+const microcyclesOfBlock = (
+  block: Block
+): { microcycle: Microcycle; dayIndex: number }[] => {
+  let dayOffset = 0;
+  return (block.microcycles || block.sets || []).map(microcycle => {
+    const item = { microcycle, dayIndex: dayOffset };
+    dayOffset += (microcycle.days || []).length;
+    return item;
+  });
+};
+---
+
+<div class="tx-app" data-lang={lang}>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
+      {ui.overviewTitle}
+    </h1>
+    <a class="tx-back" href={dayPath}>{ui.backToDay}</a>
+  </div>
+  <p class="-mt-2 text-sm text-muted">{ui.overviewDesc}</p>
+
+  {
+    phaseList.length > 1 && (
+      <nav class="tx-tabs" aria-label={ui.phasesNav}>
+        {phaseList.map((phase, pi) => (
+          <a class="tx-tab" href={`#phase-${pi + 1}`}>
+            {phase.name}
+          </a>
+        ))}
+      </nav>
+    )
+  }
+
+  {
+    phaseList.map((phase: Phase, pi: number) => {
+      const items = allMicrocycles(phase);
+      const days = items.reduce(
+        (sum, it) => sum + it.microcycle.days.length,
+        0
+      );
+      return (
+        <section id={`phase-${pi + 1}`} class="tx-phase">
+          <div class="tx-phase__head">
+            <div>
+              <div class="tx-phase__title">{phase.name}</div>
+              <div class="tx-phase__meta">
+                {items.length} {ui.microcycles} · {days} {ui.days}
+              </div>
+            </div>
+            <div class="tx-phase__total">
+              {ui.plannedVolume}
+              <strong>{phaseKm(phase)}km</strong>
+            </div>
+          </div>
+
+          {/* desktop tables */}
+          <div class="tx-tablewrap">
+            {phase.blocks.map(block => (
+              <div class="tx-table">
+                <table>
+                  <tbody>
+                    {microcyclesOfBlock(block).map(({ microcycle }) => {
+                      const cls = microcycle.taper
+                        ? " tx-cyclehead--taper"
+                        : microcycle.deload
+                          ? " tx-cyclehead--deload"
+                          : "";
+                      return (
+                        <>
+                          <tr class={`tx-cyclehead${cls}`}>
+                            <th>
+                              {ui.microcycleLabel} {microcycleIndex(microcycle)}
+                              <span class="sub">{cycleTotal(microcycle)}</span>
+                            </th>
+                            {(microcycle.days || []).map((day: PlanDay) => (
+                              <td class="tx-date">
+                                {fmtShort(day.date)}
+                                <span class="sub">
+                                  {ui.dayLabel} {day.day}
+                                </span>
+                              </td>
+                            ))}
+                          </tr>
+                          <tr class="tx-row--period">
+                            <th>{ui.am}</th>
+                            {(microcycle.days || []).map((day: PlanDay) => (
+                              <td
+                                class={`tx-cell tx-cell--${categoryClass(day.am)}`}
+                              >
+                                {cellText(day.am)}
+                              </td>
+                            ))}
+                          </tr>
+                          <tr class="tx-row--period">
+                            <th>{ui.pm}</th>
+                            {(microcycle.days || []).map((day: PlanDay) => (
+                              <td
+                                class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
+                              >
+                                {cellText(day.pm)}
+                              </td>
+                            ))}
+                          </tr>
+                        </>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+
+          {/* mobile cards */}
+          <div class="tx-mobile">
+            {phase.blocks.map((block, bi) =>
+              microcyclesOfBlock(block).map(({ microcycle, dayIndex }) => {
+                const cls = microcycle.taper
+                  ? " tx-cyclehead--taper"
+                  : microcycle.deload
+                    ? " tx-cyclehead--deload"
+                    : "";
+                return (
+                  <a class="tx-cyclecard" href={blockHref(pi, bi, dayIndex)}>
+                    <div class={`tx-cyclecard__head${cls}`}>
+                      <span>
+                        {ui.blockLabel} {block.index} · {ui.microcycleLabel}{" "}
+                        {microcycleIndex(microcycle)}
+                      </span>
+                      <span>{cycleTotal(microcycle)}</span>
+                    </div>
+                    {(microcycle.days || []).map((day: PlanDay) => (
+                      <div class="tx-daycard">
+                        <div class="tx-daycard__date">
+                          {fmtShort(day.date)} · {ui.dayLabel} {day.day}
+                        </div>
+                        <div class="tx-slot">
+                          <div class="tx-slot__label">{ui.am}</div>
+                          <div
+                            class={`tx-cell tx-cell--${categoryClass(day.am)}`}
+                          >
+                            {cellText(day.am)}
+                          </div>
+                        </div>
+                        <div class="tx-slot">
+                          <div class="tx-slot__label">{ui.pm}</div>
+                          <div
+                            class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
+                          >
+                            {cellText(day.pm)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </a>
+                );
+              })
+            )}
+          </div>
+        </section>
+      );
+    })
+  }
+</div>

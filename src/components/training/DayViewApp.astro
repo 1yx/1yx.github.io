@@ -1,0 +1,251 @@
+---
+import "@/styles/training.css";
+import { translations } from "@/i18n";
+import type { Locale } from "@/i18n";
+
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const ui = translations[lang].training;
+---
+
+<div class="tx-app" id="tx-day" data-lang={lang}>
+  <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">{ui.dayTitle}</h1>
+
+  <div class="tx-nav">
+    <button class="tx-navbtn" id="tx-prev" aria-label={ui.prevDay}>‹</button>
+    <div
+      class="tx-pos"
+      id="tx-pos"
+      role="button"
+      tabindex="0"
+      aria-label={ui.blockTitle}
+    >
+      <div class="tx-pos__t" id="tx-title"></div>
+      <div class="tx-pos__d" id="tx-date"></div>
+    </div>
+    <button class="tx-navbtn" id="tx-next" aria-label={ui.nextDay}>›</button>
+  </div>
+
+  <section class="tx-section">
+    <div class="tx-section__head">
+      {ui.plannedSection}<span class="sub">{ui.plannedSectionSub}</span>
+    </div>
+    <div class="tx-workouts" id="tx-plan"></div>
+  </section>
+
+  <section class="tx-section">
+    <div class="tx-section__head">
+      {ui.actualSection}<span class="sub">{ui.actualSectionSub}</span>
+    </div>
+    <div class="tx-workouts" id="tx-actual"></div>
+  </section>
+</div>
+
+<script>
+  import { translations } from "@/i18n";
+  import type { Locale } from "@/i18n";
+  import {
+    phases,
+    microcycleIndex,
+    dayEntriesOf,
+    aggregateActs,
+    paceOf,
+    paceText,
+    fmtFull,
+    findToday,
+    categoryClass,
+    esc,
+    type Activity,
+    type Workout,
+    type AggregatedActual,
+    type Split,
+  } from "@/utils/training";
+
+  let controller: AbortController | null = null;
+  let keyHandler: ((e: KeyboardEvent) => void) | null = null;
+
+  function init() {
+    const root = document.getElementById("tx-day");
+    if (!root) return;
+
+    // Cancel any in-flight activities fetch + stale key listener from a prior mount.
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const lang = (root.dataset.lang as Locale) || "zh-CN";
+    const base = lang === "zh-CN" ? "" : "/en";
+    const ui = translations[lang].training;
+
+    const phaseList = phases();
+    let phaseIndex = 0;
+    let blockIndex = 0;
+    let dayIndex = 0;
+    let acts: Activity[] = [];
+
+    const block = () => phaseList[phaseIndex].blocks[blockIndex];
+    const entries = () => dayEntriesOf(block());
+    const $ = (id: string) => document.getElementById(id);
+
+    function applyRoute() {
+      const params = new URLSearchParams(location.search);
+      const p = Number.parseInt(params.get("phase") || "", 10);
+      if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
+      const b = Number.parseInt(params.get("block") || "", 10);
+      if (
+        Number.isInteger(b) &&
+        b >= 0 &&
+        b < phaseList[phaseIndex].blocks.length
+      )
+        blockIndex = b;
+      const list = entries();
+      const d = Number.parseInt(params.get("day") || "", 10);
+      if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
+    }
+
+    function step(delta: number) {
+      const n = entries().length;
+      dayIndex = (dayIndex + delta + n) % n;
+      render();
+    }
+
+    function goBlock() {
+      location.href = `${base}/running/calendar/block/?phase=${phaseIndex}&block=${blockIndex}&day=${dayIndex}`;
+    }
+
+    function planBoxHtml(w: Workout | null, label: string): string {
+      if (!w || !w.text) {
+        return `<div class="tx-workout tx-workout--rest"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.rest}</div></div>`;
+      }
+      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label} · ${ui.plannedKm(w.planned_km || 0)}</div><div class="tx-workout__title">${esc(w.text)}</div></div>`;
+    }
+
+    function paceChartHtml(splits: Split[]): string {
+      const valid = (splits || []).filter(x => x && x.pace_sec_per_km);
+      if (!valid.length) return "";
+      const paces = valid.map(x => x.pace_sec_per_km as number);
+      const fastest = Math.min(...paces);
+      const slowest = Math.max(...paces);
+      const mid = Math.round((fastest + slowest) / 2);
+      const spread = Math.max(1, slowest - fastest);
+      const bars = valid
+        .map((split, i) => {
+          const speedScore =
+            (slowest - (split.pace_sec_per_km as number)) / spread;
+          const h = Math.round(24 + speedScore * 54);
+          const label = split.split || i + 1;
+          const title = `${ui.dayLabel} ${label} km：${paceText(split.pace_sec_per_km as number)}/km`;
+          return `<div class="tx-pace__bar" style="height:${h}px" title="${title}" aria-label="${title}"><span>${label}</span></div>`;
+        })
+        .join("");
+      return `<div class="tx-pace" aria-label="${ui.paceFastest(paceText(fastest))}，${ui.paceSlowest(paceText(slowest))}">
+        <div class="tx-pace__plot">
+          <div class="tx-pace__scale"><span>${paceText(fastest)}</span><span>${paceText(mid)}</span><span>${paceText(slowest)}</span></div>
+          <div class="tx-pace__bars">${bars}</div>
+        </div>
+        <div class="tx-pace__caption"><span>${ui.paceFastest(paceText(fastest))}</span><span>${ui.paceSlowest(paceText(slowest))}</span></div>
+      </div>`;
+    }
+
+    function actualBoxHtml(
+      w: Workout | null,
+      agg: AggregatedActual | null,
+      label: string
+    ): string {
+      if (agg) {
+        const extra =
+          !w || !w.text
+            ? `<span class="tx-tag tx-tag--extra">${ui.extra}</span>`
+            : "";
+        const cat = w && w.text ? categoryClass(w) : "extra";
+        const p = paceOf(agg.km, agg.t);
+        let meta = "";
+        if (agg.desc)
+          meta = `<div class="tx-workout__meta">${esc(agg.desc)}</div>`;
+        else if (agg.n > 1)
+          meta = `<div class="tx-workout__meta dim">${agg.n}</div>`;
+        const inner = `<div class="tx-workout__period">${label}${extra}</div>
+          <div class="tx-workout__title">✓ ${agg.km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(agg.splits)}`;
+        if (agg.id) {
+          return `<a class="tx-workout tx-workout--${cat} tx-workout--done" href="https://www.strava.com/activities/${agg.id}" target="_blank" rel="noopener">${inner}</a>`;
+        }
+        return `<div class="tx-workout tx-workout--${cat} tx-workout--done">${inner}</div>`;
+      }
+      if (!w || !w.text) {
+        return `<div class="tx-workout tx-workout--rest"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.rest}</div></div>`;
+      }
+      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.pending}</div></div>`;
+    }
+
+    function render() {
+      const planEl = $("tx-plan");
+      if (!planEl) return;
+      const list = entries();
+      if (dayIndex >= list.length) dayIndex = 0;
+      const { microcycle, day } = list[dayIndex];
+      const tag = microcycle.taper
+        ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
+        : microcycle.deload
+          ? `<span class="tx-tag tx-tag--deload">${ui.deload}</span>`
+          : "";
+      $("tx-title")!.innerHTML =
+        `${phaseList[phaseIndex].name.replace(" Session", " Phase")} · ${ui.microcycleLabel} ${microcycleIndex(microcycle)} · ${ui.dayLabel} ${day.day} ${tag}`;
+      $("tx-date")!.textContent =
+        `${fmtFull(day.date)}　${ui.position(dayIndex + 1, list.length)}`;
+      const agg = aggregateActs(acts, day.date);
+      planEl.innerHTML =
+        planBoxHtml(day.am, ui.am) + planBoxHtml(day.pm, ui.pm);
+      $("tx-actual")!.innerHTML =
+        actualBoxHtml(day.am, agg.am, ui.am) +
+        actualBoxHtml(day.pm, agg.pm, ui.pm);
+    }
+
+    // wire navigation
+    $("tx-prev")!.onclick = () => step(-1);
+    $("tx-next")!.onclick = () => step(1);
+    const pos = $("tx-pos")!;
+    pos.onclick = goBlock;
+    pos.onkeydown = e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        goBlock();
+      }
+    };
+
+    if (keyHandler) document.removeEventListener("keydown", keyHandler);
+    keyHandler = (e: KeyboardEvent) => {
+      if (!document.getElementById("tx-day")) return;
+      if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "ArrowRight") step(1);
+    };
+    document.addEventListener("keydown", keyHandler);
+
+    applyRoute();
+    if (!location.search) {
+      const td = findToday();
+      if (td) {
+        phaseIndex = td.phaseIndex;
+        blockIndex = td.blockIndex;
+        dayIndex = td.dayIndex;
+      }
+    }
+
+    // Render immediately with no actuals, then hydrate once activities arrive.
+    render();
+    fetch("/running/calendar/activities.json", { signal })
+      .then(r => (r.ok ? r.json() : []))
+      .then((data: Activity[] | Activity) => {
+        if (signal.aborted) return;
+        acts = Array.isArray(data) ? data : [];
+        render();
+      })
+      .catch(() => {
+        if (!signal.aborted) render();
+      });
+  }
+
+  document.addEventListener("astro:after-swap", init);
+  init();
+</script>

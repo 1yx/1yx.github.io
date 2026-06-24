@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import BlockViewApp from "@/components/training/BlockViewApp.astro";
+import { SITE } from "@/config";
+import { LOCALES, DEFAULT_LOCALE, t, type Locale } from "@/i18n";
+
+export async function getStaticPaths() {
+  return LOCALES.filter(l => l !== DEFAULT_LOCALE).map(lang => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const ui = t(lang).training;
+---
+
+<Layout
+  title={`${ui.blockTitle} | ${SITE.title}`}
+  description={ui.blockDesc}
+  lang={lang}
+  alternateLanguages={[
+    { lang: "zh-CN", href: `${SITE.website}running/calendar/block/` },
+    { lang: "en", href: `${SITE.website}en/running/calendar/block/` },
+  ]}
+>
+  <Header {lang} />
+  <Breadcrumb {lang} />
+  <main id="main-content" class="app-layout">
+    <BlockViewApp {lang} />
+  </main>
+  <Footer {lang} />
+</Layout>

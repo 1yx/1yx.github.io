@@ -33,6 +33,14 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     `${breadcrumbList[1]} ${Number(breadcrumbList[2]) === 1 ? "" : "(page " + breadcrumbList[2] + ")"}`
   );
 }
+
+// Build accumulated hrefs so a nested crumb links to its real path
+// (e.g. /running/calendar/ rather than the root-relative /calendar/).
+let acc = "";
+const crumbHrefs = breadcrumbList.map(segment => {
+  acc = acc ? `${acc}/${segment}` : segment;
+  return getLocalePath(lang, acc + "/");
+});
 ---
 
 <nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
@@ -56,7 +64,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
           </li>
         ) : (
           <li>
-            <a href={getLocalePath(lang, breadcrumb + "/")} class="capitalize opacity-70">
+            <a href={crumbHrefs[index]} class="capitalize opacity-70">
               {breadcrumb}
             </a>
             <span aria-hidden="true">&raquo;</span>

@@ -1,0 +1,533 @@
+/*
+ * Training calendar styles (/running/calendar/*).
+ *
+ * Consumed by JS-injected innerHTML across the day/block/overview views, so all
+ * classes are global (imported once per *App.astro frontmatter; Vite dedupes).
+ * Colors are built on the site theme tokens (src/styles/global.css) — they flip
+ * with [data-theme=dark] automatically. No hardcoded palette survives here.
+ */
+
+.tx-app {
+  --tx-radius: 10px;
+  --tx-surface: color-mix(in srgb, var(--muted) 9%, var(--background));
+  --tx-surface-2: color-mix(in srgb, var(--muted) 15%, var(--background));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 28px;
+}
+
+/* ---------- shared nav (prev/next + title card) ---------- */
+
+.tx-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tx-navbtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--foreground);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--tx-radius);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.tx-navbtn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.tx-pos {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  text-align: center;
+  padding: 8px 12px;
+  background: var(--tx-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--tx-radius);
+  cursor: pointer;
+}
+
+.tx-pos__t {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--foreground);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.tx-pos__d {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- tags / pills ---------- */
+
+.tx-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--background);
+}
+
+.tx-tag--deload { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 45%, var(--border)); }
+.tx-tag--taper { color: var(--purple); border-color: color-mix(in srgb, var(--purple) 45%, var(--border)); }
+.tx-tag--extra { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 45%, var(--border)); }
+
+/* ---------- section card ---------- */
+
+.tx-section {
+  background: var(--tx-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--tx-radius);
+  overflow: hidden;
+}
+
+.tx-section__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.tx-section__head .sub {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ---------- workout boxes (day view) ---------- */
+
+.tx-workouts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px;
+  align-items: start;
+}
+
+.tx-workout {
+  --tx-cat: var(--muted);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 56px;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--tx-cat) 35%, var(--border));
+  background: color-mix(in srgb, var(--tx-cat) 12%, var(--background));
+  color: var(--foreground);
+}
+
+.tx-workout--specific { --tx-cat: var(--pink); }
+.tx-workout--special { --tx-cat: var(--purple); }
+.tx-workout--fundamental { --tx-cat: var(--indigo); }
+.tx-workout--regeneration { --tx-cat: var(--mint); }
+.tx-workout--extra { --tx-cat: var(--orange); }
+
+.tx-workout--rest {
+  --tx-cat: var(--muted);
+  background: var(--background);
+  border-color: var(--border);
+}
+
+.tx-workout__period {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.tx-workout__title {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.tx-workout--rest .tx-workout__title {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tx-workout__meta {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tx-workout__meta.dim {
+  opacity: 0.8;
+}
+
+a.tx-workout {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.tx-workout:hover {
+  border-color: var(--accent);
+}
+
+.tx-workout--done .tx-workout__title {
+  color: var(--green);
+}
+
+.tx-workout--done {
+  justify-content: flex-start;
+}
+
+/* ---------- pace chart (inside a done workout) ---------- */
+
+.tx-pace {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.tx-pace__plot {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 6px;
+  align-items: end;
+}
+
+.tx-pace__scale {
+  height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1px 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-pace__bars {
+  height: 78px;
+  display: flex;
+  align-items: end;
+  gap: 3px;
+}
+
+.tx-pace__bar {
+  flex: 1;
+  min-width: 10px;
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--accent) 30%, var(--background)),
+    var(--accent)
+  );
+  position: relative;
+}
+
+.tx-pace__bar span {
+  position: absolute;
+  left: 50%;
+  bottom: -16px;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.tx-pace__caption {
+  margin-top: 16px;
+  margin-left: 42px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* ---------- block view: microcycle cards + day grid ---------- */
+
+.tx-microcycles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px;
+}
+
+.tx-microcycle {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--background);
+}
+
+.tx-microcycle__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.tx-microcycle__name {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.tx-microcycle__total {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-blockdays {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.tx-blockday {
+  min-height: 64px;
+  padding: 7px 6px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--tx-surface);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tx-blockday:hover {
+  border-color: var(--accent);
+}
+
+.tx-blockday--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--background));
+}
+
+.tx-blockday .bd-title { font-size: 10px; font-weight: 800; line-height: 1.1; }
+.tx-blockday .bd-date { font-size: 9px; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.tx-blockday .bd-km { font-size: 11px; font-weight: 850; color: var(--green); margin-top: 7px; font-variant-numeric: tabular-nums; }
+.tx-blockday .bd-km--rest { color: var(--muted); }
+.tx-blockday .bd-note { font-size: 9px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- overview: tabs + phases ---------- */
+
+.tx-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.tx-tab {
+  flex: 0 0 auto;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.tx-tab:hover,
+.tx-tab--active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.tx-phase {
+  border: 1px solid var(--border);
+  border-radius: var(--tx-radius);
+  overflow: hidden;
+  background: var(--background);
+}
+
+.tx-phase__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--tx-surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.tx-phase__title { font-size: 16px; font-weight: 800; line-height: 1.2; color: var(--foreground); }
+.tx-phase__meta { color: var(--muted); font-size: 12px; margin-top: 4px; font-weight: 600; }
+.tx-phase__total { text-align: right; font-size: 12px; color: var(--muted); }
+.tx-phase__total strong { display: block; color: var(--foreground); font-size: 18px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+/* overview: desktop table */
+.tx-tablewrap {
+  overflow-x: auto;
+  padding: 12px;
+  display: grid;
+  gap: 16px;
+}
+
+.tx-table {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tx-table table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.tx-table th,
+.tx-table td {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.tx-table th:last-child,
+.tx-table td:last-child { border-right: 0; }
+
+.tx-table .tx-row--period th {
+  position: sticky;
+  left: 0;
+  background: var(--tx-surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px;
+  text-align: left;
+}
+
+.tx-table .tx-cyclehead th,
+.tx-table .tx-cyclehead td {
+  background: var(--tx-surface);
+  font-weight: 800;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.tx-cyclehead th { color: var(--muted); }
+.tx-cyclehead td { color: var(--foreground); }
+.tx-cyclehead .sub { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: 600; }
+.tx-cyclehead--deload th, .tx-cyclehead--deload td { background: color-mix(in srgb, var(--orange) 8%, var(--tx-surface)); }
+.tx-cyclehead--taper th, .tx-cyclehead--taper td { background: color-mix(in srgb, var(--purple) 8%, var(--tx-surface)); }
+
+.tx-table .tx-date { font-variant-numeric: tabular-nums; padding: 8px; }
+.tx-table .tx-date .sub { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; font-weight: 600; }
+
+.tx-cell {
+  min-height: 44px;
+  padding: 8px 9px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  font-weight: 700;
+  word-break: break-word;
+  color: var(--foreground);
+}
+
+.tx-cell--rest { color: var(--muted); background: var(--background); }
+.tx-cell--specific { background: color-mix(in srgb, var(--pink) 16%, var(--background)); }
+.tx-cell--special { background: color-mix(in srgb, var(--purple) 16%, var(--background)); }
+.tx-cell--fundamental { background: color-mix(in srgb, var(--indigo) 16%, var(--background)); }
+.tx-cell--regeneration { background: color-mix(in srgb, var(--mint) 16%, var(--background)); }
+.tx-cell--extra { background: color-mix(in srgb, var(--orange) 16%, var(--background)); }
+
+/* overview: mobile cards (table hidden ≤720px) */
+.tx-mobile { display: none; flex-direction: column; gap: 10px; padding: 12px; }
+
+.tx-cyclecard {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tx-cyclecard:hover { border-color: var(--accent); }
+
+.tx-cyclecard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--tx-surface);
+  color: var(--foreground);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.tx-daycard { padding: 10px 12px; border-top: 1px solid var(--border); display: grid; gap: 7px; }
+.tx-daycard__date { font-size: 12px; font-weight: 800; color: var(--foreground); font-variant-numeric: tabular-nums; }
+
+.tx-slot { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.tx-slot__label { padding: 5px 8px; background: var(--tx-surface); color: var(--muted); font-size: 11px; font-weight: 800; }
+.tx-slot .tx-cell { border: 0; min-height: 0; }
+
+/* ---------- back link ---------- */
+
+.tx-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+}
+
+.tx-back:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 720px) {
+  .tx-tablewrap { display: none; }
+  .tx-mobile { display: flex; }
+  .tx-blockdays { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tx-phase__head { align-items: flex-start; flex-direction: column; }
+  .tx-phase__total { text-align: left; }
+}

@@ -1,0 +1,210 @@
+---
+import "@/styles/training.css";
+import { translations } from "@/i18n";
+import type { Locale } from "@/i18n";
+
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const ui = translations[lang].training;
+---
+
+<div class="tx-app" id="tx-block" data-lang={lang}>
+  <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
+    {ui.blockTitle}
+  </h1>
+
+  <div class="tx-nav">
+    <button class="tx-navbtn" id="tx-prev" aria-label={ui.prevBlock}>‹</button>
+    <div
+      class="tx-pos"
+      id="tx-pos"
+      role="button"
+      tabindex="0"
+      aria-label={ui.dayTitle}
+    >
+      <div class="tx-pos__t" id="tx-title"></div>
+      <div class="tx-pos__d" id="tx-date"></div>
+    </div>
+    <button class="tx-navbtn" id="tx-next" aria-label={ui.nextBlock}>›</button>
+  </div>
+
+  <section class="tx-section">
+    <div class="tx-section__head">
+      {ui.blockLabel}<span class="sub" id="tx-subtitle"></span>
+    </div>
+    <div class="tx-microcycles" id="tx-microcycles"></div>
+  </section>
+</div>
+
+<script>
+  import { translations } from "@/i18n";
+  import type { Locale } from "@/i18n";
+  import {
+    phases,
+    microcyclesOf,
+    microcycleIndex,
+    dayEntriesOf,
+    dayPlannedKm,
+    dayActualKm,
+    fmtShort,
+    findToday,
+    type Activity,
+    type PlanDay,
+  } from "@/utils/training";
+
+  let controller: AbortController | null = null;
+
+  function init() {
+    const root = document.getElementById("tx-block");
+    if (!root) return;
+
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const lang = (root.dataset.lang as Locale) || "zh-CN";
+    const base = lang === "zh-CN" ? "" : "/en";
+    const ui = translations[lang].training;
+
+    const phaseList = phases();
+    let phaseIndex = 0;
+    let blockIndex = 0;
+    let dayIndex = 0;
+    let acts: Activity[] = [];
+
+    const phase = () => phaseList[phaseIndex];
+    const block = () => phase().blocks[blockIndex];
+    const $ = (id: string) => document.getElementById(id);
+
+    function applyRoute() {
+      const params = new URLSearchParams(location.search);
+      const p = Number.parseInt(params.get("phase") || "", 10);
+      if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
+      const b = Number.parseInt(params.get("block") || "", 10);
+      if (Number.isInteger(b) && b >= 0 && b < phase().blocks.length)
+        blockIndex = b;
+      const list = dayEntriesOf(block());
+      const d = Number.parseInt(params.get("day") || "", 10);
+      if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
+    }
+
+    function goDay(index: number) {
+      dayIndex = index;
+      location.href = `${base}/running/calendar/day/?phase=${phaseIndex}&block=${blockIndex}&day=${dayIndex}`;
+    }
+
+    function stepBlock(direction: number) {
+      blockIndex =
+        (blockIndex + direction + phase().blocks.length) %
+        phase().blocks.length;
+      dayIndex = 0;
+      render();
+    }
+
+    function dayButtonHtml(day: PlanDay, indexInBlock: number): string {
+      const planned = dayPlannedKm(day);
+      const actual = dayActualKm(acts, day);
+      const active = indexInBlock === dayIndex ? " tx-blockday--active" : "";
+      const note = actual
+        ? ui.completed(actual)
+        : planned
+          ? ui.plannedKm(planned)
+          : ui.rest;
+      const kmClass = planned ? "" : " bd-km--rest";
+      const km = planned ? `${planned}km` : ui.rest;
+      return `<button class="tx-blockday${active}" data-day="${indexInBlock}">
+        <div class="bd-title">${ui.dayLabel} ${day.day}</div>
+        <div class="bd-date">${fmtShort(day.date)}</div>
+        <div class="bd-km${kmClass}">${km}</div>
+        <div class="bd-note">${note}</div>
+      </button>`;
+    }
+
+    function render() {
+      const wrap = $("tx-microcycles");
+      if (!wrap) return;
+      const currentBlock = block();
+      const micros = microcyclesOf(currentBlock);
+      const list = dayEntriesOf(currentBlock);
+      const first = list[0]?.day.date;
+      const last = list[list.length - 1]?.day.date;
+      $("tx-title")!.textContent =
+        `${phase().name} · ${ui.blockLabel} ${currentBlock.index}`;
+      $("tx-date")!.textContent =
+        first && last ? `${fmtShort(first)} - ${fmtShort(last)}` : "";
+      $("tx-subtitle")!.textContent =
+        `${micros.length} ${ui.microcycles} · ${list.length} ${ui.days}`;
+
+      let baseIdx = 0;
+      wrap.innerHTML = micros
+        .map(microcycle => {
+          const days = microcycle.days || [];
+          const parsed = parseFloat(microcycle.total_km || "");
+          const total = microcycle.total_km
+            ? Number.isNaN(parsed)
+              ? microcycle.total_km
+              : ui.plannedKm(parsed)
+            : ui.plannedKm(days.reduce((s, d) => s + dayPlannedKm(d), 0));
+          const tag = microcycle.taper
+            ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
+            : microcycle.deload
+              ? `<span class="tx-tag tx-tag--deload">${ui.deload}</span>`
+              : "";
+          const buttons = days
+            .map((day, i) => dayButtonHtml(day, baseIdx + i))
+            .join("");
+          baseIdx += days.length;
+          return `<div class="tx-microcycle">
+            <div class="tx-microcycle__head">
+              <div class="tx-microcycle__name">${ui.microcycleLabel} ${microcycleIndex(microcycle)} ${tag}</div>
+              <div class="tx-microcycle__total">${total}</div>
+            </div>
+            <div class="tx-blockdays">${buttons}</div>
+          </div>`;
+        })
+        .join("");
+
+      wrap.querySelectorAll<HTMLButtonElement>(".tx-blockday").forEach(btn => {
+        btn.onclick = () => goDay(+btn.dataset.day!);
+      });
+    }
+
+    $("tx-prev")!.onclick = () => stepBlock(-1);
+    $("tx-next")!.onclick = () => stepBlock(1);
+    const pos = $("tx-pos")!;
+    pos.onclick = () => goDay(dayIndex);
+    pos.onkeydown = e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        goDay(dayIndex);
+      }
+    };
+
+    applyRoute();
+    if (!location.search) {
+      const td = findToday();
+      if (td) {
+        phaseIndex = td.phaseIndex;
+        blockIndex = td.blockIndex;
+        dayIndex = td.dayIndex;
+      }
+    }
+
+    render();
+    fetch("/running/calendar/activities.json", { signal })
+      .then(r => (r.ok ? r.json() : []))
+      .then((data: Activity[] | Activity) => {
+        if (signal.aborted) return;
+        acts = Array.isArray(data) ? data : [];
+        render();
+      })
+      .catch(() => {
+        if (!signal.aborted) render();
+      });
+  }
+
+  document.addEventListener("astro:after-swap", init);
+  init();
+</script>
