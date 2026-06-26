@@ -96,6 +96,7 @@ export const translations = {
     keyTakeaways: "核心要点",
     training: {
       overviewTitle: "全部训练课程",
+      calendarLink: "跑步日志",
       overviewDesc:
         "2026 下半年全马训练计划——按阶段、Block、Microcycle 浏览全部训练课程。",
       dayTitle: "训练日历",
@@ -173,6 +174,7 @@ export const translations = {
     keyTakeaways: "Key Takeaways",
     training: {
       overviewTitle: "All Workouts",
+      calendarLink: "Running Log",
       overviewDesc:
         "2026 second-half marathon training plan — browse every session by phase, block, and microcycle.",
       dayTitle: "Training Calendar",

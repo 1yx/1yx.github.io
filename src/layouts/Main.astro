@@ -13,7 +13,9 @@ const { props } = Astro;
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
 ---
 
-<Breadcrumb lang={props.lang} />
+<Breadcrumb lang={props.lang}>
+  <slot name="breadcrumb-action" />
+</Breadcrumb>
 <main data-backUrl={backUrl} id="main-content" class="app-layout pb-4">
   {
     "titleTransition" in props ? (

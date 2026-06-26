@@ -43,7 +43,10 @@ const crumbHrefs = breadcrumbList.map(segment => {
 });
 ---
 
-<nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
+<nav
+  class="app-layout mt-8 mb-1 flex flex-wrap items-center justify-between gap-3"
+  aria-label="breadcrumb"
+>
   <ul
     class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
   >
@@ -73,4 +76,5 @@ const crumbHrefs = breadcrumbList.map(segment => {
       )
     }
   </ul>
+  <slot />
 </nav>

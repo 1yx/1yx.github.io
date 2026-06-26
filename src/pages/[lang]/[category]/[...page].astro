@@ -6,6 +6,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
+import CalendarLinkButton from "@/components/training/CalendarLinkButton.astro";
 import Pagination from "@/components/Pagination.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import postFilter from "@/utils/postFilter";
@@ -48,12 +49,25 @@ const ui = t(lang);
     description: ui.categoryDesc(categoryName),
   }}
   alternateLanguages={[
-    { lang: "zh-CN", href: new URL(page.url.current.replace(`/${lang}`, ""), SITE.website).href },
+    {
+      lang: "zh-CN",
+      href: new URL(page.url.current.replace(`/${lang}`, ""), SITE.website)
+        .href,
+    },
     { lang: "en", href: new URL(page.url.current, SITE.website).href },
   ]}
 >
   <Header {lang} />
-  <Main pageTitle={categoryName} pageDesc={ui.categoryDesc(categoryName)} {lang}>
+  <Main
+    pageTitle={categoryName}
+    pageDesc={ui.categoryDesc(categoryName)}
+    {lang}
+  >
+    {
+      category === "running" && (
+        <CalendarLinkButton lang={lang} slot="breadcrumb-action" />
+      )
+    }
     <ul>
       {page.data.map((data: any) => <Card {...data} />)}
     </ul>
