@@ -44,6 +44,10 @@ const cycleTotal = (microcycle: Microcycle): string => {
 
 const cellText = (w: Workout | null) => (w && w.text ? w.text : ui.rest);
 
+// Microcycle label, marking deload (cutback) weeks — the 4th microcycle of each block.
+const mcLabel = (m: Microcycle) =>
+  `${ui.microcycleLabel} ${microcycleIndex(m)}${m.deload ? " (cutback)" : ""}`;
+
 // Microcycles of a single block, each tagged with its day offset (deep-link target).
 const microcyclesOfBlock = (
   block: Block
@@ -116,7 +120,7 @@ const microcyclesOfBlock = (
                         <>
                           <tr class={`tx-cyclehead${cls}`}>
                             <th>
-                              {ui.microcycleLabel} {microcycleIndex(microcycle)}
+                              {mcLabel(microcycle)}
                               <span class="sub">{cycleTotal(microcycle)}</span>
                             </th>
                             {(microcycle.days || []).map((day: PlanDay) => (
@@ -170,8 +174,7 @@ const microcyclesOfBlock = (
                   <a class="tx-cyclecard" href={blockHref(pi, bi, dayIndex)}>
                     <div class={`tx-cyclecard__head${cls}`}>
                       <span>
-                        {ui.blockLabel} {block.index} · {ui.microcycleLabel}{" "}
-                        {microcycleIndex(microcycle)}
+                        {ui.blockLabel} {block.index} · {mcLabel(microcycle)}
                       </span>
                       <span>{cycleTotal(microcycle)}</span>
                     </div>
