@@ -13,9 +13,10 @@ on:
         description: "拉取最近 N 天（默认 30）"
         required: false
         default: "30"
-  # 跑通后放开定时（北京时间约 08:07）：
-  # schedule:
-  #   - cron: "7 0 * * *"
+  # 每天两次：北京时间 09:05 与 19:05（= UTC 01:05 / 11:05）。
+  # 错开整点以避开 GitHub Actions 调度高峰。
+  schedule:
+    - cron: "5 1,11 * * *"
 
 permissions:
   contents: write
