@@ -21,6 +21,7 @@ from pathlib import Path
 import openpyxl
 
 from generate_plan import parse_km
+from strava_feed import build_feed_entry
 
 # 路径都以本脚本所在目录 (running-log/) 为基准，CWD 无关。
 ROOT = Path(__file__).resolve().parent          # running-log/
@@ -39,30 +40,6 @@ CATEGORY_COLORS = {
     "Regeneration": "#CFEDE4",
     "Rest": "#9AA7BA",
 }
-
-
-def pace_seconds_per_km(split):
-    """Strava split average_speed 是 m/s；返回秒/km，缺失时用距离和 moving_time 兜底。"""
-    speed = split.get("average_speed") or 0
-    if speed > 0:
-        return round(1000 / speed)
-    distance_km = (split.get("distance") or 0) / 1000
-    moving_time = split.get("moving_time") or 0
-    return round(moving_time / distance_km) if distance_km > 0 and moving_time > 0 else None
-
-
-def split_obj(split):
-    """把 Strava splits_metric 压缩成前端画配速图需要的字段。"""
-    pace = pace_seconds_per_km(split)
-    if pace is None:
-        return None
-    return {
-        "split": split.get("split"),
-        "distance_km": round((split.get("distance") or 0) / 1000, 3),
-        "moving_time": split.get("moving_time") or 0,
-        "pace_sec_per_km": pace,
-        "elev_m": round(split.get("elevation_difference") or 0, 1),
-    }
 
 
 def cycle_to_block_set(cycle):
@@ -257,49 +234,33 @@ def fill_actual_from_strava(data):
     def detail_needs_refresh(activity):
         activity_id = str(activity.get("id"))
         cached = details.get(activity_id)
+        # v:2 = 缓存的是原始 splits（由 build_feed_entry 处理）；旧版存的是已处理结果，需重取
         return (
             activity.get("id") is not None and
-            (not isinstance(cached, dict) or "splits_metric" not in cached)
+            (not isinstance(cached, dict) or cached.get("v") != 2)
         )
 
     missing = [a for a in runs if detail_needs_refresh(a)]
     for a in missing:
         try:
             det = strava_client.get_activity(a["id"])
-            splits = [x for x in (split_obj(s) for s in det.get("splits_metric", [])) if x]
             details[str(a["id"])] = {
                 "description": (det.get("description") or "").strip(),
-                "splits_metric": splits,
+                "splits_metric": det.get("splits_metric", []),   # 存原始，由 build_feed_entry 处理
+                "v": 2,
             }
         except Exception as e:
             print(f"  活动 {a['id']} 详情失败: {e}")
-            details[str(a["id"])] = {"description": "", "splits_metric": []}
+            details[str(a["id"])] = {"description": "", "splits_metric": [], "v": 2}
     if missing:
         with open(DCACHE, "w", encoding="utf-8") as f:
             json.dump(details, f, ensure_ascii=False, indent=2)
 
     feed = []
     for a in runs:
-        sdt = (a.get("start_date_local") or "").replace("Z", "")
-        try:
-            dt = datetime.fromisoformat(sdt)
-        except ValueError:
-            continue
-        cached = details.get(str(a.get("id")), {})
-        if isinstance(cached, str):  # 兼容旧版缓存：id -> description
-            cached = {"description": cached, "splits_metric": []}
-        feed.append({
-            "id": a.get("id"),
-            "date": dt.date().isoformat(),
-            "time": dt.strftime("%H:%M"),
-            "name": a.get("name", ""),
-            "sport_type": a.get("sport_type", ""),
-            "distance_km": round((a.get("distance") or 0) / 1000, 2),
-            "moving_time": a.get("moving_time") or 0,
-            "elev_m": int(round(a.get("total_elevation_gain") or 0)),
-            "description": cached.get("description", ""),
-            "splits_metric": cached.get("splits_metric", []),
-        })
+        entry = build_feed_entry(a, details.get(str(a.get("id")), {}))
+        if entry is not None:
+            feed.append(entry)
     feed.sort(key=lambda x: x["date"] + x["time"], reverse=True)
     ACTIVITIES_OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(ACTIVITIES_OUT, "w", encoding="utf-8") as f:

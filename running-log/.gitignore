@@ -2,5 +2,10 @@
 __pycache__/
 *.pyc
 
+# Strava credentials & tokens — NEVER commit (secrets); all gitignored.
+.env
+.strava_tokens.json
+.refresh_token_out
+
 # Strava activity-detail cache (regenerated when credentials are configured)
 strava_activity_details.json

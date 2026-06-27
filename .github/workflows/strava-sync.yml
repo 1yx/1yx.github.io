@@ -1,0 +1,73 @@
+name: Sync Strava
+
+# 拉取最近 N 天 Strava 跑步活动，滚动合并进 public/running/calendar/activities.json，
+# 提交后触发 deploy.yml 重建站点；并用 PAT 把轮转后的 refresh_token 写回 secret。
+#
+# Secrets（仓库 Settings → Secrets）：
+#   STRAVA_CLIENT_ID / STRAVA_CLIENT_SECRET / STRAVA_REFRESH_TOKEN
+#   STRAVA_PAT  fine-grained PAT：Contents: read/write + Actions secrets: read/write（仅本仓库）
+on:
+  workflow_dispatch:
+    inputs:
+      window_days:
+        description: "拉取最近 N 天（默认 30）"
+        required: false
+        default: "30"
+  # 跑通后放开定时（北京时间约 08:07）：
+  # schedule:
+  #   - cron: "7 0 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false # 推送用 PAT（下面单独配置），避免 GITHUB_TOKEN 干扰
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync activities
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          STRAVA_WINDOW_DAYS: ${{ inputs.window_days }}
+          RT_OUT: running-log/.refresh_token_out
+        run: python running-log/sync_strava.py
+
+      - name: Commit & push activities.json
+        env:
+          PAT: ${{ secrets.STRAVA_PAT }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/running/calendar/activities.json
+          if git diff --cached --quiet; then
+            echo "activities.json 未变化，跳过提交"
+          else
+            git commit -m "chore(strava): sync activities"
+            # 用 PAT 推送（而非 GITHUB_TOKEN），才会触发 deploy.yml
+            git remote set-url origin "https://x-access-token:${PAT}@github.com/${GITHUB_REPOSITORY}.git"
+            git push
+          fi
+
+      - name: Rotate refresh token secret
+        env:
+          GH_TOKEN: ${{ secrets.STRAVA_PAT }}
+        run: |
+          NEW_RT="$(cat running-log/.refresh_token_out)"
+          if [ -z "$NEW_RT" ]; then
+            echo "未捕获到新 refresh_token" >&2
+            exit 1
+          fi
+          # refresh_token 每次刷新都轮转，无脑覆盖 secret
+          gh secret set STRAVA_REFRESH_TOKEN --body "$NEW_RT" --repo "$GITHUB_REPOSITORY"
+          echo "已轮转 STRAVA_REFRESH_TOKEN secret"
