@@ -31,7 +31,8 @@ ROOT = Path(__file__).resolve().parent          # running-log/
 REPO = ROOT.parent                               # 博客仓库根
 ACTIVITIES_OUT = REPO / "public" / "running" / "calendar" / "activities.json"
 RT_OUT = Path(os.environ.get("RT_OUT", str(ROOT / ".refresh_token_out")))
-WINDOW_DAYS = int(os.environ.get("STRAVA_WINDOW_DAYS", "30"))
+# `or "30"` 兜底：定时触发时 inputs.window_days 为空字符串（非缺失），int('') 会崩。
+WINDOW_DAYS = int(os.environ.get("STRAVA_WINDOW_DAYS") or "30")
 
 
 def load_existing():

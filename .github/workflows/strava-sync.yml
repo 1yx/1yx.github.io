@@ -40,9 +40,25 @@ jobs:
           STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
           STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
           STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
-          STRAVA_WINDOW_DAYS: ${{ inputs.window_days }}
+          STRAVA_WINDOW_DAYS: ${{ inputs.window_days || '30' }}
           RT_OUT: running-log/.refresh_token_out
         run: python running-log/sync_strava.py
+
+      # 先轮转 secret，再 push：push 失败（并发/冲突等）不至于把刚轮转、Strava 已作废旧的
+      # refresh_token 弄丢——token 持久化比这一次 activities.json 入库更关键。
+      # 注：若 PAT 本身过期，这一步同样会失败（见 github-pat.md「有效期与连锁失效」）。
+      - name: Rotate refresh token secret
+        env:
+          GH_TOKEN: ${{ secrets.STRAVA_PAT }}
+        run: |
+          NEW_RT="$(cat running-log/.refresh_token_out)"
+          if [ -z "$NEW_RT" ]; then
+            echo "未捕获到新 refresh_token" >&2
+            exit 1
+          fi
+          # refresh_token 每次刷新都轮转，无脑覆盖 secret
+          gh secret set STRAVA_REFRESH_TOKEN --body "$NEW_RT" --repo "$GITHUB_REPOSITORY"
+          echo "已轮转 STRAVA_REFRESH_TOKEN secret"
 
       - name: Commit & push activities.json
         env:
@@ -59,16 +75,3 @@ jobs:
             git remote set-url origin "https://x-access-token:${PAT}@github.com/${GITHUB_REPOSITORY}.git"
             git push
           fi
-
-      - name: Rotate refresh token secret
-        env:
-          GH_TOKEN: ${{ secrets.STRAVA_PAT }}
-        run: |
-          NEW_RT="$(cat running-log/.refresh_token_out)"
-          if [ -z "$NEW_RT" ]; then
-            echo "未捕获到新 refresh_token" >&2
-            exit 1
-          fi
-          # refresh_token 每次刷新都轮转，无脑覆盖 secret
-          gh secret set STRAVA_REFRESH_TOKEN --body "$NEW_RT" --repo "$GITHUB_REPOSITORY"
-          echo "已轮转 STRAVA_REFRESH_TOKEN secret"
