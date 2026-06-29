@@ -96,9 +96,16 @@ const ui = translations[lang].training;
     }
 
     function stepBlock(direction: number) {
-      blockIndex =
-        (blockIndex + direction + phase().blocks.length) %
-        phase().blocks.length;
+      // Cross phase boundaries so "next block" goes to the real next block
+      // (previously wrapped within the current phase).
+      blockIndex += direction;
+      if (blockIndex >= phaseList[phaseIndex].blocks.length) {
+        phaseIndex = (phaseIndex + 1) % phaseList.length;
+        blockIndex = 0;
+      } else if (blockIndex < 0) {
+        phaseIndex = (phaseIndex - 1 + phaseList.length) % phaseList.length;
+        blockIndex = phaseList[phaseIndex].blocks.length - 1;
+      }
       dayIndex = 0;
       render();
     }

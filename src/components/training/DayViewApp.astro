@@ -90,8 +90,41 @@ const ui = translations[lang].training;
     const entries = () => dayEntriesOf(block());
     const $ = (id: string) => document.getElementById(id);
 
+    function findByDate(dateStr: string) {
+      for (let p = 0; p < phaseList.length; p++) {
+        for (let b = 0; b < phaseList[p].blocks.length; b++) {
+          const ents = dayEntriesOf(phaseList[p].blocks[b]);
+          for (let di = 0; di < ents.length; di++) {
+            if (ents[di].day.date === dateStr) {
+              return { phaseIndex: p, blockIndex: b, dayIndex: di };
+            }
+          }
+        }
+      }
+      return null;
+    }
+
     function applyRoute() {
       const params = new URLSearchParams(location.search);
+      // ?date=YYYY-MM-DD (ISO) takes precedence: jump to that day if it's in
+      // the plan; otherwise fall back to today.
+      const dateParam = params.get("date");
+      if (dateParam) {
+        const found = findByDate(dateParam);
+        if (found) {
+          phaseIndex = found.phaseIndex;
+          blockIndex = found.blockIndex;
+          dayIndex = found.dayIndex;
+        } else {
+          const td = findToday();
+          if (td) {
+            phaseIndex = td.phaseIndex;
+            blockIndex = td.blockIndex;
+            dayIndex = td.dayIndex;
+          }
+        }
+        return;
+      }
       const p = Number.parseInt(params.get("phase") || "", 10);
       if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
       const b = Number.parseInt(params.get("block") || "", 10);
@@ -107,8 +140,28 @@ const ui = translations[lang].training;
     }
 
     function step(delta: number) {
-      const n = entries().length;
-      dayIndex = (dayIndex + delta + n) % n;
+      // Cross block/phase boundaries so "next day" is always the real next
+      // calendar day (the plan is contiguous: each block's day 0 follows the
+      // previous block's last day). Previously this wrapped within the current
+      // block, so the last day of a block jumped back to its first day.
+      const ni = dayIndex + delta;
+      if (ni >= entries().length) {
+        blockIndex++;
+        if (blockIndex >= phaseList[phaseIndex].blocks.length) {
+          blockIndex = 0;
+          phaseIndex = (phaseIndex + 1) % phaseList.length;
+        }
+        dayIndex = 0;
+      } else if (ni < 0) {
+        blockIndex--;
+        if (blockIndex < 0) {
+          phaseIndex = (phaseIndex - 1 + phaseList.length) % phaseList.length;
+          blockIndex = phaseList[phaseIndex].blocks.length - 1;
+        }
+        dayIndex = entries().length - 1;
+      } else {
+        dayIndex = ni;
+      }
       render();
     }
 
