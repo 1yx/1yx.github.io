@@ -55,6 +55,7 @@ const ui = translations[lang].training;
     paceText,
     fmtFull,
     findToday,
+    todayISO,
     categoryClass,
     esc,
     type Activity,
@@ -185,6 +186,11 @@ const ui = translations[lang].training;
       const list = entries();
       if (dayIndex >= list.length) dayIndex = 0;
       const { microcycle, day } = list[dayIndex];
+      // Breadcrumb tail: Today if the shown day is today, else Day (SSR defaults to Today).
+      const crumb = document.querySelector(
+        'nav[aria-label="breadcrumb"] [aria-current="page"]'
+      );
+      if (crumb) crumb.textContent = day.date === todayISO() ? "Today" : "Day";
       const tag = microcycle.taper
         ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
         : microcycle.deload

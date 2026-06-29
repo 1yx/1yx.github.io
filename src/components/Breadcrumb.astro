@@ -3,9 +3,10 @@ import { getLocalePath, type Locale } from "@/i18n";
 
 interface Props {
   lang?: Locale;
+  currentLabel?: string;
 }
 
-const { lang = "zh-CN" } = Astro.props;
+const { lang = "zh-CN", currentLabel } = Astro.props;
 
 // Remove current url path and remove trailing slash if exists
 const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
@@ -59,10 +60,13 @@ const crumbHrefs = breadcrumbList.map(segment => {
         index + 1 === breadcrumbList.length ? (
           <li>
             <span
-              class:list={["capitalize opacity-75", { lowercase: index > 0 }]}
+              class:list={[
+                "capitalize opacity-75",
+                { lowercase: index > 0 && !currentLabel },
+              ]}
               aria-current="page"
             >
-              {decodeURIComponent(breadcrumb)}
+              {currentLabel ?? decodeURIComponent(breadcrumb)}
             </span>
           </li>
         ) : (

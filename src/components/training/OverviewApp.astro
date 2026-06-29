@@ -28,7 +28,6 @@ const ui = translations[lang].training;
 const phaseList = phases();
 
 const blockPath = getLocalePath(lang, "running/calendar/block/");
-const dayPath = getLocalePath(lang, "running/calendar/day/");
 const blockHref = (pi: number, bi: number, day: number) =>
   `${blockPath}?phase=${pi}&block=${bi}&day=${day}`;
 
@@ -62,12 +61,9 @@ const microcyclesOfBlock = (
 ---
 
 <div class="tx-app" data-lang={lang}>
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
-      {ui.overviewTitle}
-    </h1>
-    <a class="tx-back" href={dayPath}>{ui.backToDay}</a>
-  </div>
+  <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
+    {ui.overviewTitle}
+  </h1>
   <p class="-mt-2 text-sm text-muted">{ui.overviewDesc}</p>
 
   {

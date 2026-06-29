@@ -1,0 +1,19 @@
+---
+// A right-aligned "split-off" breadcrumb item: « <a>label</a>», styled to match
+// the non-current breadcrumb <li> items (font-light, dim link that brightens on
+// hover, capitalized). Slotted into Breadcrumb's right-side action slot.
+interface Props {
+  href: string;
+  label: string;
+}
+const { href, label } = Astro.props;
+---
+
+<span class="font-light">
+  <span aria-hidden="true">&raquo;</span>
+  <a
+    href={href}
+    class="capitalize opacity-70 transition-opacity hover:opacity-100"
+    >{label}</a
+  >
+</span>
