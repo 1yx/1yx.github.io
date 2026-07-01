@@ -9,7 +9,7 @@ interface Props {
   translationExists?: boolean;
 }
 
-const { lang, targetUrl, translationExists = false } = Astro.props;
+const { lang, targetUrl } = Astro.props;
 const otherLang = getOtherLocale(lang);
 
 // If targetUrl is explicitly provided, use it (e.g. blog posts with different slugs)
@@ -44,5 +44,11 @@ if (targetUrl) {
   title={`Switch to ${otherLang === "zh-CN" ? "中文" : "English"}`}
   aria-label={`Switch language to ${otherLang === "zh-CN" ? "中文" : "English"}`}
 >
-  {lang === "en" ? <IconLanguage class="size-5" /> : <IconLanguageOff class="size-5" />}
+  {
+    lang === "en" ? (
+      <IconLanguage class="size-5" />
+    ) : (
+      <IconLanguageOff class="size-5" />
+    )
+  }
 </a>
