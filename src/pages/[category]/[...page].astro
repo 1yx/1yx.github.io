@@ -61,11 +61,16 @@ const ui = t(lang);
   >
     {
       category === "running" && (
-        <BreadcrumbAction
-          slot="breadcrumb-action"
-          href={getLocalePath(lang, "running/calendar/")}
-          label="Calendar"
-        />
+        <span slot="breadcrumb-action">
+          <BreadcrumbAction
+            href={getLocalePath(lang, "running/calendar/")}
+            label="Calendar"
+          />
+          <BreadcrumbAction
+            href={getLocalePath(lang, "running/calendar/day/")}
+            label="Today"
+          />
+        </span>
       )
     }
     <ul>
