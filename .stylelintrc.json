@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "declaration-property-unit-disallowed-list": {
+      "/^(font-size|line-height|margin|padding|inset|gap|width|min-width|max-width|height|min-height|max-height|top|right|bottom|left|border-radius)$/": [
+        "px"
+      ]
+    }
+  }
+}

@@ -35,7 +35,7 @@
       &::after {
         content: "";
         position: absolute;
-        inset: -2px -3px;
+        inset: -0.125rem -0.1875rem;
         border: 1.5px solid var(--strong-color, var(--border));
         border-radius: 0.5rem;
         filter: url(#sketchy-box);
@@ -48,7 +48,7 @@
       @apply wrap-break-word text-accent focus-visible:no-underline;
       position: relative;
       display: inline-block;
-      padding: 0 1px;
+      padding: 0 0.0625rem;
       transition: color 0.3s ease;
 
       /* External link style - dashed underline, 4px offset */
@@ -74,9 +74,9 @@
 
     hr {
       @apply my-10 w-full border-0;
-      height: 1px;
+      height: 0.0625rem;
       background: var(--border);
-      border-radius: 1px;
+      border-radius: 0.0625rem;
       filter: url(#sketchy-hr);
     }
 

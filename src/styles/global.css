@@ -152,9 +152,9 @@ html[data-theme="dark"] {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 1px;
+    height: 0.0625rem;
     background: var(--border);
-    border-radius: 1px;
+    border-radius: 0.0625rem;
     filter: url(#sketchy-hr);
   }
 }
@@ -168,9 +168,9 @@ html[data-theme="dark"] {
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
+    height: 0.0625rem;
     background: var(--border);
-    border-radius: 1px;
+    border-radius: 0.0625rem;
     filter: url(#sketchy-hr);
   }
 }
