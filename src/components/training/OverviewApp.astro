@@ -68,12 +68,15 @@ const microcyclesOfBlock = (
 
   {
     phaseList.length > 1 && (
-      <nav class="tx-tabs" aria-label={ui.phasesNav}>
+      <nav class="tx-tabs" aria-label={ui.calendarNav}>
         {phaseList.map((phase, pi) => (
           <a class="tx-tab" href={`#phase-${pi + 1}`}>
             {phase.name}
           </a>
         ))}
+        <a href="#" id="tx-current" class="tx-tab">
+          {ui.current}
+        </a>
       </nav>
     )
   }
@@ -102,72 +105,93 @@ const microcyclesOfBlock = (
 
           {/* desktop tables */}
           <div class="tx-tablewrap">
-            {phase.blocks.map(block => (
-              <div class="tx-table">
-                <table>
-                  <tbody>
-                    {microcyclesOfBlock(block).map(({ microcycle }) => {
-                      const cls = microcycle.taper
-                        ? " tx-cyclehead--taper"
-                        : microcycle.deload
-                          ? " tx-cyclehead--deload"
-                          : "";
-                      return (
-                        <>
-                          <tr class={`tx-cyclehead${cls}`}>
-                            <th>
-                              {mcLabel(microcycle)}
-                              <span class="sub">{cycleTotal(microcycle)}</span>
-                            </th>
-                            {(microcycle.days || []).map((day: PlanDay) => (
-                              <td class="tx-date">
-                                {fmtShort(day.date)}
+            {phase.blocks.map(block => {
+              const ents = microcyclesOfBlock(block);
+              const firstDays = ents[0]?.microcycle.days ?? [];
+              const lastDays = ents[ents.length - 1]?.microcycle.days ?? [];
+              return (
+                <div
+                  class="tx-table"
+                  data-first={firstDays[0]?.date}
+                  data-last={lastDays[lastDays.length - 1]?.date}
+                >
+                  <table>
+                    <tbody>
+                      {microcyclesOfBlock(block).map(({ microcycle }) => {
+                        const cls = microcycle.taper
+                          ? " tx-cyclehead--taper"
+                          : microcycle.deload
+                            ? " tx-cyclehead--deload"
+                            : "";
+                        return (
+                          <>
+                            <tr class={`tx-cyclehead${cls}`}>
+                              <th>
+                                {mcLabel(microcycle)}
                                 <span class="sub">
-                                  {ui.dayLabel} {day.day}
+                                  {cycleTotal(microcycle)}
                                 </span>
-                              </td>
-                            ))}
-                          </tr>
-                          <tr class="tx-row--period">
-                            <th>{ui.am}</th>
-                            {(microcycle.days || []).map((day: PlanDay) => (
-                              <td
-                                class={`tx-cell tx-cell--${categoryClass(day.am)}`}
-                              >
-                                {cellText(day.am)}
-                              </td>
-                            ))}
-                          </tr>
-                          <tr class="tx-row--period">
-                            <th>{ui.pm}</th>
-                            {(microcycle.days || []).map((day: PlanDay) => (
-                              <td
-                                class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
-                              >
-                                {cellText(day.pm)}
-                              </td>
-                            ))}
-                          </tr>
-                        </>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            ))}
+                              </th>
+                              {(microcycle.days || []).map((day: PlanDay) => (
+                                <td class="tx-date">
+                                  {fmtShort(day.date)}
+                                  <span class="sub">
+                                    {ui.dayLabel} {day.day}
+                                  </span>
+                                </td>
+                              ))}
+                            </tr>
+                            <tr class="tx-row--period">
+                              <th>{ui.am}</th>
+                              {(microcycle.days || []).map((day: PlanDay) => (
+                                <td
+                                  class={`tx-cell tx-cell--${categoryClass(day.am)}`}
+                                >
+                                  {cellText(day.am)}
+                                </td>
+                              ))}
+                            </tr>
+                            <tr class="tx-row--period">
+                              <th>{ui.pm}</th>
+                              {(microcycle.days || []).map((day: PlanDay) => (
+                                <td
+                                  class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
+                                >
+                                  {cellText(day.pm)}
+                                </td>
+                              ))}
+                            </tr>
+                          </>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
           </div>
 
           {/* mobile cards */}
           <div class="tx-mobile">
-            {phase.blocks.map((block, bi) =>
-              microcyclesOfBlock(block).map(({ microcycle, dayIndex }) => {
+            {phase.blocks.map((block, bi) => {
+              const ments = microcyclesOfBlock(block);
+              const firstDays = ments[0]?.microcycle.days ?? [];
+              const lastDays = ments[ments.length - 1]?.microcycle.days ?? [];
+              const first = firstDays[0]?.date;
+              const last = lastDays[lastDays.length - 1]?.date;
+              return ments.map(({ microcycle, dayIndex }) => {
                 const cls = microcycle.taper
                   ? " tx-cyclehead--taper"
                   : microcycle.deload
                     ? " tx-cyclehead--deload"
                     : "";
                 return (
-                  <a class="tx-cyclecard" href={blockHref(pi, bi, dayIndex)}>
+                  <a
+                    class="tx-cyclecard"
+                    href={blockHref(pi, bi, dayIndex)}
+                    data-first={first}
+                    data-last={last}
+                  >
                     <div class={`tx-cyclecard__head${cls}`}>
                       <span>
                         {ui.blockLabel} {block.index} · {mcLabel(microcycle)}
@@ -199,11 +223,50 @@ const microcyclesOfBlock = (
                     ))}
                   </a>
                 );
-              })
-            )}
+              });
+            })}
           </div>
         </section>
       );
     })
   }
 </div>
+
+<script>
+  import { todayISO } from "@/utils/training";
+
+  function jumpToCurrentBlock() {
+    const today = todayISO();
+    const blocks = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-first][data-last]")
+    );
+    const match = blocks.find(
+      el =>
+        el.dataset.first &&
+        el.dataset.last &&
+        el.dataset.first <= today &&
+        today <= el.dataset.last
+    );
+    if (!match) return;
+    // Desktop table + mobile cards carry the same block range; scroll to the
+    // one that is actually visible (the other view is display:none).
+    const target =
+      blocks.find(
+        el =>
+          el.dataset.first === match.dataset.first &&
+          el.dataset.last === match.dataset.last &&
+          el.offsetParent !== null
+      ) || match;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function init() {
+    document.getElementById("tx-current")?.addEventListener("click", e => {
+      e.preventDefault();
+      jumpToCurrentBlock();
+    });
+  }
+
+  document.addEventListener("astro:after-swap", init);
+  init();
+</script>

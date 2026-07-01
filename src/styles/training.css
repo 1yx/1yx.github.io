@@ -13,7 +13,7 @@
   --tx-surface-2: color-mix(in srgb, var(--muted) 15%, var(--background));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
   padding-bottom: 28px;
 }
 
@@ -372,6 +372,7 @@ a.tx-workout:hover {
 }
 
 .tx-phase {
+  scroll-margin-top: 1rem;
   border: 1px solid var(--border);
   border-radius: var(--tx-radius);
   overflow: hidden;
@@ -402,6 +403,7 @@ a.tx-workout:hover {
 }
 
 .tx-table {
+  scroll-margin-top: 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -474,6 +476,7 @@ a.tx-workout:hover {
 .tx-mobile { display: none; flex-direction: column; gap: 10px; padding: 12px; }
 
 .tx-cyclecard {
+  scroll-margin-top: 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
