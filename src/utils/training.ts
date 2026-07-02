@@ -254,6 +254,19 @@ export const esc = (s: string | null | undefined): string =>
     c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string)
   );
 
+/** Strip @pace/@intensity and English description words, keep only distance + structure.
+ *  e.g. "26km Long Run @5′10″" → "26km", "4km@wu+4*(6km@3′44″+1km@4′13″)" → "4km+4*(6km+1km)" */
+export const simplifyWorkoutText = (w: Workout | null): string => {
+  if (!w || !w.text) return "";
+  const s = w.text
+    .replace(/@[^\s+*)]+/g, "") // @5′10″, @wu, etc. (stop at +,*,),space)
+    .replace(/[a-zA-Z]{3,}/g, "") // Long, Run, Recovery, etc. (keeps km/m — 2 letters)
+    .replace(/[^0-9km+*()×.\s]/g, "") // keep only structural chars
+    .replace(/\s+/g, " ")
+    .trim();
+  return s || (w.planned_km ? `${w.planned_km}km` : "");
+};
+
 // ---- weekly view helpers ----
 
 /** Filterable workout categories (chips + CSS stay in sync via this tuple). */

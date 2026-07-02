@@ -311,6 +311,8 @@ a.tx-workout:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
+.tx-met { color: var(--green); }
+.tx-miss { color: var(--red); }
 
 .tx-blockdays {
   display: grid;
@@ -319,8 +321,7 @@ a.tx-workout:hover {
 }
 
 .tx-blockday {
-  min-height: 4rem;
-  padding: 0.4375rem 0.375rem;
+  padding: 0.375rem;
   text-align: left;
   border: 1px solid var(--border);
   border-radius: 0.4375rem;
@@ -339,11 +340,14 @@ a.tx-workout:hover {
   background: color-mix(in srgb, var(--accent) 12%, var(--background));
 }
 
-.tx-blockday .bd-title { font-size: 0.625rem; font-weight: 800; line-height: 1.1; }
-.tx-blockday .bd-date { font-size: 0.5625rem; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
-.tx-blockday .bd-km { font-size: 0.6875rem; font-weight: 850; color: var(--green); margin-top: 7px; font-variant-numeric: tabular-nums; }
-.tx-blockday .bd-km--rest { color: var(--muted); }
-.tx-blockday .bd-note { font-size: 0.5625rem; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bd-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.625rem; font-weight: 800; margin-bottom: 0.25rem; }
+.bd-date { color: var(--muted); font-variant-numeric: tabular-nums; }
+.bd-plan { display: flex; flex-direction: column; gap: 0.1875rem; }
+.bd-slot { flex: 1; display: flex; justify-content: space-between; align-items: baseline; padding: 0.1875rem 0.25rem; font-size: 0.5625rem; font-weight: 700; line-height: 1.2; border-radius: 0.25rem; overflow: hidden; }
+.bd-slot.bd-rest { color: var(--muted); }
+.bd-act { font-size: 0.5625rem; font-weight: 700; }
+.bd-met { color: var(--green); }
+.bd-miss { color: var(--orange); }
 
 /* ---------- overview: tabs + phases ---------- */
 

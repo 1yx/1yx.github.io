@@ -47,11 +47,15 @@ const ui = translations[lang].training;
     microcycleIndex,
     dayEntriesOf,
     dayPlannedKm,
-    dayActualKm,
+    aggregateActs,
+    categoryClass,
+    simplifyWorkoutText,
     fmtShort,
     findToday,
     type Activity,
+    type AggregatedActual,
     type PlanDay,
+    type Workout,
   } from "@/utils/training";
 
   let controller: AbortController | null = null;
@@ -110,23 +114,65 @@ const ui = translations[lang].training;
       render();
     }
 
+    function slotHtml(w: Workout | null, a: AggregatedActual | null): string {
+      const plan = w && w.text ? simplifyWorkoutText(w) : a ? ui.rest : "";
+      let actual = "";
+      if (a) {
+        const km = Math.floor(a.km);
+        const met = w && w.text ? a.km >= (w.planned_km || 0) : false;
+        actual = `<span class="bd-act ${met ? "bd-met" : "bd-miss"}">${km}km ${met ? "✓" : "✗"}</span>`;
+      } else if (w && w.text) {
+        actual = `<span class="bd-act bd-miss">0km ✗</span>`;
+      }
+      if (!plan && !actual)
+        return `<div class="bd-slot bd-rest">${ui.rest}</div>`;
+      const cat = w && w.text ? categoryClass(w) : "extra";
+      return `<div class="bd-slot tx-cell--${cat}">${plan}${actual}</div>`;
+    }
+
+    function mergeActual(
+      am: AggregatedActual | null,
+      pm: AggregatedActual | null
+    ): AggregatedActual | null {
+      if (!am) return pm;
+      if (!pm) return am;
+      return {
+        km: +(am.km + pm.km).toFixed(2),
+        t: am.t + pm.t,
+        e: am.e + pm.e,
+        n: am.n + pm.n,
+        name: am.name,
+        id: am.id,
+        desc: am.desc,
+        splits: [...am.splits, ...pm.splits],
+      };
+    }
+
     function dayButtonHtml(day: PlanDay, indexInBlock: number): string {
-      const planned = dayPlannedKm(day);
-      const actual = dayActualKm(acts, day);
       const active = indexInBlock === dayIndex ? " tx-blockday--active" : "";
-      const note = actual
-        ? ui.completed(actual)
-        : planned
-          ? ui.plannedKm(planned)
-          : ui.rest;
-      const kmClass = planned ? "" : " bd-km--rest";
-      const km = planned ? `${planned}km` : ui.rest;
-      return `<button class="tx-blockday${active}" data-day="${indexInBlock}">
-        <div class="bd-title">${ui.dayLabel} ${day.day}</div>
-        <div class="bd-date">${fmtShort(day.date)}</div>
-        <div class="bd-km${kmClass}">${km}</div>
-        <div class="bd-note">${note}</div>
-      </button>`;
+      const agg = aggregateActs(acts, day.date);
+      const hasAm = !!day.am?.text;
+      const hasPm = !!day.pm?.text;
+      const restSlot = `<div class="bd-slot bd-rest">${ui.rest}</div>`;
+      let amSlot: string;
+      let pmSlot: string;
+      if (hasAm && !hasPm && !agg.am && agg.pm) {
+        // AM-only plan, AM has no actual but PM does → merge into AM (6/1 case)
+        amSlot = slotHtml(day.am, mergeActual(agg.am, agg.pm));
+        pmSlot = restSlot;
+      } else if (!hasAm && hasPm && !agg.pm && agg.am) {
+        // PM-only plan, mirror case
+        amSlot = restSlot;
+        pmSlot = slotHtml(day.pm, mergeActual(agg.am, agg.pm));
+      } else {
+        // normal: each slot shows its own plan + actual independently
+        amSlot = slotHtml(day.am, agg.am);
+        pmSlot = slotHtml(day.pm, agg.pm);
+      }
+      return `<div class="tx-blockday${active}" data-day="${indexInBlock}">
+        <div class="bd-head"><span>${ui.dayLabel} ${day.day}</span><span class="bd-date">${fmtShort(day.date)}</span></div>
+        <div class="bd-plan">${amSlot}${pmSlot}</div>
+      </div>`;
     }
 
     function render() {
@@ -149,11 +195,19 @@ const ui = translations[lang].training;
         .map(microcycle => {
           const days = microcycle.days || [];
           const parsed = parseFloat(microcycle.total_km || "");
-          const total = microcycle.total_km
-            ? Number.isNaN(parsed)
-              ? microcycle.total_km
-              : ui.plannedKm(parsed)
-            : ui.plannedKm(days.reduce((s, d) => s + dayPlannedKm(d), 0));
+          const plannedKm = Number.isNaN(parsed)
+            ? days.reduce((s, d) => s + dayPlannedKm(d), 0)
+            : parsed;
+          const actualKm = days.reduce((s, d) => {
+            const a = aggregateActs(acts, d.date);
+            return s + (a.am?.km || 0) + (a.pm?.km || 0);
+          }, 0);
+          const met = actualKm >= plannedKm;
+          const hasActual = actualKm > 0;
+          const actualHtml = hasActual
+            ? `<span class="${met ? "tx-met" : "tx-miss"}"> 实际 ${Math.floor(actualKm)}km ${met ? "✓" : "✗"}</span>`
+            : "";
+          const total = `${ui.plannedKm(plannedKm)}${actualHtml}`;
           const tag = microcycle.taper
             ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
             : microcycle.deload

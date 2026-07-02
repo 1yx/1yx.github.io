@@ -357,6 +357,7 @@ const microcyclesOfBlock = (
     mondayOf,
     fmtShort,
     categoryClass,
+    simplifyWorkoutText,
     type Workout,
     type PlanDay,
   } from "@/utils/training";
@@ -405,22 +406,8 @@ const microcyclesOfBlock = (
         });
     }
 
-    // Simplify workout text for the weekly view: strip @pace/@intensity and
-    // English description words, keep only distance + structure.
-    // e.g. "26km Long Run @5′10″" → "26km", "4km@wu+4*(6km@3′44″+1km@4′13″)" → "4km+4*(6km+1km)"
-    function weeklyCellText(w: Workout | null): string {
-      if (!w || !w.text) return "";
-      const s = w.text
-        .replace(/@[^\s+*)]+/g, "") // @5′10″, @wu, etc. (stop at +,*,),space)
-        .replace(/[a-zA-Z]{3,}/g, "") // Long, Run, Recovery, etc. (keeps km/m — 2 letters)
-        .replace(/[^0-9km+*()×.\s]/g, "") // keep only structural chars
-        .replace(/\s+/g, " ")
-        .trim();
-      return s || (w.planned_km ? `${w.planned_km}km` : "");
-    }
-
     function dayCellHtml(w: Workout | null): string {
-      return `<div class="tx-cell tx-cell--${categoryClass(w)}">${weeklyCellText(w)}</div>`;
+      return `<div class="tx-cell tx-cell--${categoryClass(w)}">${simplifyWorkoutText(w)}</div>`;
     }
 
     // Build the Mon–Sun weekly grid (whole plan) into .tx-weekly, once.
