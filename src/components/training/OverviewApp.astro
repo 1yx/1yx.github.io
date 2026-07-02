@@ -219,7 +219,7 @@ const microcyclesOfBlock = (
 
             {/* desktop tables */}
             <div class="tx-tablewrap">
-              {phase.blocks.map(block => {
+              {phase.blocks.map((block, bi) => {
                 const ents = microcyclesOfBlock(block);
                 const firstDays = ents[0]?.microcycle.days ?? [];
                 const lastDays = ents[ents.length - 1]?.microcycle.days ?? [];
@@ -228,6 +228,7 @@ const microcyclesOfBlock = (
                     class="tx-table"
                     data-first={firstDays[0]?.date}
                     data-last={lastDays[lastDays.length - 1]?.date}
+                    data-href={blockHref(pi, bi, 0)}
                   >
                     <table>
                       <tbody>
@@ -570,6 +571,12 @@ const microcyclesOfBlock = (
           }
         });
       });
+    // click a block table → navigate to the block view
+    app.querySelectorAll<HTMLElement>(".tx-table").forEach(el => {
+      el.addEventListener("click", () => {
+        if (el.dataset.href) location.href = el.dataset.href;
+      });
+    });
     document.getElementById("tx-current")?.addEventListener("click", e => {
       e.preventDefault();
       jumpToCurrent();
