@@ -355,7 +355,7 @@ const microcyclesOfBlock = (
     function weeklyCellText(w: Workout | null): string {
       if (!w || !w.text) return "";
       const s = w.text
-        .replace(/@\S+/g, "") // @5′10″, @wu, etc.
+        .replace(/@[^\s+*)]+/g, "") // @5′10″, @wu, etc. (stop at +,*,),space)
         .replace(/[a-zA-Z]{3,}/g, "") // Long, Run, Recovery, etc. (keeps km/m — 2 letters)
         .replace(/[^0-9km+*()×.\s]/g, "") // keep only structural chars
         .replace(/\s+/g, " ")
