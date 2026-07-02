@@ -38,6 +38,7 @@ CATEGORY_COLORS = {
     "Special": "#C5A6FF",
     "Fundamental": "#74DDFF",
     "Regeneration": "#CFEDE4",
+    "Race": "#FFD700",
     "Rest": "#9AA7BA",
 }
 
@@ -64,6 +65,8 @@ def parse_planned_km(text):
 def workout_category(phase_name, text, day, period):
     if not text:
         return "Rest"
+    if "marathon race" in text.lower():
+        return "Race"
     if "Recovery" in text or "Shakeout" in text or "Walk / Jog" in text:
         return "Regeneration"
     if phase_name == "Aerobic Phase":

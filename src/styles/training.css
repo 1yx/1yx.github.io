@@ -128,6 +128,13 @@
   font-size: 0.6875rem;
 }
 
+/* Planned km in the block header is muted like the microcycle total;
+   the nested .tx-met/.tx-miss spans override for actuals. */
+#tx-block-total {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- workout boxes (day view) ---------- */
 
 .tx-workouts {
@@ -401,7 +408,7 @@ a.tx-workout:hover {
 .tx-phase__title { font-size: 1rem; font-weight: 800; line-height: 1.2; color: var(--foreground); }
 .tx-phase__meta { color: var(--muted); font-size: 0.75rem; margin-top: 4px; font-weight: 600; }
 .tx-phase__total { text-align: right; font-size: 0.75rem; color: var(--muted); }
-.tx-phase__total strong { display: block; color: var(--foreground); font-size: 1.125rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.tx-phase__total strong { display: block; color: var(--muted); font-size: 1.125rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
 
 /* overview: desktop table */
 .tx-tablewrap {
@@ -430,6 +437,9 @@ a.tx-workout:hover {
   border-spacing: 0;
   table-layout: fixed;
 }
+.tx-table .col-label { width: 7.4rem; }
+.tx-table .col-day1 { width: 17rem; }
+.tx-table .col-day3 { width: 17rem; }
 
 .tx-table th,
 .tx-table td {
@@ -441,12 +451,14 @@ a.tx-workout:hover {
 .tx-table th:last-child,
 .tx-table td:last-child { border-right: 0; }
 
-.tx-table .tx-row--period th {
+.tx-period-label {
+  text-align: center !important;
+  vertical-align: middle !important;
   position: sticky;
   left: 0;
   background: var(--tx-surface);
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.5625rem;
   font-weight: 800;
   padding: 0.5rem;
   text-align: left;
@@ -466,8 +478,8 @@ a.tx-workout:hover {
 .tx-cyclehead--deload th, .tx-cyclehead--deload td { background: color-mix(in srgb, var(--orange) 8%, var(--tx-surface)); }
 .tx-cyclehead--taper th, .tx-cyclehead--taper td { background: color-mix(in srgb, var(--purple) 8%, var(--tx-surface)); }
 
-.tx-table .tx-date { font-variant-numeric: tabular-nums; padding: 0.5rem; }
-.tx-table .tx-date .sub { display: block; color: var(--muted); font-size: 0.625rem; margin-top: 2px; font-weight: 600; }
+.tx-table .tx-date { font-variant-numeric: tabular-nums; padding: 0.5rem; color: var(--muted); }
+.tx-table .tx-date__wd { float: right; }
 
 .tx-cell {
   padding: 0.5rem 0.5625rem;

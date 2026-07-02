@@ -206,7 +206,7 @@ const ui = translations[lang].training;
       const blockMet = blockActual >= blockPlanned;
       const blockHasActual = blockActual > 0;
       const blockActualHtml = blockHasActual
-        ? `<span class="${blockMet ? "tx-met" : "tx-miss"}"> 实际 ${Math.floor(blockActual)}km ${blockMet ? "✓" : "✗"}</span>`
+        ? `<span class="${blockMet ? "tx-met" : "tx-miss"}"> ${ui.actualLabel} ${Math.floor(blockActual)}km ${blockMet ? "✓" : "✗"}</span>`
         : "";
       $("tx-block-total")!.innerHTML =
         `${ui.plannedKm(blockPlanned)}${blockActualHtml}`;
@@ -226,7 +226,7 @@ const ui = translations[lang].training;
           const met = actualKm >= plannedKm;
           const hasActual = actualKm > 0;
           const actualHtml = hasActual
-            ? `<span class="${met ? "tx-met" : "tx-miss"}"> 实际 ${Math.floor(actualKm)}km ${met ? "✓" : "✗"}</span>`
+            ? `<span class="${met ? "tx-met" : "tx-miss"}"> ${ui.actualLabel} ${Math.floor(actualKm)}km ${met ? "✓" : "✗"}</span>`
             : "";
           const total = `${ui.plannedKm(plannedKm)}${actualHtml}`;
           const tag = microcycle.taper

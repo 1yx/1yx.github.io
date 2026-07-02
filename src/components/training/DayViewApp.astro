@@ -50,7 +50,6 @@ const ui = translations[lang].training;
     phases,
     microcycleIndex,
     dayEntriesOf,
-    aggregateActs,
     paceOf,
     paceText,
     fmtFull,
@@ -60,7 +59,6 @@ const ui = translations[lang].training;
     esc,
     type Activity,
     type Workout,
-    type AggregatedActual,
     type Split,
   } from "@/utils/training";
 
@@ -203,34 +201,33 @@ const ui = translations[lang].training;
       </div>`;
     }
 
-    function actualBoxHtml(
-      w: Workout | null,
-      agg: AggregatedActual | null,
-      label: string
-    ): string {
-      if (agg) {
-        const extra =
-          !w || !w.text
-            ? `<span class="tx-tag tx-tag--extra">${ui.extra}</span>`
-            : "";
-        const cat = categoryClass(w);
-        const p = paceOf(agg.km, agg.t);
-        let meta = "";
-        if (agg.desc)
-          meta = `<div class="tx-workout__meta">${esc(agg.desc)}</div>`;
-        else if (agg.n > 1)
-          meta = `<div class="tx-workout__meta dim">${agg.n}</div>`;
-        const inner = `<div class="tx-workout__period">${label}${extra}</div>
-          <div class="tx-workout__title">✓ ${agg.km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(agg.splits)}`;
-        if (agg.id) {
-          return `<a class="tx-workout tx-workout--${cat} tx-workout--done" href="https://www.strava.com/activities/${agg.id}" target="_blank" rel="noopener">${inner}</a>`;
-        }
-        return `<div class="tx-workout tx-workout--${cat} tx-workout--done">${inner}</div>`;
+    function activityBoxHtml(w: Workout | null, act: Activity, label: string): string {
+      const extra =
+        !w || !w.text
+          ? `<span class="tx-tag tx-tag--extra">${ui.extra}</span>`
+          : "";
+      const cat = categoryClass(w);
+      const p = paceOf(act.distance_km, act.moving_time);
+      const desc = (act.description || "").trim();
+      const meta = desc
+        ? `<div class="tx-workout__meta">${esc(desc)}</div>`
+        : "";
+      const inner = `<div class="tx-workout__period">${label}${extra}</div>
+          <div class="tx-workout__title">✓ ${act.distance_km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(act.splits_metric || [])}`;
+      if (act.id) {
+        return `<a class="tx-workout tx-workout--${cat} tx-workout--done" href="https://www.strava.com/activities/${act.id}" target="_blank" rel="noopener">${inner}</a>`;
+      }
+      return `<div class="tx-workout tx-workout--${cat} tx-workout--done">${inner}</div>`;
+    }
+
+    function actualSlotsHtml(w: Workout | null, periodActs: Activity[], label: string, pendingLabel: string): string {
+      if (periodActs.length > 0) {
+        return periodActs.map(a => activityBoxHtml(w, a, label)).join("");
       }
       if (!w || !w.text) {
         return `<div class="tx-workout tx-workout--rest"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.rest}</div></div>`;
       }
-      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.pending}</div></div>`;
+      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${pendingLabel}</div></div>`;
     }
 
     function render() {
@@ -249,16 +246,25 @@ const ui = translations[lang].training;
         : microcycle.deload
           ? `<span class="tx-tag tx-tag--deload">${ui.deload}</span>`
           : "";
+      const phaseName =
+        (ui.phaseLabels as Record<string, string>)[phaseList[phaseIndex].name] ??
+        phaseList[phaseIndex].name.replace(" Session", " Phase");
+      const dayName = lang === "zh-CN" ? `第${day.day}天` : `Day ${day.day}`;
       $("tx-title")!.innerHTML =
-        `${phaseList[phaseIndex].name.replace(" Session", " Phase")} · ${ui.microcycleLabel} ${microcycleIndex(microcycle)} · ${ui.dayLabel} ${day.day} ${tag}`;
-      $("tx-date")!.textContent =
-        `${fmtFull(day.date)}　${ui.position(dayIndex + 1, list.length)}`;
-      const agg = aggregateActs(acts, day.date);
+        `${phaseName} · ${ui.microcycleLabel} ${microcycleIndex(microcycle)} · ${dayName} ${tag}`;
+      $("tx-date")!.textContent = fmtFull(day.date);
+      const amActs = acts.filter(
+        a => a.date === day.date && parseInt((a.time || "12").slice(0, 2)) < 12
+      );
+      const pmActs = acts.filter(
+        a => a.date === day.date && parseInt((a.time || "12").slice(0, 2)) >= 12
+      );
+      const pendingLabel = todayISO() > day.date ? ui.incomplete : ui.pending;
       planEl.innerHTML =
         planBoxHtml(day.am, ui.am) + planBoxHtml(day.pm, ui.pm);
       $("tx-actual")!.innerHTML =
-        actualBoxHtml(day.am, agg.am, ui.am) +
-        actualBoxHtml(day.pm, agg.pm, ui.pm);
+        actualSlotsHtml(day.am, amActs, ui.am, pendingLabel) +
+        actualSlotsHtml(day.pm, pmActs, ui.pm, pendingLabel);
     }
 
     // wire navigation
