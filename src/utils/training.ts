@@ -263,6 +263,7 @@ export const simplifyWorkoutText = (w: Workout | null): string => {
     .replace(/[a-zA-Z]{3,}/g, "") // Long, Run, Recovery, etc. (keeps km/m — 2 letters)
     .replace(/[^0-9km+*()×.\s]/g, "") // keep only structural chars
     .replace(/\s+/g, " ")
+    .replace(/\s*([+*])\s*/g, "$1") // remove spaces around + and *
     .trim();
   return s || (w.planned_km ? `${w.planned_km}km` : "");
 };

@@ -213,7 +213,7 @@ const ui = translations[lang].training;
           !w || !w.text
             ? `<span class="tx-tag tx-tag--extra">${ui.extra}</span>`
             : "";
-        const cat = w && w.text ? categoryClass(w) : "extra";
+        const cat = categoryClass(w);
         const p = paceOf(agg.km, agg.t);
         let meta = "";
         if (agg.desc)

@@ -156,7 +156,7 @@
 .tx-workout--special { --tx-cat: var(--purple); }
 .tx-workout--fundamental { --tx-cat: var(--indigo); }
 .tx-workout--regeneration { --tx-cat: var(--mint); }
-.tx-workout--extra { --tx-cat: var(--orange); }
+
 .tx-workout--race { --tx-cat: var(--yellow); }
 
 .tx-workout--rest {
@@ -321,7 +321,7 @@ a.tx-workout:hover {
   font-variant-numeric: tabular-nums;
 }
 .tx-met { color: var(--green); }
-.tx-miss { color: var(--red); }
+.tx-miss { color: var(--orange); }
 
 .tx-blockdays {
   display: grid;
