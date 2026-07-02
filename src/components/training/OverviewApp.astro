@@ -42,6 +42,8 @@ const cycleTotal = (microcycle: Microcycle): string => {
 };
 
 const cellText = (w: Workout | null) => (w && w.text ? w.text : ui.rest);
+const phaseLabel = (name: string) =>
+  (ui.phaseLabels as Record<string, string>)[name] ?? name;
 
 // Microcycle label, marking deload (cutback) weeks — the 4th microcycle of each block.
 const mcLabel = (m: Microcycle) =>
@@ -71,7 +73,7 @@ const microcyclesOfBlock = (
       <nav class="tx-tabs" aria-label={ui.calendarNav}>
         {phaseList.map((phase, pi) => (
           <a class="tx-tab" href={`#phase-${pi + 1}`}>
-            {phase.name}
+            {phaseLabel(phase.name)}
           </a>
         ))}
         <a href="#" id="tx-current" class="tx-tab">
@@ -149,7 +151,7 @@ const microcyclesOfBlock = (
           <section id={`phase-${pi + 1}`} class="tx-phase">
             <div class="tx-phase__head">
               <div>
-                <div class="tx-phase__title">{phase.name}</div>
+                <div class="tx-phase__title">{phaseLabel(phase.name)}</div>
                 <div class="tx-phase__meta">
                   {items.length} {ui.microcycles} · {days} {ui.days}
                 </div>
@@ -299,7 +301,6 @@ const microcyclesOfBlock = (
     mondayOf,
     fmtShort,
     categoryClass,
-    esc,
     type Workout,
     type PlanDay,
   } from "@/utils/training";
@@ -348,8 +349,22 @@ const microcyclesOfBlock = (
         });
     }
 
+    // Simplify workout text for the weekly view: strip @pace/@intensity and
+    // English description words, keep only distance + structure.
+    // e.g. "26km Long Run @5′10″" → "26km", "4km@wu+4*(6km@3′44″+1km@4′13″)" → "4km+4*(6km+1km)"
+    function weeklyCellText(w: Workout | null): string {
+      if (!w || !w.text) return "";
+      const s = w.text
+        .replace(/@\S+/g, "") // @5′10″, @wu, etc.
+        .replace(/[a-zA-Z]{3,}/g, "") // Long, Run, Recovery, etc. (keeps km/m — 2 letters)
+        .replace(/[^0-9km+*()×.\s]/g, "") // keep only structural chars
+        .replace(/\s+/g, " ")
+        .trim();
+      return s || (w.planned_km ? `${w.planned_km}km` : "");
+    }
+
     function dayCellHtml(w: Workout | null): string {
-      return `<div class="tx-cell tx-cell--${categoryClass(w)}">${w && w.text ? esc(w.text) : ""}</div>`;
+      return `<div class="tx-cell tx-cell--${categoryClass(w)}">${weeklyCellText(w)}</div>`;
     }
 
     // Build the Mon–Sun weekly grid (whole plan) into .tx-weekly, once.
@@ -376,7 +391,13 @@ const microcyclesOfBlock = (
         "</div>";
       for (const mon of mondays) {
         const slots = byMonday.get(mon)!;
-        html += `<div class="tx-weekly__week" data-monday="${mon}">`;
+        const hasMonthStart = Object.values(slots).some(
+          d => d && new Date(d.date + "T00:00:00Z").getUTCDate() === 1
+        );
+        const isFirst = mon === mondays[0];
+        const monthCls =
+          hasMonthStart && !isFirst ? " tx-weekly__week--month-start" : "";
+        html += `<div class="tx-weekly__week${monthCls}" data-monday="${mon}">`;
         for (let wd = 0; wd < 7; wd++) {
           const day = slots[wd];
           if (!day) {
