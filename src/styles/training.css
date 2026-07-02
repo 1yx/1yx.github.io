@@ -46,6 +46,14 @@
   color: var(--accent);
   border-color: var(--accent);
 }
+.tx-navbtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.tx-navbtn:disabled:hover {
+  color: var(--foreground);
+  border-color: var(--border);
+}
 
 .tx-pos {
   flex: 1;
@@ -105,6 +113,7 @@
 .tx-section__head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5625rem 0.75rem;
   border-bottom: 1px solid var(--border);
@@ -335,11 +344,6 @@ a.tx-workout:hover {
   border-color: var(--accent);
 }
 
-.tx-blockday--active {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, var(--background));
-}
-
 .bd-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.625rem; font-weight: 800; margin-bottom: 0.25rem; }
 .bd-date { color: var(--muted); font-variant-numeric: tabular-nums; }
 .bd-plan { display: flex; flex-direction: column; gap: 0.1875rem; }
@@ -413,6 +417,10 @@ a.tx-workout:hover {
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+.tx-table:hover {
+  border-color: var(--accent);
 }
 
 .tx-table table {
@@ -475,7 +483,7 @@ a.tx-workout:hover {
 .tx-cell--special { background: color-mix(in srgb, var(--purple) 16%, var(--background)); }
 .tx-cell--fundamental { background: color-mix(in srgb, var(--indigo) 16%, var(--background)); }
 .tx-cell--regeneration { background: color-mix(in srgb, var(--mint) 16%, var(--background)); }
-.tx-cell--extra { background: color-mix(in srgb, var(--orange) 16%, var(--background)); }
+
 .tx-cell--race { background: color-mix(in srgb, var(--yellow) 16%, var(--background)); }
 
 /* overview: mobile cards (table hidden ≤720px) */

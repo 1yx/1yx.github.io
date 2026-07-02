@@ -32,7 +32,8 @@ const ui = translations[lang].training;
 
   <section class="tx-section">
     <div class="tx-section__head">
-      {ui.blockLabel}<span class="sub" id="tx-subtitle"></span>
+      <span id="tx-subtitle"></span>
+      <span id="tx-block-total"></span>
     </div>
     <div class="tx-microcycles" id="tx-microcycles"></div>
   </section>
@@ -148,8 +149,11 @@ const ui = translations[lang].training;
       };
     }
 
+    function dayLabel(n: number): string {
+      return lang === "zh-CN" ? `第${n}天` : `Day ${n}`;
+    }
+
     function dayButtonHtml(day: PlanDay, indexInBlock: number): string {
-      const active = indexInBlock === dayIndex ? " tx-blockday--active" : "";
       const agg = aggregateActs(acts, day.date);
       const hasAm = !!day.am?.text;
       const hasPm = !!day.pm?.text;
@@ -157,20 +161,17 @@ const ui = translations[lang].training;
       let amSlot: string;
       let pmSlot: string;
       if (hasAm && !hasPm && !agg.am && agg.pm) {
-        // AM-only plan, AM has no actual but PM does → merge into AM (6/1 case)
         amSlot = slotHtml(day.am, mergeActual(agg.am, agg.pm));
         pmSlot = restSlot;
       } else if (!hasAm && hasPm && !agg.pm && agg.am) {
-        // PM-only plan, mirror case
         amSlot = restSlot;
         pmSlot = slotHtml(day.pm, mergeActual(agg.am, agg.pm));
       } else {
-        // normal: each slot shows its own plan + actual independently
         amSlot = slotHtml(day.am, agg.am);
         pmSlot = slotHtml(day.pm, agg.pm);
       }
-      return `<div class="tx-blockday${active}" data-day="${indexInBlock}">
-        <div class="bd-head"><span>${ui.dayLabel} ${day.day}</span><span class="bd-date">${fmtShort(day.date)}</span></div>
+      return `<div class="tx-blockday" data-day="${indexInBlock}">
+        <div class="bd-head"><span>${dayLabel(day.day)}</span><span class="bd-date">${fmtShort(day.date)} ${lang === "zh-CN" ? "周" : ""}${ui.weekdayShort[(new Date(day.date + "T00:00:00").getDay() + 6) % 7]}</span></div>
         <div class="bd-plan">${amSlot}${pmSlot}</div>
       </div>`;
     }
@@ -183,12 +184,32 @@ const ui = translations[lang].training;
       const list = dayEntriesOf(currentBlock);
       const first = list[0]?.day.date;
       const last = list[list.length - 1]?.day.date;
+      const phaseName =
+        (ui.phaseLabels as Record<string, string>)[phase().name] ??
+        phase().name;
       $("tx-title")!.textContent =
-        `${phase().name} · ${ui.blockLabel} ${currentBlock.index}`;
+        `${phaseName} · ${ui.blockLabel} ${currentBlock.index}`;
       $("tx-date")!.textContent =
         first && last ? `${fmtShort(first)} - ${fmtShort(last)}` : "";
       $("tx-subtitle")!.textContent =
         `${micros.length} ${ui.microcycles} · ${list.length} ${ui.days}`;
+
+      // block-level planned vs actual totals
+      const blockPlanned = list.reduce(
+        (s, { day }) => s + dayPlannedKm(day),
+        0
+      );
+      const blockActual = list.reduce((s, { day }) => {
+        const a = aggregateActs(acts, day.date);
+        return s + (a.am?.km || 0) + (a.pm?.km || 0);
+      }, 0);
+      const blockMet = blockActual >= blockPlanned;
+      const blockHasActual = blockActual > 0;
+      const blockActualHtml = blockHasActual
+        ? `<span class="${blockMet ? "tx-met" : "tx-miss"}"> 实际 ${Math.floor(blockActual)}km ${blockMet ? "✓" : "✗"}</span>`
+        : "";
+      $("tx-block-total")!.innerHTML =
+        `${ui.plannedKm(blockPlanned)}${blockActualHtml}`;
 
       let baseIdx = 0;
       wrap.innerHTML = micros
@@ -230,6 +251,14 @@ const ui = translations[lang].training;
       wrap.querySelectorAll<HTMLButtonElement>(".tx-blockday").forEach(btn => {
         btn.onclick = () => goDay(+btn.dataset.day!);
       });
+
+      // disable prev/next at the first/last block
+      const isFirst = phaseIndex === 0 && blockIndex === 0;
+      const isLast =
+        phaseIndex === phaseList.length - 1 &&
+        blockIndex === phaseList[phaseIndex].blocks.length - 1;
+      ($("tx-prev") as HTMLButtonElement)!.disabled = isFirst;
+      ($("tx-next") as HTMLButtonElement)!.disabled = isLast;
     }
 
     $("tx-prev")!.onclick = () => stepBlock(-1);
