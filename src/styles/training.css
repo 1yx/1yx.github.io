@@ -526,6 +526,10 @@ a.tx-workout:hover {
 }
 .tx-chip:hover,
 .tx-chip[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.tx-chip[data-filter-toggle="specific"]     { background: color-mix(in srgb, var(--pink) 16%, var(--background)); }
+.tx-chip[data-filter-toggle="special"]      { background: color-mix(in srgb, var(--purple) 16%, var(--background)); }
+.tx-chip[data-filter-toggle="fundamental"]  { background: color-mix(in srgb, var(--indigo) 16%, var(--background)); }
+.tx-chip[data-filter-toggle="regeneration"] { background: color-mix(in srgb, var(--mint) 16%, var(--background)); }
 
 /* category filter: dim non-matching cells (covers table + mobile cards + weekly) */
 .tx-app[data-filter="specific"] .tx-cell:not(.tx-cell--specific),
