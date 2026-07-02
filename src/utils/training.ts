@@ -257,7 +257,7 @@ export const esc = (s: string | null | undefined): string =>
 // ---- weekly view helpers ----
 
 /** Filterable workout categories (chips + CSS stay in sync via this tuple). */
-export const CATEGORIES = ["regeneration", "fundamental", "special", "specific"] as const;
+export const CATEGORIES = ["regeneration", "fundamental", "special", "specific", "race"] as const;
 export type CategoryKey = (typeof CATEGORIES)[number];
 
 /** Flatten the whole plan into an ordered list of days (plan is contiguous). */

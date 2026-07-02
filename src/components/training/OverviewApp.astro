@@ -13,6 +13,7 @@ import {
   dayPlannedKm,
   categoryClass,
   fmtShort,
+  allDays,
   type Block,
   type Microcycle,
   type Phase,
@@ -45,9 +46,43 @@ const cellText = (w: Workout | null) => (w && w.text ? w.text : ui.rest);
 const phaseLabel = (name: string) =>
   (ui.phaseLabels as Record<string, string>)[name] ?? name;
 
+const ZH_ORDINALS = [
+  "一",
+  "二",
+  "三",
+  "四",
+  "五",
+  "六",
+  "七",
+  "八",
+  "九",
+  "十",
+  "十一",
+  "十二",
+];
+const EN_SHORT = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const months = [...new Set(allDays().map(d => d.date.slice(0, 7)))].sort();
+const monthLabel = (ym: string) => {
+  const m = parseInt(ym.split("-")[1]);
+  return lang === "zh-CN" ? `${ZH_ORDINALS[m - 1]}月` : EN_SHORT[m - 1];
+};
+
 // Microcycle label, marking deload (cutback) weeks — the 4th microcycle of each block.
 const mcLabel = (m: Microcycle) =>
-  `${ui.microcycleLabel} ${microcycleIndex(m)}${m.deload ? " (cutback)" : ""}`;
+  `${ui.microcycleLabel} ${microcycleIndex(m)}${m.taper ? " (taper)" : m.deload ? " (cutback)" : ""}`;
 
 // Microcycles of a single block, each tagged with its day offset (deep-link target).
 const microcyclesOfBlock = (
@@ -71,75 +106,95 @@ const microcyclesOfBlock = (
   {
     phaseList.length > 1 && (
       <nav class="tx-tabs" aria-label={ui.calendarNav}>
-        {phaseList.map((phase, pi) => (
-          <a class="tx-tab" href={`#phase-${pi + 1}`}>
-            {phaseLabel(phase.name)}
+        <div class="tx-tabs__row">
+          <button
+            class="tx-tab tx-tab--active"
+            type="button"
+            data-view-toggle="microcycle"
+          >
+            {ui.microcycleView}
+          </button>
+          <a href="#" id="tx-current" class="tx-tab">
+            {ui.current}
           </a>
-        ))}
-        <a href="#" id="tx-current" class="tx-tab">
-          {ui.current}
-        </a>
-        <span class="tx-tabs__sep" aria-hidden="true" />
-        <button
-          class="tx-tab tx-tab--active"
-          type="button"
-          data-view-toggle="microcycle"
-        >
-          {ui.microcycleView}
-        </button>
-        <button
-          class="tx-tab tx-toggle-weekly"
-          type="button"
-          data-view-toggle="weekly"
-        >
-          {ui.weeklyView}
-        </button>
-        <span class="tx-tabs__sep" aria-hidden="true" />
-        <button
-          class="tx-chip"
-          type="button"
-          aria-pressed="true"
-          data-filter-toggle="none"
-        >
-          {ui.filterAll}
-        </button>
-        <button
-          class="tx-chip"
-          type="button"
-          aria-pressed="false"
-          data-filter-toggle="regeneration"
-        >
-          {ui.filterRegeneration}
-        </button>
-        <button
-          class="tx-chip"
-          type="button"
-          aria-pressed="false"
-          data-filter-toggle="fundamental"
-        >
-          {ui.filterFundamental}
-        </button>
-        <button
-          class="tx-chip"
-          type="button"
-          aria-pressed="false"
-          data-filter-toggle="special"
-        >
-          {ui.filterSpecial}
-        </button>
-        <button
-          class="tx-chip"
-          type="button"
-          aria-pressed="false"
-          data-filter-toggle="specific"
-        >
-          {ui.filterSpecific}
-        </button>
+          {phaseList.map((phase, pi) => (
+            <a class="tx-tab" href={`#phase-${pi + 1}`}>
+              {phaseLabel(phase.name)}
+            </a>
+          ))}
+        </div>
+        <div class="tx-tabs__row">
+          <button
+            class="tx-tab tx-toggle-weekly"
+            type="button"
+            data-view-toggle="weekly"
+          >
+            {ui.weeklyView}
+          </button>
+          <a href="#" id="tx-current-wk" class="tx-tab">
+            {ui.current}
+          </a>
+          {months.map(ym => (
+            <a href="#" class="tx-tab" data-month={ym}>
+              {monthLabel(ym)}
+            </a>
+          ))}
+        </div>
+        <div class="tx-tabs__row" role="group" aria-label="filters">
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="true"
+            data-filter-toggle="none"
+          >
+            {ui.filterAll}
+          </button>
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="false"
+            data-filter-toggle="regeneration"
+          >
+            {ui.filterRegeneration}
+          </button>
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="false"
+            data-filter-toggle="fundamental"
+          >
+            {ui.filterFundamental}
+          </button>
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="false"
+            data-filter-toggle="special"
+          >
+            {ui.filterSpecial}
+          </button>
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="false"
+            data-filter-toggle="specific"
+          >
+            {ui.filterSpecific}
+          </button>
+          <button
+            class="tx-chip"
+            type="button"
+            aria-pressed="false"
+            data-filter-toggle="race"
+          >
+            {ui.filterRace}
+          </button>
+        </div>
       </nav>
     )
   }
 
-  <div class="tx-microcycle">
+  <div class="tx-mc-view">
     {
       phaseList.map((phase: Phase, pi: number) => {
         const items = allMicrocycles(phase);
@@ -397,7 +452,14 @@ const microcyclesOfBlock = (
         const isFirst = mon === mondays[0];
         const monthCls =
           hasMonthStart && !isFirst ? " tx-weekly__week--month-start" : "";
-        html += `<div class="tx-weekly__week${monthCls}" data-monday="${mon}">`;
+        const weekMonths = [
+          ...new Set(
+            Object.values(slots)
+              .filter(Boolean)
+              .map(d => d.date.slice(0, 7))
+          ),
+        ].join(" ");
+        html += `<div class="tx-weekly__week${monthCls}" data-monday="${mon}" data-months="${weekMonths}">`;
         for (let wd = 0; wd < 7; wd++) {
           const day = slots[wd];
           if (!day) {
@@ -432,14 +494,26 @@ const microcyclesOfBlock = (
       }
     }
 
+    // Scroll an element to offsetRem below the viewport top (JS-controlled,
+    // so different triggers can use different gaps).
+    function scrollToEl(el: HTMLElement, offsetRem: number) {
+      const rootPx = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+      window.scrollTo({
+        top:
+          window.scrollY + el.getBoundingClientRect().top - offsetRem * rootPx,
+        behavior: "smooth",
+      });
+    }
+
     function jumpToCurrent() {
       const today = todayISO();
       if (state.view === "weekly") {
-        app
-          .querySelector<HTMLElement>(
-            `.tx-weekly__week[data-monday="${mondayOf(today)}"]`
-          )
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const wk = app.querySelector<HTMLElement>(
+          `.tx-weekly__week[data-monday="${mondayOf(today)}"]`
+        );
+        if (wk) scrollToEl(wk, 0.15); // tight: single week, minimal gap
         return;
       }
       const blocks = Array.from(
@@ -473,13 +547,84 @@ const microcyclesOfBlock = (
     app
       .querySelectorAll<HTMLButtonElement>("[data-filter-toggle]")
       .forEach(btn => {
-        btn.addEventListener("click", () =>
-          applyState({ filter: btn.dataset.filterToggle as Filter })
-        );
+        btn.addEventListener("click", () => {
+          const filter = btn.dataset.filterToggle as Filter;
+          applyState({ filter });
+          if (filter !== "none") {
+            // after the VT, scroll to the first visible cell of this category
+            setTimeout(() => {
+              const cell = Array.from(
+                app.querySelectorAll<HTMLElement>(`.tx-cell--${filter}`)
+              ).find(c => c.offsetParent !== null);
+              if (!cell) return;
+              if (state.view === "microcycle") {
+                // scroll to the block containing the first match, 1rem gap
+                const block = cell.closest<HTMLElement>(".tx-table");
+                if (block) scrollToEl(block, 1);
+              } else {
+                // weekly: scroll to the week row containing the first match, 0.15rem gap
+                const week = cell.closest<HTMLElement>(".tx-weekly__week");
+                if (week) scrollToEl(week, 0.15);
+              }
+            }, 400);
+          }
+        });
       });
     document.getElementById("tx-current")?.addEventListener("click", e => {
       e.preventDefault();
       jumpToCurrent();
+    });
+    document.getElementById("tx-current-wk")?.addEventListener("click", e => {
+      e.preventDefault();
+      jumpToCurrent();
+    });
+    // phase tabs: clear filter if active, then scroll (weekly) or anchor (microcycle)
+    app
+      .querySelectorAll<HTMLAnchorElement>('a[href^="#phase-"]')
+      .forEach(btn => {
+        btn.addEventListener("click", e => {
+          const hadFilter = state.filter !== "none";
+          if (hadFilter) applyState({ filter: "none" });
+          if (state.view !== "weekly") return; // microcycle: native anchor works
+          e.preventDefault();
+          const phaseEl = document.getElementById(
+            btn.getAttribute("href")!.slice(1)
+          );
+          const firstDate =
+            phaseEl?.querySelector<HTMLElement>(".tx-table")?.dataset.first;
+          if (!firstDate) return;
+          const week = Array.from(
+            app.querySelectorAll<HTMLElement>(".tx-weekly__week")
+          ).find(w => {
+            const diff =
+              (new Date(firstDate + "T00:00:00Z").getTime() -
+                new Date(w.dataset.monday! + "T00:00:00Z").getTime()) /
+              86400000;
+            return diff >= 0 && diff <= 6;
+          });
+          if (week) {
+            if (hadFilter) setTimeout(() => scrollToEl(week, 0.15), 400);
+            else scrollToEl(week, 0.15);
+          }
+        });
+      });
+    // month tabs: scroll to the month in the current view
+    app.querySelectorAll<HTMLAnchorElement>("[data-month]").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        const ym = btn.dataset.month!;
+        if (state.view === "weekly") {
+          const wk = app.querySelector<HTMLElement>(
+            `.tx-weekly__week[data-months~="${ym}"]`
+          );
+          if (wk) scrollToEl(wk, 2); // wider gap to show the month separator
+        } else {
+          const ms = `${ym}-01`;
+          Array.from(app.querySelectorAll<HTMLElement>(".tx-table"))
+            .find(el => el.dataset.first! <= ms && ms <= el.dataset.last!)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     });
   }
 

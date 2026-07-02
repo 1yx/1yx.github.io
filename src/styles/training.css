@@ -148,6 +148,7 @@
 .tx-workout--fundamental { --tx-cat: var(--indigo); }
 .tx-workout--regeneration { --tx-cat: var(--mint); }
 .tx-workout--extra { --tx-cat: var(--orange); }
+.tx-workout--race { --tx-cat: var(--yellow); }
 
 .tx-workout--rest {
   --tx-cat: var(--muted);
@@ -470,6 +471,7 @@ a.tx-workout:hover {
 .tx-cell--fundamental { background: color-mix(in srgb, var(--indigo) 16%, var(--background)); }
 .tx-cell--regeneration { background: color-mix(in srgb, var(--mint) 16%, var(--background)); }
 .tx-cell--extra { background: color-mix(in srgb, var(--orange) 16%, var(--background)); }
+.tx-cell--race { background: color-mix(in srgb, var(--yellow) 16%, var(--background)); }
 
 /* overview: mobile cards (table hidden ≤720px) */
 .tx-mobile { display: none; flex-direction: column; gap: 0.625rem; padding: 0.75rem; }
@@ -508,8 +510,8 @@ a.tx-workout:hover {
 
 /* ---------- view toggle + category filter ---------- */
 
-.tx-tabs { flex-wrap: wrap; overflow: visible; }
-.tx-tabs__sep { align-self: center; width: 0; height: 1.25rem; margin: 0 0.25rem; border-left: 1px solid var(--border); }
+.tx-tabs { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+.tx-tabs__row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
 .tx-tab--active { color: var(--accent); border-color: var(--accent); }
 
 .tx-chip {
@@ -530,14 +532,17 @@ a.tx-workout:hover {
 .tx-chip[data-filter-toggle="special"]      { background: color-mix(in srgb, var(--purple) 16%, var(--background)); }
 .tx-chip[data-filter-toggle="fundamental"]  { background: color-mix(in srgb, var(--indigo) 16%, var(--background)); }
 .tx-chip[data-filter-toggle="regeneration"] { background: color-mix(in srgb, var(--mint) 16%, var(--background)); }
+.tx-chip[data-filter-toggle="race"] { background: color-mix(in srgb, var(--yellow) 16%, var(--background)); }
 
-/* category filter: dim non-matching cells (covers table + mobile cards + weekly) */
+/* category filter: dim non-matching cells — fade bg+text, keep border at full */
 .tx-app[data-filter="specific"] .tx-cell:not(.tx-cell--specific),
 .tx-app[data-filter="special"] .tx-cell:not(.tx-cell--special),
 .tx-app[data-filter="fundamental"] .tx-cell:not(.tx-cell--fundamental),
-.tx-app[data-filter="regeneration"] .tx-cell:not(.tx-cell--regeneration) {
-  opacity: 0.15;
-  transition: opacity 0.15s ease;
+.tx-app[data-filter="regeneration"] .tx-cell:not(.tx-cell--regeneration),
+.tx-app[data-filter="race"] .tx-cell:not(.tx-cell--race) {
+  background: var(--background);
+  color: color-mix(in srgb, var(--foreground) 15%, var(--background));
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 /* ---------- weekly view (Mon–Sun grid) ---------- */
@@ -546,7 +551,7 @@ a.tx-workout:hover {
 .tx-weekly__head,
 .tx-weekly__week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.25rem; }
 .tx-weekly__dow { font-size: 0.625rem; font-weight: 800; color: var(--muted); text-align: center; padding-bottom: 0.25rem; }
-.tx-weekly__week { scroll-margin-top: 1rem; }
+.tx-weekly__week { scroll-margin-top: 0.15rem; }
 .tx-weekly__head { margin-bottom: 0.75rem; }
 .tx-weekly__week + .tx-weekly__week { margin-top: 0.25rem; }
 .tx-weekly__week + .tx-weekly__week--month-start { margin-top: 2rem; }
@@ -563,12 +568,14 @@ a.tx-workout:hover {
 .tx-wkday__date { font-size: 0.5625rem; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tx-wkday .tx-cell { font-size: 0.5625rem; height: 0.9375rem; padding: 0 0.1875rem; line-height: 0.9375rem; border-radius: 0.25rem; overflow: hidden; }
 
+.tx-mc-view { display: flex; flex-direction: column; gap: 1rem; }
+
 /* hide the inactive view (data-view on .tx-app root) */
 .tx-app[data-view="microcycle"] .tx-weekly,
-.tx-app[data-view="weekly"] .tx-microcycle { display: none; }
+.tx-app[data-view="weekly"] .tx-mc-view { display: none; }
 
 /* view-transition: only the active view carries the shared name */
-.tx-app[data-view="microcycle"] .tx-microcycle,
+.tx-app[data-view="microcycle"] .tx-mc-view,
 .tx-app[data-view="weekly"] .tx-weekly { view-transition-name: tx-cal; }
 
 /* ---------- responsive ---------- */
@@ -581,5 +588,5 @@ a.tx-workout:hover {
   .tx-phase__total { text-align: left; }
   .tx-toggle-weekly { display: none; }        /* weekly toggle is desktop-only */
   .tx-weekly { display: none !important; }     /* never render the weekly grid on mobile */
-  .tx-microcycle { display: block !important; } /* always show phases (mobile cards) */
+  .tx-mc-view { display: flex !important; } /* always show phases (mobile cards) */
 }
