@@ -456,7 +456,6 @@ a.tx-workout:hover {
 .tx-table .tx-date .sub { display: block; color: var(--muted); font-size: 0.625rem; margin-top: 2px; font-weight: 600; }
 
 .tx-cell {
-  min-height: 2.75rem;
   padding: 0.5rem 0.5625rem;
   font-size: 0.7812rem;
   line-height: 1.35;
@@ -505,7 +504,7 @@ a.tx-workout:hover {
 
 .tx-slot { border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
 .tx-slot__label { padding: 0.3125rem 0.5rem; background: var(--tx-surface); color: var(--muted); font-size: 0.6875rem; font-weight: 800; }
-.tx-slot .tx-cell { border: 0; min-height: 0; }
+.tx-slot .tx-cell { border: 0; }
 
 /* ---------- view toggle + category filter ---------- */
 
@@ -558,7 +557,7 @@ a.tx-workout:hover {
   gap: 0.1875rem;
 }
 .tx-wkday__date { font-size: 0.5625rem; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
-.tx-wkday .tx-cell { font-size: 0.5625rem; min-height: 0; height: 0.6875rem; padding: 0 0.1875rem; line-height: 0.6875rem; border-radius: 0.25rem; overflow: hidden; }
+.tx-wkday .tx-cell { font-size: 0.5625rem; height: 0.9375rem; padding: 0 0.1875rem; line-height: 0.9375rem; border-radius: 0.25rem; overflow: hidden; }
 
 /* hide the inactive view (data-view on .tx-app root) */
 .tx-app[data-view="microcycle"] .tx-weekly,
