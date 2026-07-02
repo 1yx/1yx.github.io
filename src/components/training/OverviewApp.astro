@@ -60,7 +60,7 @@ const microcyclesOfBlock = (
 };
 ---
 
-<div class="tx-app" data-lang={lang}>
+<div class="tx-app" data-lang={lang} data-view="microcycle" data-filter="none">
   <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
     {ui.overviewTitle}
   </h1>
@@ -77,193 +77,388 @@ const microcyclesOfBlock = (
         <a href="#" id="tx-current" class="tx-tab">
           {ui.current}
         </a>
+        <span class="tx-tabs__sep" aria-hidden="true" />
+        <button
+          class="tx-tab tx-tab--active"
+          type="button"
+          data-view-toggle="microcycle"
+        >
+          {ui.microcycleView}
+        </button>
+        <button
+          class="tx-tab tx-toggle-weekly"
+          type="button"
+          data-view-toggle="weekly"
+        >
+          {ui.weeklyView}
+        </button>
+        <span class="tx-tabs__sep" aria-hidden="true" />
+        <button
+          class="tx-chip"
+          type="button"
+          aria-pressed="true"
+          data-filter-toggle="none"
+        >
+          {ui.filterAll}
+        </button>
+        <button
+          class="tx-chip"
+          type="button"
+          aria-pressed="false"
+          data-filter-toggle="regeneration"
+        >
+          {ui.filterRegeneration}
+        </button>
+        <button
+          class="tx-chip"
+          type="button"
+          aria-pressed="false"
+          data-filter-toggle="fundamental"
+        >
+          {ui.filterFundamental}
+        </button>
+        <button
+          class="tx-chip"
+          type="button"
+          aria-pressed="false"
+          data-filter-toggle="special"
+        >
+          {ui.filterSpecial}
+        </button>
+        <button
+          class="tx-chip"
+          type="button"
+          aria-pressed="false"
+          data-filter-toggle="specific"
+        >
+          {ui.filterSpecific}
+        </button>
       </nav>
     )
   }
 
-  {
-    phaseList.map((phase: Phase, pi: number) => {
-      const items = allMicrocycles(phase);
-      const days = items.reduce(
-        (sum, it) => sum + it.microcycle.days.length,
-        0
-      );
-      return (
-        <section id={`phase-${pi + 1}`} class="tx-phase">
-          <div class="tx-phase__head">
-            <div>
-              <div class="tx-phase__title">{phase.name}</div>
-              <div class="tx-phase__meta">
-                {items.length} {ui.microcycles} · {days} {ui.days}
+  <div class="tx-microcycle">
+    {
+      phaseList.map((phase: Phase, pi: number) => {
+        const items = allMicrocycles(phase);
+        const days = items.reduce(
+          (sum, it) => sum + it.microcycle.days.length,
+          0
+        );
+        return (
+          <section id={`phase-${pi + 1}`} class="tx-phase">
+            <div class="tx-phase__head">
+              <div>
+                <div class="tx-phase__title">{phase.name}</div>
+                <div class="tx-phase__meta">
+                  {items.length} {ui.microcycles} · {days} {ui.days}
+                </div>
+              </div>
+              <div class="tx-phase__total">
+                {ui.plannedVolume}
+                <strong>{phaseKm(phase)}km</strong>
               </div>
             </div>
-            <div class="tx-phase__total">
-              {ui.plannedVolume}
-              <strong>{phaseKm(phase)}km</strong>
-            </div>
-          </div>
 
-          {/* desktop tables */}
-          <div class="tx-tablewrap">
-            {phase.blocks.map(block => {
-              const ents = microcyclesOfBlock(block);
-              const firstDays = ents[0]?.microcycle.days ?? [];
-              const lastDays = ents[ents.length - 1]?.microcycle.days ?? [];
-              return (
-                <div
-                  class="tx-table"
-                  data-first={firstDays[0]?.date}
-                  data-last={lastDays[lastDays.length - 1]?.date}
-                >
-                  <table>
-                    <tbody>
-                      {microcyclesOfBlock(block).map(({ microcycle }) => {
-                        const cls = microcycle.taper
-                          ? " tx-cyclehead--taper"
-                          : microcycle.deload
-                            ? " tx-cyclehead--deload"
-                            : "";
-                        return (
-                          <>
-                            <tr class={`tx-cyclehead${cls}`}>
-                              <th>
-                                {mcLabel(microcycle)}
-                                <span class="sub">
-                                  {cycleTotal(microcycle)}
-                                </span>
-                              </th>
-                              {(microcycle.days || []).map((day: PlanDay) => (
-                                <td class="tx-date">
-                                  {fmtShort(day.date)}
-                                  <span class="sub">
-                                    {ui.dayLabel} {day.day}
-                                  </span>
-                                </td>
-                              ))}
-                            </tr>
-                            <tr class="tx-row--period">
-                              <th>{ui.am}</th>
-                              {(microcycle.days || []).map((day: PlanDay) => (
-                                <td
-                                  class={`tx-cell tx-cell--${categoryClass(day.am)}`}
-                                >
-                                  {cellText(day.am)}
-                                </td>
-                              ))}
-                            </tr>
-                            <tr class="tx-row--period">
-                              <th>{ui.pm}</th>
-                              {(microcycle.days || []).map((day: PlanDay) => (
-                                <td
-                                  class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
-                                >
-                                  {cellText(day.pm)}
-                                </td>
-                              ))}
-                            </tr>
-                          </>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* mobile cards */}
-          <div class="tx-mobile">
-            {phase.blocks.map((block, bi) => {
-              const ments = microcyclesOfBlock(block);
-              const firstDays = ments[0]?.microcycle.days ?? [];
-              const lastDays = ments[ments.length - 1]?.microcycle.days ?? [];
-              const first = firstDays[0]?.date;
-              const last = lastDays[lastDays.length - 1]?.date;
-              return ments.map(({ microcycle, dayIndex }) => {
-                const cls = microcycle.taper
-                  ? " tx-cyclehead--taper"
-                  : microcycle.deload
-                    ? " tx-cyclehead--deload"
-                    : "";
+            {/* desktop tables */}
+            <div class="tx-tablewrap">
+              {phase.blocks.map(block => {
+                const ents = microcyclesOfBlock(block);
+                const firstDays = ents[0]?.microcycle.days ?? [];
+                const lastDays = ents[ents.length - 1]?.microcycle.days ?? [];
                 return (
-                  <a
-                    class="tx-cyclecard"
-                    href={blockHref(pi, bi, dayIndex)}
-                    data-first={first}
-                    data-last={last}
+                  <div
+                    class="tx-table"
+                    data-first={firstDays[0]?.date}
+                    data-last={lastDays[lastDays.length - 1]?.date}
                   >
-                    <div class={`tx-cyclecard__head${cls}`}>
-                      <span>
-                        {ui.blockLabel} {block.index} · {mcLabel(microcycle)}
-                      </span>
-                      <span>{cycleTotal(microcycle)}</span>
-                    </div>
-                    {(microcycle.days || []).map((day: PlanDay) => (
-                      <div class="tx-daycard">
-                        <div class="tx-daycard__date">
-                          {fmtShort(day.date)} · {ui.dayLabel} {day.day}
-                        </div>
-                        <div class="tx-slot">
-                          <div class="tx-slot__label">{ui.am}</div>
-                          <div
-                            class={`tx-cell tx-cell--${categoryClass(day.am)}`}
-                          >
-                            {cellText(day.am)}
-                          </div>
-                        </div>
-                        <div class="tx-slot">
-                          <div class="tx-slot__label">{ui.pm}</div>
-                          <div
-                            class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
-                          >
-                            {cellText(day.pm)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </a>
+                    <table>
+                      <tbody>
+                        {microcyclesOfBlock(block).map(({ microcycle }) => {
+                          const cls = microcycle.taper
+                            ? " tx-cyclehead--taper"
+                            : microcycle.deload
+                              ? " tx-cyclehead--deload"
+                              : "";
+                          return (
+                            <>
+                              <tr class={`tx-cyclehead${cls}`}>
+                                <th>
+                                  {mcLabel(microcycle)}
+                                  <span class="sub">
+                                    {cycleTotal(microcycle)}
+                                  </span>
+                                </th>
+                                {(microcycle.days || []).map((day: PlanDay) => (
+                                  <td class="tx-date">
+                                    {fmtShort(day.date)}
+                                    <span class="sub">
+                                      {ui.dayLabel} {day.day}
+                                    </span>
+                                  </td>
+                                ))}
+                              </tr>
+                              <tr class="tx-row--period">
+                                <th>{ui.am}</th>
+                                {(microcycle.days || []).map((day: PlanDay) => (
+                                  <td
+                                    class={`tx-cell tx-cell--${categoryClass(day.am)}`}
+                                  >
+                                    {cellText(day.am)}
+                                  </td>
+                                ))}
+                              </tr>
+                              <tr class="tx-row--period">
+                                <th>{ui.pm}</th>
+                                {(microcycle.days || []).map((day: PlanDay) => (
+                                  <td
+                                    class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
+                                  >
+                                    {cellText(day.pm)}
+                                  </td>
+                                ))}
+                              </tr>
+                            </>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 );
-              });
-            })}
-          </div>
-        </section>
-      );
-    })
-  }
+              })}
+            </div>
+
+            {/* mobile cards */}
+            <div class="tx-mobile">
+              {phase.blocks.map((block, bi) => {
+                const ments = microcyclesOfBlock(block);
+                const firstDays = ments[0]?.microcycle.days ?? [];
+                const lastDays = ments[ments.length - 1]?.microcycle.days ?? [];
+                const first = firstDays[0]?.date;
+                const last = lastDays[lastDays.length - 1]?.date;
+                return ments.map(({ microcycle, dayIndex }) => {
+                  const cls = microcycle.taper
+                    ? " tx-cyclehead--taper"
+                    : microcycle.deload
+                      ? " tx-cyclehead--deload"
+                      : "";
+                  return (
+                    <a
+                      class="tx-cyclecard"
+                      href={blockHref(pi, bi, dayIndex)}
+                      data-first={first}
+                      data-last={last}
+                    >
+                      <div class={`tx-cyclecard__head${cls}`}>
+                        <span>
+                          {ui.blockLabel} {block.index} · {mcLabel(microcycle)}
+                        </span>
+                        <span>{cycleTotal(microcycle)}</span>
+                      </div>
+                      {(microcycle.days || []).map((day: PlanDay) => (
+                        <div class="tx-daycard">
+                          <div class="tx-daycard__date">
+                            {fmtShort(day.date)} · {ui.dayLabel} {day.day}
+                          </div>
+                          <div class="tx-slot">
+                            <div class="tx-slot__label">{ui.am}</div>
+                            <div
+                              class={`tx-cell tx-cell--${categoryClass(day.am)}`}
+                            >
+                              {cellText(day.am)}
+                            </div>
+                          </div>
+                          <div class="tx-slot">
+                            <div class="tx-slot__label">{ui.pm}</div>
+                            <div
+                              class={`tx-cell tx-cell--${categoryClass(day.pm)}`}
+                            >
+                              {cellText(day.pm)}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </a>
+                  );
+                });
+              })}
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+  <div class="tx-weekly"></div>
 </div>
 
 <script>
-  import { todayISO } from "@/utils/training";
+  import { translations, type Locale } from "@/i18n";
+  import {
+    todayISO,
+    allDays,
+    mondayOf,
+    fmtShort,
+    categoryClass,
+    esc,
+    type Workout,
+    type PlanDay,
+  } from "@/utils/training";
 
-  function jumpToCurrentBlock() {
-    const today = todayISO();
-    const blocks = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-first][data-last]")
-    );
-    const match = blocks.find(
-      el =>
-        el.dataset.first &&
-        el.dataset.last &&
-        el.dataset.first <= today &&
-        today <= el.dataset.last
-    );
-    if (!match) return;
-    // Desktop table + mobile cards carry the same block range; scroll to the
-    // one that is actually visible (the other view is display:none).
-    const target =
-      blocks.find(
-        el =>
-          el.dataset.first === match.dataset.first &&
-          el.dataset.last === match.dataset.last &&
-          el.offsetParent !== null
-      ) || match;
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  type View = "microcycle" | "weekly";
+  type Filter =
+    | "none"
+    | "regeneration"
+    | "fundamental"
+    | "special"
+    | "specific";
 
   function init() {
+    const app = document.querySelector<HTMLElement>(".tx-app")!;
+    if (!app) return; // runtime guard (TS sees app as non-null via the assertion above)
+    const lang = (app.dataset.lang as Locale) || "zh-CN";
+    const ui = translations[lang].training;
+
+    const state = {
+      view: (app.dataset.view as View) || "microcycle",
+      filter: (app.dataset.filter as Filter) || "none",
+    };
+    let weeklyBuilt = false;
+
+    function renderAttrs() {
+      app.dataset.view = state.view;
+      app.dataset.filter = state.filter;
+    }
+
+    function updateToggleActive() {
+      app
+        .querySelectorAll<HTMLButtonElement>("[data-view-toggle]")
+        .forEach(btn => {
+          btn.classList.toggle(
+            "tx-tab--active",
+            btn.dataset.viewToggle === state.view
+          );
+        });
+      app
+        .querySelectorAll<HTMLButtonElement>("[data-filter-toggle]")
+        .forEach(btn => {
+          btn.setAttribute(
+            "aria-pressed",
+            String(btn.dataset.filterToggle === state.filter)
+          );
+        });
+    }
+
+    function dayCellHtml(w: Workout | null): string {
+      return `<div class="tx-cell tx-cell--${categoryClass(w)}">${w && w.text ? esc(w.text) : ""}</div>`;
+    }
+
+    // Build the Mon–Sun weekly grid (whole plan) into .tx-weekly, once.
+    function buildWeekly() {
+      const container = app.querySelector<HTMLElement>(".tx-weekly");
+      if (!container) return;
+      const byMonday = new Map<string, { [wd: number]: PlanDay }>();
+      for (const day of allDays()) {
+        const mon = mondayOf(day.date);
+        const wd = (new Date(day.date + "T00:00:00Z").getUTCDay() + 6) % 7; // Mon=0 … Sun=6
+        let slots = byMonday.get(mon);
+        if (!slots) {
+          slots = {};
+          byMonday.set(mon, slots);
+        }
+        slots[wd] = day;
+      }
+      const mondays = [...byMonday.keys()].sort();
+      let html =
+        '<div class="tx-weekly__head">' +
+        ui.weekdayShort
+          .map(d => `<div class="tx-weekly__dow">${d}</div>`)
+          .join("") +
+        "</div>";
+      for (const mon of mondays) {
+        const slots = byMonday.get(mon)!;
+        html += `<div class="tx-weekly__week" data-monday="${mon}">`;
+        for (let wd = 0; wd < 7; wd++) {
+          const day = slots[wd];
+          if (!day) {
+            html += '<div class="tx-wkday tx-wkday--empty"></div>';
+          } else {
+            html +=
+              `<div class="tx-wkday"><div class="tx-wkday__date">${fmtShort(day.date)}</div>` +
+              `${dayCellHtml(day.am)}${dayCellHtml(day.pm)}</div>`;
+          }
+        }
+        html += "</div>";
+      }
+      container.innerHTML = html;
+    }
+
+    // Apply state -> DOM, wrapped in a View Transition when available.
+    function commit() {
+      if (state.view === "weekly" && !weeklyBuilt) {
+        buildWeekly();
+        weeklyBuilt = true;
+      }
+      renderAttrs();
+      updateToggleActive();
+    }
+
+    function applyState(next: Partial<typeof state>) {
+      Object.assign(state, next);
+      if (typeof document.startViewTransition === "function") {
+        document.startViewTransition(commit);
+      } else {
+        commit(); // Firefox / older browsers: instant
+      }
+    }
+
+    function jumpToCurrent() {
+      const today = todayISO();
+      if (state.view === "weekly") {
+        app
+          .querySelector<HTMLElement>(
+            `.tx-weekly__week[data-monday="${mondayOf(today)}"]`
+          )
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      const blocks = Array.from(
+        app.querySelectorAll<HTMLElement>("[data-first][data-last]")
+      );
+      const match = blocks.find(
+        el =>
+          el.dataset.first &&
+          el.dataset.last &&
+          el.dataset.first <= today &&
+          today <= el.dataset.last
+      );
+      if (!match) return;
+      const target =
+        blocks.find(
+          el =>
+            el.dataset.first === match.dataset.first &&
+            el.dataset.last === match.dataset.last &&
+            el.offsetParent !== null
+        ) || match;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    app
+      .querySelectorAll<HTMLButtonElement>("[data-view-toggle]")
+      .forEach(btn => {
+        btn.addEventListener("click", () =>
+          applyState({ view: btn.dataset.viewToggle as View })
+        );
+      });
+    app
+      .querySelectorAll<HTMLButtonElement>("[data-filter-toggle]")
+      .forEach(btn => {
+        btn.addEventListener("click", () =>
+          applyState({ filter: btn.dataset.filterToggle as Filter })
+        );
+      });
     document.getElementById("tx-current")?.addEventListener("click", e => {
       e.preventDefault();
-      jumpToCurrentBlock();
+      jumpToCurrent();
     });
   }
 

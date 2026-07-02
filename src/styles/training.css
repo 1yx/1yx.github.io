@@ -507,6 +507,64 @@ a.tx-workout:hover {
 .tx-slot__label { padding: 0.3125rem 0.5rem; background: var(--tx-surface); color: var(--muted); font-size: 0.6875rem; font-weight: 800; }
 .tx-slot .tx-cell { border: 0; min-height: 0; }
 
+/* ---------- view toggle + category filter ---------- */
+
+.tx-tabs { flex-wrap: wrap; overflow: visible; }
+.tx-tabs__sep { align-self: center; width: 0; height: 1.25rem; margin: 0 0.25rem; border-left: 1px solid var(--border); }
+.tx-tab--active { color: var(--accent); border-color: var(--accent); }
+
+.tx-chip {
+  flex: 0 0 auto;
+  padding: 0.25rem 0.625rem;
+  border-radius: 62.5rem;
+  border: 1px solid var(--border);
+  background: var(--background);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tx-chip:hover,
+.tx-chip[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+/* category filter: dim non-matching cells (covers table + mobile cards + weekly) */
+.tx-app[data-filter="specific"] .tx-cell:not(.tx-cell--specific),
+.tx-app[data-filter="special"] .tx-cell:not(.tx-cell--special),
+.tx-app[data-filter="fundamental"] .tx-cell:not(.tx-cell--fundamental),
+.tx-app[data-filter="regeneration"] .tx-cell:not(.tx-cell--regeneration) {
+  opacity: 0.15;
+  transition: opacity 0.15s ease;
+}
+
+/* ---------- weekly view (Mon–Sun grid) ---------- */
+
+.tx-weekly { display: grid; gap: 0.75rem; }
+.tx-weekly__head,
+.tx-weekly__week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.25rem; }
+.tx-weekly__dow { font-size: 0.625rem; font-weight: 800; color: var(--muted); text-align: center; padding-bottom: 0.25rem; }
+.tx-weekly__week { scroll-margin-top: 1rem; }
+.tx-wkday {
+  min-height: 3.5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--tx-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+}
+.tx-wkday__date { font-size: 0.5625rem; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tx-wkday .tx-cell { font-size: 0.5625rem; padding: 0.125rem 0.25rem; min-height: 0; border-radius: 0.25rem; line-height: 1.2; }
+
+/* hide the inactive view (data-view on .tx-app root) */
+.tx-app[data-view="microcycle"] .tx-weekly,
+.tx-app[data-view="weekly"] .tx-microcycle { display: none; }
+
+/* view-transition: only the active view carries the shared name */
+.tx-app[data-view="microcycle"] .tx-microcycle,
+.tx-app[data-view="weekly"] .tx-weekly { view-transition-name: tx-cal; }
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 720px) {
@@ -515,4 +573,7 @@ a.tx-workout:hover {
   .tx-blockdays { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tx-phase__head { align-items: flex-start; flex-direction: column; }
   .tx-phase__total { text-align: left; }
+  .tx-toggle-weekly { display: none; }        /* weekly toggle is desktop-only */
+  .tx-weekly { display: none !important; }     /* never render the weekly grid on mobile */
+  .tx-microcycle { display: block !important; } /* always show phases (mobile cards) */
 }

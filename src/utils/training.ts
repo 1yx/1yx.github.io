@@ -253,3 +253,23 @@ export const esc = (s: string | null | undefined): string =>
     /[&<>"]/g,
     c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string)
   );
+
+// ---- weekly view helpers ----
+
+/** Filterable workout categories (chips + CSS stay in sync via this tuple). */
+export const CATEGORIES = ["regeneration", "fundamental", "special", "specific"] as const;
+export type CategoryKey = (typeof CATEGORIES)[number];
+
+/** Flatten the whole plan into an ordered list of days (plan is contiguous). */
+export const allDays = (): PlanDay[] =>
+  phases().flatMap(p =>
+    p.blocks.flatMap(b => (b.microcycles || b.sets || []).flatMap(m => m.days))
+  );
+
+/** ISO date (YYYY-MM-DD) of the Monday starting the week of `iso` (UTC-stable). */
+export const mondayOf = (iso: string): string => {
+  const d = new Date(iso + "T00:00:00Z");
+  const diff = (d.getUTCDay() + 6) % 7; // Mon=0 … Sun=6
+  d.setUTCDate(d.getUTCDate() - diff);
+  return d.toISOString().slice(0, 10);
+};
