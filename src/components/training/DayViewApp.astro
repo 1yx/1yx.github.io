@@ -52,6 +52,8 @@ const ui = translations[lang].training;
     dayEntriesOf,
     paceOf,
     paceText,
+    paceZone,
+    parseTargetPace,
     fmtFull,
     findToday,
     todayISO,
@@ -174,30 +176,172 @@ const ui = translations[lang].training;
       return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label} · ${ui.plannedKm(w.planned_km || 0)}</div><div class="tx-workout__title">${esc(w.text)}</div></div>`;
     }
 
-    function paceChartHtml(splits: Split[]): string {
-      const valid = (splits || []).filter(x => x && x.pace_sec_per_km);
+    // Catmull-Rom → cubic Bézier: a smooth path through every point.
+    function smoothPath(points: [number, number][]): string {
+      if (!points.length) return "";
+      if (points.length < 3)
+        return `M${points[0][0]},${points[0][1]}` +
+          (points[1] ? ` L${points[1][0]},${points[1][1]}` : "");
+      let d = `M${points[0][0]},${points[0][1]}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[i - 1] || points[i];
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const p3 = points[i + 2] || p2;
+        const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+        const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+        const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+        const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+        d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+      }
+      return d;
+    }
+
+    function paceChartHtml(w: Workout | null, splits: Split[]): string {
+      // Bars = the PLAN target (a zone-colored band: light fill below the target,
+      // darker band across the target range). Line = the ACTUAL per-km pace, as a
+      // smooth curve. x = cumulative moving_time; y = pace (faster = lower).
+      // drop GPS fragments (partial km < 0.5) — their pace is noise and they
+      // distort the curve (e.g. a 0.035km/17s tail split reporting 8′08″/km).
+      const valid = (splits || []).filter(
+        x =>
+          x &&
+          x.pace_sec_per_km &&
+          x.moving_time &&
+          (x.distance_km ?? 1) >= 0.5
+      );
       if (!valid.length) return "";
-      const paces = valid.map(x => x.pace_sec_per_km as number);
-      const fastest = Math.min(...paces);
-      const slowest = Math.max(...paces);
-      const mid = Math.round((fastest + slowest) / 2);
-      const spread = Math.max(1, slowest - fastest);
-      const bars = valid
-        .map((split, i) => {
-          const speedScore =
-            (slowest - (split.pace_sec_per_km as number)) / spread;
-          const h = Math.round(24 + speedScore * 54);
-          const label = split.split || i + 1;
-          const title = `${ui.dayLabel} ${label} km：${paceText(split.pace_sec_per_km as number)}/km`;
-          return `<div class="tx-pace__bar" style="height:${h}px" title="${title}" aria-label="${title}"><span>${label}</span></div>`;
+      // Regeneration (recovery) sessions carry no @pace — they're all Z1, so
+      // infer a Z1 target (≥ 5′09″/km, open-ended up) to draw their plan rect too.
+      const Z1_CEIL = 310; // 5′09″, the Z1/Z2 boundary
+      let target = parseTargetPace(w?.text);
+      if (!target && w != null && categoryClass(w) === "regeneration") {
+        target = { fast: Z1_CEIL, slow: Infinity };
+      }
+
+      let cum = 0;
+      const pts = valid.map(s => {
+        const start = cum;
+        const wid = s.moving_time as number;
+        cum += wid;
+        return {
+          start,
+          w: wid,
+          pace: s.pace_sec_per_km as number,
+          n: s.split ?? 0,
+        };
+      });
+      const total = cum;
+
+      // The plan rectangle spans the PLANNED duration (planned_km × target pace),
+      // not the full actual time — run longer and the curve extends past the rect.
+      const planPace = target
+        ? Number.isFinite(target.slow)
+          ? (target.fast + target.slow) / 2
+          : target.fast
+        : null;
+      const plannedDur =
+        target && w?.planned_km && planPace ? w.planned_km * planPace : null;
+      const planW = plannedDur ?? total; // plan rectangle width (fallback: full)
+      const viewW = Math.max(total, planW); // viewBox spans whichever is longer
+
+      // y-domain covers actual paces + the plan target range
+      const vals: number[] = pts.map(p => p.pace);
+      if (target) {
+        vals.push(target.fast);
+        if (Number.isFinite(target.slow)) vals.push(target.slow);
+      }
+      const fastest = Math.min(...vals);
+      const slowest = Math.max(...vals);
+      const span = slowest - fastest;
+      let pMin = fastest - Math.max(8, span * 0.12);
+      let pMax = slowest + Math.max(8, span * 0.12);
+      if (pMax - pMin < 16) {
+        const c = (pMin + pMax) / 2;
+        pMin = c - 8;
+        pMax = c + 8;
+      }
+      pMin = Math.max(0, pMin);
+
+      const H = 80; // viewBox height (user units); CSS height 5rem
+      const yOf = (pace: number) => (H * (pace - pMin)) / (pMax - pMin); // faster → smaller y → top
+
+      // plan target: light base (baseline→fast bound) + darker band across the
+      // target range (fast→slow); a single pace draws a crisp line instead.
+      let plan = "";
+      const tz = target ? paceZone(target.fast) : null;
+      const rngLabel = target
+        ? Number.isFinite(target.slow)
+          ? `${paceText(target.fast)}–${paceText(target.slow)}`
+          : `>${paceText(target.fast)}`
+        : "";
+      if (target && tz) {
+        const yFast = yOf(target.fast);
+        const ySlow = Number.isFinite(target.slow) ? yOf(target.slow) : H; // ∞ → bottom
+        // light base: top edge down to the fast bound (faster-than-target)
+        plan = `<rect class="tx-pace__plan-base" style="--zc:${tz.color}" x="0" y="0" width="${planW}" height="${yFast.toFixed(1)}"/>`;
+        if (target.slow > target.fast) {
+          // dark band across the target range (fast → slow)
+          plan += `<rect class="tx-pace__plan-zone" style="--zc:${tz.color}" x="0" y="${yFast.toFixed(1)}" width="${planW}" height="${(ySlow - yFast).toFixed(1)}"><title>${ui.plannedSection} Z${tz.id} ${rngLabel}/km</title></rect>`;
+        } else {
+          plan += `<line class="tx-pace__plan-line" style="--zc:${tz.color}" x1="0" x2="${planW}" y1="${yFast.toFixed(1)}" y2="${yFast.toFixed(1)}"><title>${ui.plannedSection} Z${tz.id} ${rngLabel}/km</title></line>`;
+        }
+      }
+
+      // actual: smooth curve from the left edge (x=0, at the first km's pace)
+      // through each km to the right edge (x=total); no per-km dots.
+      const centers: [number, number][] = pts.map(p => [
+        p.start + p.w / 2,
+        yOf(p.pace),
+      ]);
+      const curvePts: [number, number][] = centers.length
+        ? [
+            [0, centers[0][1]],
+            ...centers,
+            [total, centers[centers.length - 1][1]],
+          ]
+        : [];
+      const curve =
+        curvePts.length > 1
+          ? `<path class="tx-pace__line" d="${smoothPath(curvePts)}"/>`
+          : "";
+
+      // y-axis pace labels: fastest (top) · mid · slowest (bottom)
+      const midPace = Math.round((fastest + slowest) / 2);
+      const scale = `<span>${paceText(Math.round(fastest))}</span><span>${paceText(midPace)}</span><span>${paceText(Math.round(slowest))}</span>`;
+
+      const fmtT = (sec: number) => {
+        const m = Math.floor(sec / 60),
+          s = Math.round(sec % 60);
+        return `${m}:${s < 10 ? "0" : ""}${s}`;
+      };
+      const xticks = [0, 0.25, 0.5, 0.75, 1]
+        .map(frac => {
+          const tx = frac === 0 ? "0" : frac === 1 ? "-100%" : "-50%";
+          return `<span class="tx-pace__tick" style="left:${(frac * 100).toFixed(2)}%; transform:translateX(${tx})">${fmtT(frac * viewW)}</span>`;
         })
         .join("");
-      return `<div class="tx-pace" aria-label="${ui.paceFastest(paceText(fastest))}，${ui.paceSlowest(paceText(slowest))}">
+
+      // legend: plan target zone (+ range) · actual pace range
+      const legend: string[] = [];
+      if (target && tz) {
+        legend.push(
+          `<span class="tx-pace__lg"><i class="tx-pace__sw" style="--zc:${tz.color}"></i>${ui.plannedSection} Z${tz.id} ${rngLabel}/km</span>`
+        );
+      }
+      const aFast = Math.min(...pts.map(p => p.pace));
+      const aSlow = Math.max(...pts.map(p => p.pace));
+      legend.push(
+        `<span class="tx-pace__lg"><i class="tx-pace__ln"></i>${ui.actualSection} ${paceText(Math.round(aFast))}–${paceText(Math.round(aSlow))}/km</span>`
+      );
+
+      return `<div class="tx-pace" aria-label="${ui.paceFastest(paceText(Math.round(aFast)))}，${ui.paceSlowest(paceText(Math.round(aSlow)))}">
         <div class="tx-pace__plot">
-          <div class="tx-pace__scale"><span>${paceText(fastest)}</span><span>${paceText(mid)}</span><span>${paceText(slowest)}</span></div>
-          <div class="tx-pace__bars">${bars}</div>
+          <div class="tx-pace__scale">${scale}</div>
+          <svg class="tx-pace__svg" viewBox="0 0 ${viewW} ${H}" preserveAspectRatio="none" role="img">${plan}${curve}</svg>
         </div>
-        <div class="tx-pace__caption"><span>${ui.paceFastest(paceText(fastest))}</span><span>${ui.paceSlowest(paceText(slowest))}</span></div>
+        <div class="tx-pace__xaxis">${xticks}</div>
+        <div class="tx-pace__legend">${legend.join("")}</div>
       </div>`;
     }
 
@@ -213,7 +357,7 @@ const ui = translations[lang].training;
         ? `<div class="tx-workout__meta">${esc(desc)}</div>`
         : "";
       const inner = `<div class="tx-workout__period">${label}${extra}</div>
-          <div class="tx-workout__title">✓ ${act.distance_km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(act.splits_metric || [])}`;
+          <div class="tx-workout__title">✓ ${act.distance_km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(w, act.splits_metric || [])}`;
       if (act.id) {
         return `<a class="tx-workout tx-workout--${cat} tx-workout--done" href="https://www.strava.com/activities/${act.id}" target="_blank" rel="noopener">${inner}</a>`;
       }

@@ -215,6 +215,47 @@ export const paceText = (sec: number): string => {
   return m + "′" + (ss < 10 ? "0" : "") + ss + "″";
 };
 
+// ---- pace zones (6-zone scheme; thresholds tunable) ----
+
+export interface PaceZone {
+  id: number; // 1 (slowest) … 6 (fastest)
+  max: number; // exclusive upper bound in sec/km (Infinity for the slowest bucket)
+  color: string; // CSS color token, set as inline --zc on each rect/swatch
+  label: string; // display range, e.g. "4:15–5:09"
+}
+
+/** Six-zone pace scheme (sec/km, faster = smaller). A pace lands in the first
+ *  zone whose `max` it is strictly below; the Z1 bucket (Infinity) catches all. */
+export const PACE_ZONES: PaceZone[] = [
+  { id: 6, max: 204, color: "var(--purple)", label: "<3:24" }, // Z6 < 3:24
+  { id: 5, max: 220, color: "var(--red)", label: "3:24–3:39" }, // Z5
+  { id: 4, max: 239, color: "var(--orange)", label: "3:40–3:58" }, // Z4
+  { id: 3, max: 255, color: "var(--yellow)", label: "3:59–4:14" }, // Z3
+  { id: 2, max: 310, color: "var(--green)", label: "4:15–5:09" }, // Z2
+  { id: 1, max: Infinity, color: "var(--teal)", label: ">5:09" }, // Z1 ≥ 310
+];
+
+/** Classify a sec/km pace into its zone. */
+export const paceZone = (secPerKm: number): PaceZone =>
+  PACE_ZONES.find(z => secPerKm < z.max) ?? PACE_ZONES[PACE_ZONES.length - 1];
+
+/** Parse the first target-pace token from a plan workout text into sec/km.
+ *  Handles a single pace (`@5′00″`) and a range (`@5′05″-5′15″`); returns
+ *  {fast, slow} (fast ≤ slow). Multi-segment texts yield the first segment. */
+export const parseTargetPace = (
+  text: string | null | undefined
+): { fast: number; slow: number } | null => {
+  if (!text) return null;
+  const m = text.match(/@(\d+)[′'](\d+)[″"](?:\s*-\s*(\d+)[′'](\d+)[″"])?/);
+  if (!m) return null;
+  const a = +m[1] * 60 + +m[2];
+  if (m[3] !== undefined && m[4] !== undefined) {
+    const b = +m[3] * 60 + +m[4];
+    return { fast: Math.min(a, b), slow: Math.max(a, b) };
+  }
+  return { fast: a, slow: a };
+};
+
 export const fmtShort = (iso: string): string => {
   const d = new Date(iso + "T00:00:00");
   return `${d.getMonth() + 1}/${d.getDate()}`;
