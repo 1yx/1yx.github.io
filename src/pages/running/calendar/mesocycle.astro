@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
-import BlockViewApp from "@/components/training/BlockViewApp.astro";
+import MesocycleViewApp from "@/components/training/MesocycleViewApp.astro";
 import { SITE } from "@/config";
 import { DEFAULT_LOCALE, t, type Locale } from "@/i18n";
 
@@ -12,17 +12,17 @@ const ui = t(lang).training;
 ---
 
 <Layout
-  title={`${ui.blockTitle} | ${SITE.title}`}
-  description={ui.blockDesc}
+  title={`${ui.mesocycleTitle} | ${SITE.title}`}
+  description={ui.mesocycleDesc}
   alternateLanguages={[
-    { lang: "zh-CN", href: `${SITE.website}running/calendar/block/` },
-    { lang: "en", href: `${SITE.website}en/running/calendar/block/` },
+    { lang: "zh-CN", href: `${SITE.website}running/calendar/mesocycle/` },
+    { lang: "en", href: `${SITE.website}en/running/calendar/mesocycle/` },
   ]}
 >
   <Header {lang} />
-  <Breadcrumb {lang} currentLabel="Block" />
+  <Breadcrumb {lang} currentLabel="大周期视图" />
   <main id="main-content" class="app-layout">
-    <BlockViewApp {lang} />
+    <MesocycleViewApp {lang} />
   </main>
   <Footer {lang} />
 </Layout>

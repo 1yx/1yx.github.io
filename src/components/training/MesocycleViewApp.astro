@@ -10,13 +10,13 @@ const { lang } = Astro.props;
 const ui = translations[lang].training;
 ---
 
-<div class="tx-app" id="tx-block" data-lang={lang}>
+<div class="tx-app" id="tx-mesocycle" data-lang={lang}>
   <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
-    {ui.blockTitle}
+    {ui.mesocycleTitle}
   </h1>
 
   <div class="tx-nav">
-    <button class="tx-navbtn" id="tx-prev" aria-label={ui.prevBlock}>‹</button>
+    <button class="tx-navbtn" id="tx-prev" aria-label={ui.prevMesocycle}>‹</button>
     <div
       class="tx-pos"
       id="tx-pos"
@@ -27,13 +27,13 @@ const ui = translations[lang].training;
       <div class="tx-pos__t" id="tx-title"></div>
       <div class="tx-pos__d" id="tx-date"></div>
     </div>
-    <button class="tx-navbtn" id="tx-next" aria-label={ui.nextBlock}>›</button>
+    <button class="tx-navbtn" id="tx-next" aria-label={ui.nextMesocycle}>›</button>
   </div>
 
   <section class="tx-section">
     <div class="tx-section__head">
       <span id="tx-subtitle"></span>
-      <span id="tx-block-total"></span>
+      <span id="tx-meso-total"></span>
     </div>
     <div class="tx-microcycles" id="tx-microcycles"></div>
   </section>
@@ -62,7 +62,7 @@ const ui = translations[lang].training;
   let controller: AbortController | null = null;
 
   function init() {
-    const root = document.getElementById("tx-block");
+    const root = document.getElementById("tx-mesocycle");
     if (!root) return;
 
     controller?.abort();
@@ -75,41 +75,41 @@ const ui = translations[lang].training;
 
     const phaseList = phases();
     let phaseIndex = 0;
-    let blockIndex = 0;
+    let mesocycleIndex = 0;
     let dayIndex = 0;
     let acts: Activity[] = [];
 
     const phase = () => phaseList[phaseIndex];
-    const block = () => phase().blocks[blockIndex];
+    const mesocycle = () => phase().mesocycles[mesocycleIndex];
     const $ = (id: string) => document.getElementById(id);
 
     function applyRoute() {
       const params = new URLSearchParams(location.search);
       const p = Number.parseInt(params.get("phase") || "", 10);
       if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
-      const b = Number.parseInt(params.get("block") || "", 10);
-      if (Number.isInteger(b) && b >= 0 && b < phase().blocks.length)
-        blockIndex = b;
-      const list = dayEntriesOf(block());
+      const b = Number.parseInt(params.get("mesocycle") || "", 10);
+      if (Number.isInteger(b) && b >= 0 && b < phase().mesocycles.length)
+        mesocycleIndex = b;
+      const list = dayEntriesOf(mesocycle());
       const d = Number.parseInt(params.get("day") || "", 10);
       if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
     }
 
     function goDay(index: number) {
       dayIndex = index;
-      location.href = `${base}/running/calendar/day/?phase=${phaseIndex}&block=${blockIndex}&day=${dayIndex}`;
+      location.href = `${base}/running/calendar/day/?phase=${phaseIndex}&mesocycle=${mesocycleIndex}&day=${dayIndex}`;
     }
 
-    function stepBlock(direction: number) {
-      // Cross phase boundaries so "next block" goes to the real next block
+    function stepMesocycle(direction: number) {
+      // Cross phase boundaries so "next mesocycle" goes to the real next mesocycle
       // (previously wrapped within the current phase).
-      blockIndex += direction;
-      if (blockIndex >= phaseList[phaseIndex].blocks.length) {
+      mesocycleIndex += direction;
+      if (mesocycleIndex >= phaseList[phaseIndex].mesocycles.length) {
         phaseIndex = (phaseIndex + 1) % phaseList.length;
-        blockIndex = 0;
-      } else if (blockIndex < 0) {
+        mesocycleIndex = 0;
+      } else if (mesocycleIndex < 0) {
         phaseIndex = (phaseIndex - 1 + phaseList.length) % phaseList.length;
-        blockIndex = phaseList[phaseIndex].blocks.length - 1;
+        mesocycleIndex = phaseList[phaseIndex].mesocycles.length - 1;
       }
       dayIndex = 0;
       render();
@@ -153,7 +153,7 @@ const ui = translations[lang].training;
       return lang === "zh-CN" ? `第${n}天` : `Day ${n}`;
     }
 
-    function dayButtonHtml(day: PlanDay, indexInBlock: number): string {
+    function dayButtonHtml(day: PlanDay, indexInMesocycle: number): string {
       const agg = aggregateActs(acts, day.date);
       const hasAm = !!day.am?.text;
       const hasPm = !!day.pm?.text;
@@ -170,7 +170,7 @@ const ui = translations[lang].training;
         amSlot = slotHtml(day.am, agg.am);
         pmSlot = slotHtml(day.pm, agg.pm);
       }
-      return `<div class="tx-blockday" data-day="${indexInBlock}">
+      return `<div class="tx-mesoday" data-day="${indexInMesocycle}">
         <div class="bd-head"><span>${dayLabel(day.day)}</span><span class="bd-date">${fmtShort(day.date)} ${lang === "zh-CN" ? "周" : ""}${ui.weekdayShort[(new Date(day.date + "T00:00:00").getDay() + 6) % 7]}</span></div>
         <div class="bd-plan">${amSlot}${pmSlot}</div>
       </div>`;
@@ -179,37 +179,37 @@ const ui = translations[lang].training;
     function render() {
       const wrap = $("tx-microcycles");
       if (!wrap) return;
-      const currentBlock = block();
-      const micros = microcyclesOf(currentBlock);
-      const list = dayEntriesOf(currentBlock);
+      const currentMesocycle = mesocycle();
+      const micros = microcyclesOf(currentMesocycle);
+      const list = dayEntriesOf(currentMesocycle);
       const first = list[0]?.day.date;
       const last = list[list.length - 1]?.day.date;
       const phaseName =
         (ui.phaseLabels as Record<string, string>)[phase().name] ??
         phase().name;
       $("tx-title")!.textContent =
-        `${phaseName} · ${ui.blockLabel} ${currentBlock.index}`;
+        `${phaseName} · ${ui.mesocycleLabel} ${currentMesocycle.index}`;
       $("tx-date")!.textContent =
         first && last ? `${fmtShort(first)} - ${fmtShort(last)}` : "";
       $("tx-subtitle")!.textContent =
         `${micros.length} ${ui.microcycles} · ${list.length} ${ui.days}`;
 
-      // block-level planned vs actual totals
-      const blockPlanned = list.reduce(
+      // mesocycle-level planned vs actual totals
+      const mesocyclePlanned = list.reduce(
         (s, { day }) => s + dayPlannedKm(day),
         0
       );
-      const blockActual = list.reduce((s, { day }) => {
+      const mesocycleActual = list.reduce((s, { day }) => {
         const a = aggregateActs(acts, day.date);
         return s + (a.am?.km || 0) + (a.pm?.km || 0);
       }, 0);
-      const blockMet = blockActual >= blockPlanned;
-      const blockHasActual = blockActual > 0;
-      const blockActualHtml = blockHasActual
-        ? `<span class="${blockMet ? "tx-met" : "tx-miss"}"> ${ui.actualLabel} ${Math.floor(blockActual)}km ${blockMet ? "✓" : "✗"}</span>`
+      const mesocycleMet = mesocycleActual >= mesocyclePlanned;
+      const mesocycleHasActual = mesocycleActual > 0;
+      const mesocycleActualHtml = mesocycleHasActual
+        ? `<span class="${mesocycleMet ? "tx-met" : "tx-miss"}"> ${ui.actualLabel} ${Math.floor(mesocycleActual)}km ${mesocycleMet ? "✓" : "✗"}</span>`
         : "";
-      $("tx-block-total")!.innerHTML =
-        `${ui.plannedKm(blockPlanned)}${blockActualHtml}`;
+      $("tx-meso-total")!.innerHTML =
+        `${ui.plannedKm(mesocyclePlanned)}${mesocycleActualHtml}`;
 
       let baseIdx = 0;
       wrap.innerHTML = micros
@@ -231,8 +231,8 @@ const ui = translations[lang].training;
           const total = `${ui.plannedKm(plannedKm)}${actualHtml}`;
           const tag = microcycle.taper
             ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
-            : microcycle.deload
-              ? `<span class="tx-tag tx-tag--deload">${ui.deload}</span>`
+            : microcycle.cutback
+              ? `<span class="tx-tag tx-tag--cutback">${ui.cutback}</span>`
               : "";
           const buttons = days
             .map((day, i) => dayButtonHtml(day, baseIdx + i))
@@ -243,26 +243,26 @@ const ui = translations[lang].training;
               <div class="tx-microcycle__name">${ui.microcycleLabel} ${microcycleIndex(microcycle)} ${tag}</div>
               <div class="tx-microcycle__total">${total}</div>
             </div>
-            <div class="tx-blockdays">${buttons}</div>
+            <div class="tx-mesodays">${buttons}</div>
           </div>`;
         })
         .join("");
 
-      wrap.querySelectorAll<HTMLButtonElement>(".tx-blockday").forEach(btn => {
+      wrap.querySelectorAll<HTMLButtonElement>(".tx-mesoday").forEach(btn => {
         btn.onclick = () => goDay(+btn.dataset.day!);
       });
 
-      // disable prev/next at the first/last block
-      const isFirst = phaseIndex === 0 && blockIndex === 0;
+      // disable prev/next at the first/last mesocycle
+      const isFirst = phaseIndex === 0 && mesocycleIndex === 0;
       const isLast =
         phaseIndex === phaseList.length - 1 &&
-        blockIndex === phaseList[phaseIndex].blocks.length - 1;
+        mesocycleIndex === phaseList[phaseIndex].mesocycles.length - 1;
       ($("tx-prev") as HTMLButtonElement)!.disabled = isFirst;
       ($("tx-next") as HTMLButtonElement)!.disabled = isLast;
     }
 
-    $("tx-prev")!.onclick = () => stepBlock(-1);
-    $("tx-next")!.onclick = () => stepBlock(1);
+    $("tx-prev")!.onclick = () => stepMesocycle(-1);
+    $("tx-next")!.onclick = () => stepMesocycle(1);
     const pos = $("tx-pos")!;
     pos.onclick = () => goDay(dayIndex);
     pos.onkeydown = e => {
@@ -277,7 +277,7 @@ const ui = translations[lang].training;
       const td = findToday();
       if (td) {
         phaseIndex = td.phaseIndex;
-        blockIndex = td.blockIndex;
+        mesocycleIndex = td.mesocycleIndex;
         dayIndex = td.dayIndex;
       }
     }

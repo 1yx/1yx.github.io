@@ -1,7 +1,7 @@
 /*
  * Training calendar styles (/running/calendar/*).
  *
- * Consumed by JS-injected innerHTML across the day/block/overview views, so all
+ * Consumed by JS-injected innerHTML across the day/mesocycle/overview views, so all
  * classes are global (imported once per *App.astro frontmatter; Vite dedupes).
  * Colors are built on the site theme tokens (src/styles/global.css) — they flip
  * with [data-theme=dark] automatically. No hardcoded palette survives here.
@@ -97,7 +97,7 @@
   background: var(--background);
 }
 
-.tx-tag--deload { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 45%, var(--border)); }
+.tx-tag--cutback { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 45%, var(--border)); }
 .tx-tag--taper { color: var(--purple); border-color: color-mix(in srgb, var(--purple) 45%, var(--border)); }
 .tx-tag--extra { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 45%, var(--border)); }
 
@@ -128,9 +128,9 @@
   font-size: 0.6875rem;
 }
 
-/* Planned km in the block header is muted like the microcycle total;
+/* Planned km in the mesocycle header is muted like the microcycle total;
    the nested .tx-met/.tx-miss spans override for actuals. */
-#tx-block-total {
+#tx-meso-total {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -291,7 +291,7 @@ a.tx-workout:hover {
   font-weight: 700;
 }
 
-/* ---------- block view: microcycle cards + day grid ---------- */
+/* ---------- mesocycle view: microcycle cards + day grid ---------- */
 
 .tx-microcycles {
   display: grid;
@@ -330,13 +330,13 @@ a.tx-workout:hover {
 .tx-met { color: var(--green); }
 .tx-miss { color: var(--orange); }
 
-.tx-blockdays {
+.tx-mesodays {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.375rem;
 }
 
-.tx-blockday {
+.tx-mesoday {
   padding: 0.375rem;
   text-align: left;
   border: 1px solid var(--border);
@@ -347,7 +347,7 @@ a.tx-workout:hover {
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.tx-blockday:hover {
+.tx-mesoday:hover {
   border-color: var(--accent);
 }
 
@@ -475,7 +475,7 @@ a.tx-workout:hover {
 .tx-cyclehead th { color: var(--muted); }
 .tx-cyclehead td { color: var(--foreground); }
 .tx-cyclehead .sub { display: block; color: var(--muted); font-size: 0.625rem; margin-top: 2px; font-weight: 600; }
-.tx-cyclehead--deload th, .tx-cyclehead--deload td { background: color-mix(in srgb, var(--orange) 8%, var(--tx-surface)); }
+.tx-cyclehead--cutback th, .tx-cyclehead--cutback td { background: color-mix(in srgb, var(--orange) 8%, var(--tx-surface)); }
 .tx-cyclehead--taper th, .tx-cyclehead--taper td { background: color-mix(in srgb, var(--purple) 8%, var(--tx-surface)); }
 
 .tx-table .tx-date { font-variant-numeric: tabular-nums; padding: 0.5rem; color: var(--muted); }
@@ -608,7 +608,7 @@ a.tx-workout:hover {
 @media (max-width: 720px) {
   .tx-tablewrap { display: none; }
   .tx-mobile { display: flex; }
-  .tx-blockdays { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tx-mesodays { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tx-phase__head { align-items: flex-start; flex-direction: column; }
   .tx-phase__total { text-align: left; }
   .tx-toggle-weekly { display: none; }        /* weekly toggle is desktop-only */

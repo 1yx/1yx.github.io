@@ -20,7 +20,7 @@ const ui = translations[lang].training;
       id="tx-pos"
       role="button"
       tabindex="0"
-      aria-label={ui.blockTitle}
+      aria-label={ui.mesocycleTitle}
     >
       <div class="tx-pos__t" id="tx-title"></div>
       <div class="tx-pos__d" id="tx-date"></div>
@@ -80,21 +80,21 @@ const ui = translations[lang].training;
 
     const phaseList = phases();
     let phaseIndex = 0;
-    let blockIndex = 0;
+    let mesocycleIndex = 0;
     let dayIndex = 0;
     let acts: Activity[] = [];
 
-    const block = () => phaseList[phaseIndex].blocks[blockIndex];
-    const entries = () => dayEntriesOf(block());
+    const mesocycle = () => phaseList[phaseIndex].mesocycles[mesocycleIndex];
+    const entries = () => dayEntriesOf(mesocycle());
     const $ = (id: string) => document.getElementById(id);
 
     function findByDate(dateStr: string) {
       for (let p = 0; p < phaseList.length; p++) {
-        for (let b = 0; b < phaseList[p].blocks.length; b++) {
-          const ents = dayEntriesOf(phaseList[p].blocks[b]);
+        for (let b = 0; b < phaseList[p].mesocycles.length; b++) {
+          const ents = dayEntriesOf(phaseList[p].mesocycles[b]);
           for (let di = 0; di < ents.length; di++) {
             if (ents[di].day.date === dateStr) {
-              return { phaseIndex: p, blockIndex: b, dayIndex: di };
+              return { phaseIndex: p, mesocycleIndex: b, dayIndex: di };
             }
           }
         }
@@ -111,13 +111,13 @@ const ui = translations[lang].training;
         const found = findByDate(dateParam);
         if (found) {
           phaseIndex = found.phaseIndex;
-          blockIndex = found.blockIndex;
+          mesocycleIndex = found.mesocycleIndex;
           dayIndex = found.dayIndex;
         } else {
           const td = findToday();
           if (td) {
             phaseIndex = td.phaseIndex;
-            blockIndex = td.blockIndex;
+            mesocycleIndex = td.mesocycleIndex;
             dayIndex = td.dayIndex;
           }
         }
@@ -125,36 +125,36 @@ const ui = translations[lang].training;
       }
       const p = Number.parseInt(params.get("phase") || "", 10);
       if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
-      const b = Number.parseInt(params.get("block") || "", 10);
+      const b = Number.parseInt(params.get("mesocycle") || "", 10);
       if (
         Number.isInteger(b) &&
         b >= 0 &&
-        b < phaseList[phaseIndex].blocks.length
+        b < phaseList[phaseIndex].mesocycles.length
       )
-        blockIndex = b;
+        mesocycleIndex = b;
       const list = entries();
       const d = Number.parseInt(params.get("day") || "", 10);
       if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
     }
 
     function step(delta: number) {
-      // Cross block/phase boundaries so "next day" is always the real next
-      // calendar day (the plan is contiguous: each block's day 0 follows the
-      // previous block's last day). Previously this wrapped within the current
-      // block, so the last day of a block jumped back to its first day.
+      // Cross mesocycle/phase boundaries so "next day" is always the real next
+      // calendar day (the plan is contiguous: each mesocycle's day 0 follows the
+      // previous mesocycle's last day). Previously this wrapped within the current
+      // mesocycle, so the last day of a mesocycle jumped back to its first day.
       const ni = dayIndex + delta;
       if (ni >= entries().length) {
-        blockIndex++;
-        if (blockIndex >= phaseList[phaseIndex].blocks.length) {
-          blockIndex = 0;
+        mesocycleIndex++;
+        if (mesocycleIndex >= phaseList[phaseIndex].mesocycles.length) {
+          mesocycleIndex = 0;
           phaseIndex = (phaseIndex + 1) % phaseList.length;
         }
         dayIndex = 0;
       } else if (ni < 0) {
-        blockIndex--;
-        if (blockIndex < 0) {
+        mesocycleIndex--;
+        if (mesocycleIndex < 0) {
           phaseIndex = (phaseIndex - 1 + phaseList.length) % phaseList.length;
-          blockIndex = phaseList[phaseIndex].blocks.length - 1;
+          mesocycleIndex = phaseList[phaseIndex].mesocycles.length - 1;
         }
         dayIndex = entries().length - 1;
       } else {
@@ -163,8 +163,8 @@ const ui = translations[lang].training;
       render();
     }
 
-    function goBlock() {
-      location.href = `${base}/running/calendar/block/?phase=${phaseIndex}&block=${blockIndex}&day=${dayIndex}`;
+    function goMesocycle() {
+      location.href = `${base}/running/calendar/mesocycle/?phase=${phaseIndex}&mesocycle=${mesocycleIndex}&day=${dayIndex}`;
     }
 
     function planBoxHtml(w: Workout | null, label: string): string {
@@ -243,8 +243,8 @@ const ui = translations[lang].training;
       if (crumb) crumb.textContent = day.date === todayISO() ? "Today" : "Day";
       const tag = microcycle.taper
         ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
-        : microcycle.deload
-          ? `<span class="tx-tag tx-tag--deload">${ui.deload}</span>`
+        : microcycle.cutback
+          ? `<span class="tx-tag tx-tag--cutback">${ui.cutback}</span>`
           : "";
       const phaseName =
         (ui.phaseLabels as Record<string, string>)[phaseList[phaseIndex].name] ??
@@ -271,11 +271,11 @@ const ui = translations[lang].training;
     $("tx-prev")!.onclick = () => step(-1);
     $("tx-next")!.onclick = () => step(1);
     const pos = $("tx-pos")!;
-    pos.onclick = goBlock;
+    pos.onclick = goMesocycle;
     pos.onkeydown = e => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        goBlock();
+        goMesocycle();
       }
     };
 
@@ -292,7 +292,7 @@ const ui = translations[lang].training;
       const td = findToday();
       if (td) {
         phaseIndex = td.phaseIndex;
-        blockIndex = td.blockIndex;
+        mesocycleIndex = td.mesocycleIndex;
         dayIndex = td.dayIndex;
       }
     }

@@ -1,7 +1,7 @@
 // Shared types + pure helpers for the /running/calendar/ pages.
 //
 // The training plan is imported once here (single Vite module-graph node → one
-// shared chunk across the day/block/overview client scripts). Strava activities
+// shared chunk across the day/mesocycle/overview client scripts). Strava activities
 // are fetched at runtime from /running/calendar/activities.json (updated by a
 // GitHub Action without rebuild), so they are passed into the helpers as args.
 
@@ -25,14 +25,14 @@ export interface PlanDay {
 export interface Microcycle {
   index?: number;
   cycle?: number;
-  in_block?: number;
-  deload?: boolean;
+  in_mesocycle?: number;
+  cutback?: boolean;
   taper?: boolean;
   total_km?: string;
   days: PlanDay[];
 }
 
-export interface Block {
+export interface Mesocycle {
   index: number;
   microcycles?: Microcycle[];
   sets?: Microcycle[];
@@ -40,7 +40,7 @@ export interface Block {
 
 export interface Phase {
   name: string;
-  blocks: Block[];
+  mesocycles: Mesocycle[];
 }
 
 export interface Plan {
@@ -82,7 +82,7 @@ export const phases = (): Phase[] => {
   return p.phases || p.sessions || [];
 };
 
-export const microcyclesOf = (block: Block): Microcycle[] => block.microcycles || block.sets || [];
+export const microcyclesOf = (mesocycle: Mesocycle): Microcycle[] => mesocycle.microcycles || mesocycle.sets || [];
 
 export const microcycleIndex = (m: Microcycle): number => m.index ?? m.cycle ?? 0;
 
@@ -94,28 +94,28 @@ export interface DayEntry {
   day: PlanDay;
 }
 
-/** Flatten a block's microcycles into an ordered list of {microcycle, day}. */
-export const dayEntriesOf = (block: Block): DayEntry[] => {
+/** Flatten a mesocycle's microcycles into an ordered list of {microcycle, day}. */
+export const dayEntriesOf = (mesocycle: Mesocycle): DayEntry[] => {
   const out: DayEntry[] = [];
-  for (const m of microcyclesOf(block)) {
+  for (const m of microcyclesOf(mesocycle)) {
     for (const day of m.days) out.push({ microcycle: m, day });
   }
   return out;
 };
 
 export interface PhaseMicrocycle {
-  block: Block;
-  blockIndex: number;
+  mesocycle: Mesocycle;
+  mesocycleIndex: number;
   microcycle: Microcycle;
   dayIndex: number;
 }
 
-/** All microcycles in a phase, tagged with their block + day offset (for deep links). */
+/** All microcycles in a phase, tagged with their mesocycle + day offset (for deep links). */
 export const allMicrocycles = (phase: Phase): PhaseMicrocycle[] =>
-  phase.blocks.flatMap((block, blockIndex) => {
+  phase.mesocycles.flatMap((mesocycle, mesocycleIndex) => {
     let dayOffset = 0;
-    return microcyclesOf(block).map(microcycle => {
-      const item: PhaseMicrocycle = { block, blockIndex, microcycle, dayIndex: dayOffset };
+    return microcyclesOf(mesocycle).map(microcycle => {
+      const item: PhaseMicrocycle = { mesocycle, mesocycleIndex, microcycle, dayIndex: dayOffset };
       dayOffset += (microcycle.days || []).length;
       return item;
     });
@@ -218,16 +218,16 @@ export const todayISO = (): string => {
   );
 };
 
-/** Find the {phaseIndex, blockIndex, dayIndex} for today, or null if not in the plan. */
-export const findToday = (): { phaseIndex: number; blockIndex: number; dayIndex: number } | null => {
+/** Find the {phaseIndex, mesocycleIndex, dayIndex} for today, or null if not in the plan. */
+export const findToday = (): { phaseIndex: number; mesocycleIndex: number; dayIndex: number } | null => {
   const t = todayISO();
   const phaseList = phases();
   for (let p = 0; p < phaseList.length; p++) {
-    for (let b = 0; b < phaseList[p].blocks.length; b++) {
+    for (let b = 0; b < phaseList[p].mesocycles.length; b++) {
       const days: string[] = [];
-      microcyclesOf(phaseList[p].blocks[b]).forEach(m => m.days.forEach(day => days.push(day.date)));
+      microcyclesOf(phaseList[p].mesocycles[b]).forEach(m => m.days.forEach(day => days.push(day.date)));
       const idx = days.indexOf(t);
-      if (idx >= 0) return { phaseIndex: p, blockIndex: b, dayIndex: idx };
+      if (idx >= 0) return { phaseIndex: p, mesocycleIndex: b, dayIndex: idx };
     }
   }
   return null;
@@ -277,7 +277,7 @@ export type CategoryKey = (typeof CATEGORIES)[number];
 /** Flatten the whole plan into an ordered list of days (plan is contiguous). */
 export const allDays = (): PlanDay[] =>
   phases().flatMap(p =>
-    p.blocks.flatMap(b => (b.microcycles || b.sets || []).flatMap(m => m.days))
+    p.mesocycles.flatMap(b => (b.microcycles || b.sets || []).flatMap(m => m.days))
   );
 
 /** ISO date (YYYY-MM-DD) of the Monday starting the week of `iso` (UTC-stable). */

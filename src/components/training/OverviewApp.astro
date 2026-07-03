@@ -1,7 +1,7 @@
 ---
 // Server-rendered overview (the /running/calendar/ landing page).
 // Uses only the build-time plan (no runtime Strava data), so it renders to
-// static HTML with real <a> links into the day/block views — better for SEO
+// static HTML with real <a> links into the day/mesocycle views — better for SEO
 // and accessibility than a client-rendered shell.
 import "@/styles/training.css";
 import { translations, getLocalePath, type Locale } from "@/i18n";
@@ -14,7 +14,7 @@ import {
   categoryClass,
   fmtShort,
   allDays,
-  type Block,
+  type Mesocycle,
   type Microcycle,
   type Phase,
   type PlanDay,
@@ -28,9 +28,9 @@ const { lang } = Astro.props;
 const ui = translations[lang].training;
 const phaseList = phases();
 
-const blockPath = getLocalePath(lang, "running/calendar/block/");
-const blockHref = (pi: number, bi: number, day: number) =>
-  `${blockPath}?phase=${pi}&block=${bi}&day=${day}`;
+const mesocyclePath = getLocalePath(lang, "running/calendar/mesocycle/");
+const mesocycleHref = (pi: number, bi: number, day: number) =>
+  `${mesocyclePath}?phase=${pi}&mesocycle=${bi}&day=${day}`;
 
 const cycleTotal = (microcycle: Microcycle): string => {
   if (!microcycle.total_km) {
@@ -86,16 +86,16 @@ const monthLabel = (ym: string) => {
   return lang === "zh-CN" ? `${ZH_ORDINALS[m - 1]}月` : EN_SHORT[m - 1];
 };
 
-// Microcycle label, marking deload (cutback) weeks — the 4th microcycle of each block.
+// Microcycle label, marking cutback weeks — the 4th microcycle of each mesocycle.
 const mcLabel = (m: Microcycle) =>
-  `${ui.microcycleLabel} ${microcycleIndex(m)}${m.taper ? ` (${ui.taper})` : m.deload ? ` (${ui.deload})` : ""}`;
+  `${ui.microcycleLabel} ${microcycleIndex(m)}${m.taper ? ` (${ui.taper})` : m.cutback ? ` (${ui.cutback})` : ""}`;
 
-// Microcycles of a single block, each tagged with its day offset (deep-link target).
-const microcyclesOfBlock = (
-  block: Block
+// Microcycles of a single mesocycle, each tagged with its day offset (deep-link target).
+const microcyclesOfMesocycle = (
+  mesocycle: Mesocycle
 ): { microcycle: Microcycle; dayIndex: number }[] => {
   let dayOffset = 0;
-  return (block.microcycles || block.sets || []).map(microcycle => {
+  return (mesocycle.microcycles || mesocycle.sets || []).map(microcycle => {
     const item = { microcycle, dayIndex: dayOffset };
     dayOffset += (microcycle.days || []).length;
     return item;
@@ -225,8 +225,8 @@ const microcyclesOfBlock = (
 
             {/* desktop tables */}
             <div class="tx-tablewrap">
-              {phase.blocks.map((block, bi) => {
-                const ents = microcyclesOfBlock(block);
+              {phase.mesocycles.map((mesocycle, bi) => {
+                const ents = microcyclesOfMesocycle(mesocycle);
                 const firstDays = ents[0]?.microcycle.days ?? [];
                 const lastDays = ents[ents.length - 1]?.microcycle.days ?? [];
                 return (
@@ -234,7 +234,7 @@ const microcyclesOfBlock = (
                     class="tx-table"
                     data-first={firstDays[0]?.date}
                     data-last={lastDays[lastDays.length - 1]?.date}
-                    data-href={blockHref(pi, bi, 0)}
+                    data-href={mesocycleHref(pi, bi, 0)}
                   >
                     <table>
                       <colgroup>
@@ -245,11 +245,11 @@ const microcyclesOfBlock = (
                         <col />
                       </colgroup>
                       <tbody>
-                        {microcyclesOfBlock(block).map(({ microcycle }) => {
+                        {microcyclesOfMesocycle(mesocycle).map(({ microcycle }) => {
                           const cls = microcycle.taper
                             ? " tx-cyclehead--taper"
-                            : microcycle.deload
-                              ? " tx-cyclehead--deload"
+                            : microcycle.cutback
+                              ? " tx-cyclehead--cutback"
                               : "";
                           return (
                             <>
@@ -296,8 +296,8 @@ const microcyclesOfBlock = (
 
             {/* mobile cards */}
             <div class="tx-mobile">
-              {phase.blocks.map((block, bi) => {
-                const ments = microcyclesOfBlock(block);
+              {phase.mesocycles.map((mesocycle, bi) => {
+                const ments = microcyclesOfMesocycle(mesocycle);
                 const firstDays = ments[0]?.microcycle.days ?? [];
                 const lastDays = ments[ments.length - 1]?.microcycle.days ?? [];
                 const first = firstDays[0]?.date;
@@ -305,19 +305,19 @@ const microcyclesOfBlock = (
                 return ments.map(({ microcycle, dayIndex }) => {
                   const cls = microcycle.taper
                     ? " tx-cyclehead--taper"
-                    : microcycle.deload
-                      ? " tx-cyclehead--deload"
+                    : microcycle.cutback
+                      ? " tx-cyclehead--cutback"
                       : "";
                   return (
                     <a
                       class="tx-cyclecard"
-                      href={blockHref(pi, bi, dayIndex)}
+                      href={mesocycleHref(pi, bi, dayIndex)}
                       data-first={first}
                       data-last={last}
                     >
                       <div class={`tx-cyclecard__head${cls}`}>
                         <span>
-                          {ui.blockLabel} {block.index} · {mcLabel(microcycle)}
+                          {ui.mesocycleLabel} {mesocycle.index} · {mcLabel(microcycle)}
                         </span>
                         <span>{cycleTotal(microcycle)}</span>
                       </div>
@@ -512,10 +512,10 @@ const microcyclesOfBlock = (
         if (wk) scrollToEl(wk, 0.15); // tight: single week, minimal gap
         return;
       }
-      const blocks = Array.from(
+      const mesocycles = Array.from(
         app.querySelectorAll<HTMLElement>("[data-first][data-last]")
       );
-      const match = blocks.find(
+      const match = mesocycles.find(
         el =>
           el.dataset.first &&
           el.dataset.last &&
@@ -524,7 +524,7 @@ const microcyclesOfBlock = (
       );
       if (!match) return;
       const target =
-        blocks.find(
+        mesocycles.find(
           el =>
             el.dataset.first === match.dataset.first &&
             el.dataset.last === match.dataset.last &&
@@ -554,9 +554,9 @@ const microcyclesOfBlock = (
               ).find(c => c.offsetParent !== null);
               if (!cell) return;
               if (state.view === "microcycle") {
-                // scroll to the block containing the first match, 1rem gap
-                const block = cell.closest<HTMLElement>(".tx-table");
-                if (block) scrollToEl(block, 1);
+                // scroll to the mesocycle containing the first match, 1rem gap
+                const mesocycle = cell.closest<HTMLElement>(".tx-table");
+                if (mesocycle) scrollToEl(mesocycle, 1);
               } else {
                 // weekly: scroll to the week row containing the first match, 0.15rem gap
                 const week = cell.closest<HTMLElement>(".tx-weekly__week");
@@ -566,7 +566,7 @@ const microcyclesOfBlock = (
           }
         });
       });
-    // click a block table → navigate to the block view
+    // click a mesocycle table → navigate to the mesocycle view
     app.querySelectorAll<HTMLElement>(".tx-table").forEach(el => {
       el.addEventListener("click", () => {
         if (el.dataset.href) location.href = el.dataset.href;

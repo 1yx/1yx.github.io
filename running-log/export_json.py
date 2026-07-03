@@ -43,7 +43,7 @@ CATEGORY_COLORS = {
 }
 
 
-def cycle_to_block_set(cycle):
+def cycle_to_mesocycle_set(cycle):
     return (cycle - 1) // 4 + 1, (cycle - 1) % 4 + 1
 
 
@@ -120,15 +120,15 @@ def row_has_cycle(ws, row):
 
 
 def build_phase_from_sheet(ws):
-    """一个 Excel sheet -> {name, blocks:[{index, microcycles:[...]}]}。"""
+    """一个 Excel sheet -> {name, mesocycles:[{index, microcycles:[...]}]}。"""
     display_name = ws.title
-    blocks = {}
+    mesocycles = {}
     cycle = 0
     for header_row in range(1, ws.max_row + 1, ROWS_PER_CYCLE):
         if not row_has_cycle(ws, header_row):
             continue
         cycle += 1
-        block_idx, microcycle_in_block = cycle_to_block_set(cycle)
+        mesocycle_idx, microcycle_in_mesocycle = cycle_to_mesocycle_set(cycle)
         am_row = header_row + 1
         pm_row = header_row + 2
         days = []
@@ -146,15 +146,15 @@ def build_phase_from_sheet(ws):
         is_marathon = display_name == "Marathon Phase"
         microcycle_obj = {
             "index": cycle,                       # 绝对 microcycle 序号
-            "in_block": microcycle_in_block,      # Block 内第几个 Microcycle (1-4)
-            "deload": microcycle_in_block == 4,   # 每个 Block 的第 4 个 Microcycle = 减量
+            "in_mesocycle": microcycle_in_mesocycle,      # Mesocycle 内第几个 Microcycle (1-4)
+            "cutback": microcycle_in_mesocycle == 4,   # 每个 Mesocycle 的第 4 个 Microcycle = 减量
             "taper": is_marathon and cycle >= 16,
             "total_km": total_cell or (f"{total:g}km" if total else None),
             "days": days,
         }
-        blocks.setdefault(block_idx, {"index": block_idx, "microcycles": []})["microcycles"].append(microcycle_obj)
-    block_list = [blocks[k] for k in sorted(blocks)]
-    return {"name": phase_name(display_name), "blocks": block_list}
+        mesocycles.setdefault(mesocycle_idx, {"index": mesocycle_idx, "microcycles": []})["microcycles"].append(microcycle_obj)
+    mesocycle_list = [mesocycles[k] for k in sorted(mesocycles)]
+    return {"name": phase_name(display_name), "mesocycles": mesocycle_list}
 
 
 def build_data_from_workbook(path=WORKBOOK):
@@ -179,7 +179,7 @@ def fill_actual_from_strava(data):
     if not strava_client.configured():
         print("未配置 Strava 凭据(.env)，跳过 actual 填充（仅生成计划数据）。")
         return
-    dates = [d["date"] for phase in data["phases"] for b in phase["blocks"]
+    dates = [d["date"] for phase in data["phases"] for b in phase["mesocycles"]
              for microcycle in b["microcycles"] for d in microcycle["days"]]
     if not dates:
         return
@@ -207,7 +207,7 @@ def fill_actual_from_strava(data):
     # 回填到对应计划格
     filled = 0
     for phase in data["phases"]:
-        for b in phase["blocks"]:
+        for b in phase["mesocycles"]:
             for microcycle in b["microcycles"]:
                 for d in microcycle["days"]:
                     for period in ("am", "pm"):
@@ -278,7 +278,7 @@ def main():
     PLAN_OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(PLAN_OUT, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    n_microcycles = sum(len(b["microcycles"]) for phase in data["phases"] for b in phase["blocks"])
+    n_microcycles = sum(len(b["microcycles"]) for phase in data["phases"] for b in phase["mesocycles"])
     print(f"已写出 {PLAN_OUT.relative_to(REPO)}（{len(data['phases'])} phases, {n_microcycles} microcycles）")
 
 

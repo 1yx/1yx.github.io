@@ -2,14 +2,14 @@
   "phases": [
     {
       "name": "Aerobic Phase",
-      "blocks": [
+      "mesocycles": [
         {
           "index": 1,
           "microcycles": [
             {
               "index": 1,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -89,8 +89,8 @@
             },
             {
               "index": 2,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "59km",
               "days": [
@@ -170,8 +170,8 @@
             },
             {
               "index": 3,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "63km",
               "days": [
@@ -251,8 +251,8 @@
             },
             {
               "index": 4,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "51km",
               "days": [
@@ -337,8 +337,8 @@
           "microcycles": [
             {
               "index": 5,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "69km",
               "days": [
@@ -418,8 +418,8 @@
             },
             {
               "index": 6,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -499,8 +499,8 @@
             },
             {
               "index": 7,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -580,8 +580,8 @@
             },
             {
               "index": 8,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -666,8 +666,8 @@
           "microcycles": [
             {
               "index": 9,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -747,8 +747,8 @@
             },
             {
               "index": 10,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -828,8 +828,8 @@
             },
             {
               "index": 11,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -909,8 +909,8 @@
             },
             {
               "index": 12,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "57km",
               "days": [
@@ -995,8 +995,8 @@
           "microcycles": [
             {
               "index": 13,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -1076,8 +1076,8 @@
             },
             {
               "index": 14,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -1157,8 +1157,8 @@
             },
             {
               "index": 15,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "73km",
               "days": [
@@ -1238,8 +1238,8 @@
             },
             {
               "index": 16,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "57km",
               "days": [
@@ -1324,8 +1324,8 @@
           "microcycles": [
             {
               "index": 17,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1405,8 +1405,8 @@
             },
             {
               "index": 18,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1486,8 +1486,8 @@
             },
             {
               "index": 19,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1567,8 +1567,8 @@
             },
             {
               "index": 20,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "59km",
               "days": [
@@ -1653,8 +1653,8 @@
           "microcycles": [
             {
               "index": 21,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1734,8 +1734,8 @@
             },
             {
               "index": 22,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1815,8 +1815,8 @@
             },
             {
               "index": 23,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "75km",
               "days": [
@@ -1896,8 +1896,8 @@
             },
             {
               "index": 24,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "61km",
               "days": [
@@ -1982,8 +1982,8 @@
           "microcycles": [
             {
               "index": 25,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "77km",
               "days": [
@@ -2063,8 +2063,8 @@
             },
             {
               "index": 26,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "77km",
               "days": [
@@ -2144,8 +2144,8 @@
             },
             {
               "index": 27,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "77km",
               "days": [
@@ -2225,8 +2225,8 @@
             },
             {
               "index": 28,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "61km",
               "days": [
@@ -2310,14 +2310,14 @@
     },
     {
       "name": "Threshold Phase",
-      "blocks": [
+      "mesocycles": [
         {
           "index": 1,
           "microcycles": [
             {
               "index": 1,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "72km",
               "days": [
@@ -2397,8 +2397,8 @@
             },
             {
               "index": 2,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -2478,8 +2478,8 @@
             },
             {
               "index": 3,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "70km",
               "days": [
@@ -2559,8 +2559,8 @@
             },
             {
               "index": 4,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -2645,8 +2645,8 @@
           "microcycles": [
             {
               "index": 5,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "72km",
               "days": [
@@ -2726,8 +2726,8 @@
             },
             {
               "index": 6,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -2807,8 +2807,8 @@
             },
             {
               "index": 7,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "70km",
               "days": [
@@ -2888,8 +2888,8 @@
             },
             {
               "index": 8,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -2974,8 +2974,8 @@
           "microcycles": [
             {
               "index": 9,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "69.5km",
               "days": [
@@ -3055,8 +3055,8 @@
             },
             {
               "index": 10,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "68.5km",
               "days": [
@@ -3136,8 +3136,8 @@
             },
             {
               "index": 11,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "67.5km",
               "days": [
@@ -3217,8 +3217,8 @@
             },
             {
               "index": 12,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -3302,14 +3302,14 @@
     },
     {
       "name": "Marathon Phase",
-      "blocks": [
+      "mesocycles": [
         {
           "index": 1,
           "microcycles": [
             {
               "index": 1,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -3389,8 +3389,8 @@
             },
             {
               "index": 2,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -3470,8 +3470,8 @@
             },
             {
               "index": 3,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -3551,8 +3551,8 @@
             },
             {
               "index": 4,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -3637,8 +3637,8 @@
           "microcycles": [
             {
               "index": 5,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -3718,8 +3718,8 @@
             },
             {
               "index": 6,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "74km",
               "days": [
@@ -3799,8 +3799,8 @@
             },
             {
               "index": 7,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "69km",
               "days": [
@@ -3880,8 +3880,8 @@
             },
             {
               "index": 8,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -3966,8 +3966,8 @@
           "microcycles": [
             {
               "index": 9,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -4047,8 +4047,8 @@
             },
             {
               "index": 10,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -4128,8 +4128,8 @@
             },
             {
               "index": 11,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -4209,8 +4209,8 @@
             },
             {
               "index": 12,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
               "total_km": "55km",
               "days": [
@@ -4295,8 +4295,8 @@
           "microcycles": [
             {
               "index": 13,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
               "total_km": "71km",
               "days": [
@@ -4376,8 +4376,8 @@
             },
             {
               "index": 14,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
               "total_km": "74km",
               "days": [
@@ -4457,8 +4457,8 @@
             },
             {
               "index": 15,
-              "in_block": 3,
-              "deload": false,
+              "in_mesocycle": 3,
+              "cutback": false,
               "taper": false,
               "total_km": "74km",
               "days": [
@@ -4538,8 +4538,8 @@
             },
             {
               "index": 16,
-              "in_block": 4,
-              "deload": true,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": true,
               "total_km": "47.5km",
               "days": [
@@ -4624,8 +4624,8 @@
           "microcycles": [
             {
               "index": 17,
-              "in_block": 1,
-              "deload": false,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": true,
               "total_km": "34.5km",
               "days": [
@@ -4705,8 +4705,8 @@
             },
             {
               "index": 18,
-              "in_block": 2,
-              "deload": false,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": true,
               "total_km": "54.6km",
               "days": [
