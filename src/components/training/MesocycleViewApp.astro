@@ -53,6 +53,7 @@ const ui = translations[lang].training;
     simplifyWorkoutText,
     fmtShort,
     findToday,
+    todayISO,
     type Activity,
     type AggregatedActual,
     type PlanDay,
@@ -115,14 +116,20 @@ const ui = translations[lang].training;
       render();
     }
 
-    function slotHtml(w: Workout | null, a: AggregatedActual | null): string {
+    function slotHtml(
+      w: Workout | null,
+      a: AggregatedActual | null,
+      due: boolean
+    ): string {
       const plan = w && w.text ? simplifyWorkoutText(w) : a ? ui.rest : "";
       let actual = "";
       if (a) {
         const km = Math.floor(a.km);
         const met = w && w.text ? a.km >= (w.planned_km || 0) : false;
         actual = `<span class="bd-act ${met ? "bd-met" : "bd-miss"}">${km}km ${met ? "✓" : "✗"}</span>`;
-      } else if (w && w.text) {
+      } else if (w && w.text && due) {
+        // Past/today with a plan but no Strava actual = missed. Future dates
+        // (not yet due) show nothing — the plan hasn't reached its day yet.
         actual = `<span class="bd-act bd-miss">0km ✗</span>`;
       }
       if (!plan && !actual)
@@ -155,20 +162,21 @@ const ui = translations[lang].training;
 
     function dayButtonHtml(day: PlanDay, indexInMesocycle: number): string {
       const agg = aggregateActs(acts, day.date);
+      const due = day.date <= todayISO();
       const hasAm = !!day.am?.text;
       const hasPm = !!day.pm?.text;
       const restSlot = `<div class="bd-slot bd-rest">${ui.rest}</div>`;
       let amSlot: string;
       let pmSlot: string;
       if (hasAm && !hasPm && !agg.am && agg.pm) {
-        amSlot = slotHtml(day.am, mergeActual(agg.am, agg.pm));
+        amSlot = slotHtml(day.am, mergeActual(agg.am, agg.pm), due);
         pmSlot = restSlot;
       } else if (!hasAm && hasPm && !agg.pm && agg.am) {
         amSlot = restSlot;
-        pmSlot = slotHtml(day.pm, mergeActual(agg.am, agg.pm));
+        pmSlot = slotHtml(day.pm, mergeActual(agg.am, agg.pm), due);
       } else {
-        amSlot = slotHtml(day.am, agg.am);
-        pmSlot = slotHtml(day.pm, agg.pm);
+        amSlot = slotHtml(day.am, agg.am, due);
+        pmSlot = slotHtml(day.pm, agg.pm, due);
       }
       return `<div class="tx-mesoday" data-day="${indexInMesocycle}">
         <div class="bd-head"><span>${dayLabel(day.day)}</span><span class="bd-date">${fmtShort(day.date)} ${lang === "zh-CN" ? "周" : ""}${ui.weekdayShort[(new Date(day.date + "T00:00:00").getDay() + 6) % 7]}</span></div>
