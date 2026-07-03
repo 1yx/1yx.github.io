@@ -182,6 +182,7 @@ const ui = translations[lang].training;
       // Bars = the PLAN target (a zone-colored band: light fill below the target,
       // darker band across the target range). Line = the ACTUAL per-km pace, as a
       // smooth curve. x = cumulative moving_time; y = pace (faster = lower).
+      // A planned-but-not-yet-run session draws the plan band alone (no curve).
       // drop GPS fragments (partial km < 0.5) — their pace is noise and they
       // distort the curve (e.g. a 0.035km/17s tail split reporting 8′08″/km).
       const valid = (splits || []).filter(
@@ -191,7 +192,6 @@ const ui = translations[lang].training;
           x.moving_time &&
           (x.distance_km ?? 1) >= 0.5
       );
-      if (!valid.length) return "";
       // Regeneration (recovery) sessions carry no @pace — they're all Z1, so
       // infer a Z1 target (≥ 5′09″/km, open-ended up) to draw their plan rect too.
       const Z1_CEIL = 310; // 5′09″, the Z1/Z2 boundary
@@ -199,6 +199,8 @@ const ui = translations[lang].training;
       if (!target && w != null && categoryClass(w) === "regeneration") {
         target = { fast: Z1_CEIL, slow: Infinity };
       }
+      // Nothing to draw: no actual splits AND no plan target.
+      if (!valid.length && !target) return "";
 
       let cum = 0;
       const pts = valid.map(s => {
@@ -213,6 +215,8 @@ const ui = translations[lang].training;
         };
       });
       const total = cum;
+      const aFast = pts.length ? Math.min(...pts.map(p => p.pace)) : null;
+      const aSlow = pts.length ? Math.max(...pts.map(p => p.pace)) : null;
 
       // The plan rectangle spans the PLANNED duration (planned_km × target pace),
       // not the full actual time — run longer and the curve extends past the rect.
@@ -225,6 +229,7 @@ const ui = translations[lang].training;
         target && w?.planned_km && planPace ? w.planned_km * planPace : null;
       const planW = plannedDur ?? total; // plan rectangle width (fallback: full)
       const viewW = Math.max(total, planW); // viewBox spans whichever is longer
+      if (!viewW) return ""; // no duration to plot (no actual, no planned_km)
 
       // y-domain covers actual paces + the plan target range
       const vals: number[] = pts.map(p => p.pace);
@@ -287,9 +292,12 @@ const ui = translations[lang].training;
           ? `<path class="tx-pace__line" d="${smoothPath(curvePts)}"/>`
           : "";
 
-      // y-axis pace labels: fastest (top) · mid · slowest (bottom)
-      const midPace = Math.round((fastest + slowest) / 2);
-      const scale = `<span>${paceText(Math.round(fastest))}</span><span>${paceText(midPace)}</span><span>${paceText(Math.round(slowest))}</span>`;
+      // y-axis pace labels: with actuals, the run's fastest/slowest; plan-only
+      // (no run yet) falls back to the domain bounds so the labels stay distinct.
+      const sFast = Math.round(aFast !== null ? fastest : pMin);
+      const sSlow = Math.round(aFast !== null ? slowest : pMax);
+      const sMid = Math.round((sFast + sSlow) / 2);
+      const scale = `<span>${paceText(sFast)}</span><span>${paceText(sMid)}</span><span>${paceText(sSlow)}</span>`;
 
       const fmtT = (sec: number) => {
         const m = Math.floor(sec / 60),
@@ -303,20 +311,24 @@ const ui = translations[lang].training;
         })
         .join("");
 
-      // legend: plan target zone (+ range) · actual pace range
+      // legend: plan target zone (+ range); actual pace range only when there's a run
       const legend: string[] = [];
       if (target && tz) {
         legend.push(
           `<span class="tx-pace__lg"><i class="tx-pace__sw" style="--zc:${tz.color}"></i>${ui.plannedSection} Z${tz.id} ${rngLabel}/km</span>`
         );
       }
-      const aFast = Math.min(...pts.map(p => p.pace));
-      const aSlow = Math.max(...pts.map(p => p.pace));
-      legend.push(
-        `<span class="tx-pace__lg"><i class="tx-pace__ln"></i>${ui.actualSection} ${paceText(Math.round(aFast))}–${paceText(Math.round(aSlow))}/km</span>`
-      );
+      if (aFast !== null && aSlow !== null) {
+        legend.push(
+          `<span class="tx-pace__lg"><i class="tx-pace__ln"></i>${ui.actualSection} ${paceText(Math.round(aFast))}–${paceText(Math.round(aSlow))}/km</span>`
+        );
+      }
 
-      return `<div class="tx-pace" aria-label="${ui.paceFastest(paceText(Math.round(aFast)))}，${ui.paceSlowest(paceText(Math.round(aSlow)))}">
+      const aria =
+        aFast !== null && aSlow !== null
+          ? `${ui.paceFastest(paceText(Math.round(aFast)))}，${ui.paceSlowest(paceText(Math.round(aSlow)))}`
+          : `${ui.plannedSection} Z${tz?.id ?? ""} ${rngLabel}/km`;
+      return `<div class="tx-pace" aria-label="${aria}">
         <div class="tx-pace__plot">
           <div class="tx-pace__scale">${scale}</div>
           <svg class="tx-pace__svg" viewBox="0 0 ${viewW} ${H}" preserveAspectRatio="none" role="img">${plan}${curve}</svg>
@@ -351,13 +363,14 @@ const ui = translations[lang].training;
     function sessionHtml(
       plan: Workout | null,
       act: Activity | null,
-      pendingLabel: string
+      pendingLabel: string,
+      isPast: boolean
     ): string {
       // unplanned run — neutral extra card, no plan block
       if (!plan) {
         const cat = "extra";
         const tag = `<div class="tx-session__top"><span class="tx-tag tx-tag--extra">${ui.extra}</span></div>`;
-        return `<div class="tx-session tx-session--${cat}">${tag}${actualBlockHtml(null, act, pendingLabel, false)}</div>`;
+        return `<div class="tx-session tx-session--${cat}">${tag}${actualBlockHtml(null, act, pendingLabel, isPast)}</div>`;
       }
 
       const cat = categoryClass(plan);
@@ -367,37 +380,41 @@ const ui = translations[lang].training;
             <span class="tx-tag">${catLabel(cat)}</span>
           </div>
         </div>`;
-      return `<div class="tx-session tx-session--${cat}">${planBlock}${actualBlockHtml(plan, act, pendingLabel, true)}</div>`;
+      return `<div class="tx-session tx-session--${cat}">${planBlock}${actualBlockHtml(plan, act, pendingLabel, isPast)}</div>`;
     }
 
-    /** Actual block: distance @ pace · duration · elev with a status ✓, the
-     *  Strava desc, and the pace chart. The divider shows only when a plan
-     *  block precedes it (hasPlan). */
+    /** Actual block: distance @ pace · duration · elev with a ✓/✗ status, the
+     *  Strava desc, and the pace chart. Always sits under a divider — a plan
+     *  row above for matched sessions, the "extra" tag for unplanned ones. */
     function actualBlockHtml(
       plan: Workout | null,
       act: Activity | null,
       pendingLabel: string,
-      hasPlan: boolean
+      isPast: boolean
     ): string {
       if (!act) {
-        return `<div class="tx-session__actual tx-session__actual--pending${hasPlan ? "" : " tx-session__actual--bare"}">
-            <div class="tx-session__stats">${pendingLabel}</div>
+        // Past-due planned run with no Strava actual = missed → ✗ (matches the
+        // mesocycle view's "0km ✗"). A future not-yet-due day shows no mark.
+        // The plan-only pace chart (target band, no actual curve) still draws.
+        const mark = isPast ? ` <span class="tx-miss">✗</span>` : "";
+        return `<div class="tx-session__actual tx-session__actual--pending">
+            <div class="tx-session__stats">${pendingLabel}${mark}</div>
+            ${paceChartHtml(plan, [])}
           </div>`;
       }
       const p = paceOf(act.distance_km, act.moving_time);
       const elev = act.elev_m ? ` · ↑${Math.round(act.elev_m)}m` : "";
       const desc = (act.description || "").trim();
       const descHtml = desc ? `<div class="tx-session__desc">${esc(desc)}</div>` : "";
-      // ✓ is green when the run matches a planned session, orange when it's an
-      // unplanned extra (no plan workout); the summary text stays ink-colored.
-      const check = plan ? "done" : "extra";
+      // ✓ when the run met its plan (actual km ≥ planned), else ✗ — same rule
+      // as the mesocycle view: an unplanned extra or an under-distance run is ✗.
+      const met = plan && plan.text ? act.distance_km >= (plan.planned_km || 0) : false;
       const strava = act.id
         ? `<a class="tx-session__strava" href="https://www.strava.com/activities/${act.id}" target="_blank" rel="noopener">Strava ↗</a>`
         : "";
-      const inner = `<div class="tx-session__stats"><span class="tx-session__statsline">${act.distance_km}km${p ? " @ " + p : ""} · ${fmtDur(act.moving_time)}${elev} <span class="tx-session__check tx-session__check--${check}">✓</span></span>${strava}</div>
+      const inner = `<div class="tx-session__stats"><span class="tx-session__statsline">${act.distance_km}km${p ? " @ " + p : ""} · ${fmtDur(act.moving_time)}${elev} <span class="${met ? "tx-met" : "tx-miss"}">${met ? "✓" : "✗"}</span></span>${strava}</div>
           ${descHtml}${paceChartHtml(plan, act.splits_metric || [])}`;
-      const klass = `tx-session__actual${hasPlan ? "" : " tx-session__actual--bare"}`;
-      return `<div class="${klass}">${inner}</div>`;
+      return `<div class="tx-session__actual">${inner}</div>`;
     }
 
     function render() {
@@ -423,7 +440,8 @@ const ui = translations[lang].training;
       $("tx-title")!.innerHTML =
         `${phaseName} · ${ui.microcycleLabel} ${microcycleIndex(microcycle)} · ${dayName} ${tag}`;
       $("tx-date")!.textContent = fmtFull(day.date);
-      const pendingLabel = todayISO() > day.date ? ui.incomplete : ui.pending;
+      const isPast = todayISO() > day.date;
+      const pendingLabel = isPast ? ui.incomplete : ui.pending;
       // Pair plan workouts with actuals by COUNT and order, not by AM/PM slot —
       // a plan written in the AM slot but run in the afternoon (e.g. 6/05) then
       // lands in ONE container instead of being split across mismatched boxes.
@@ -439,7 +457,7 @@ const ui = translations[lang].training;
         n === 0
           ? `<div class="tx-session tx-session--rest"><div class="tx-session__title">${ui.rest}</div></div>`
           : Array.from({ length: n }, (_, i) =>
-              sessionHtml(planWs[i] || null, dayActs[i] || null, pendingLabel)
+              sessionHtml(planWs[i] || null, dayActs[i] || null, pendingLabel, isPast)
             ).join("");
       planEl.innerHTML = html;
     }

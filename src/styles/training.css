@@ -252,8 +252,8 @@
   margin-left: 0;
 }
 
-/* actual block sits under a divider; --bare drops it (no plan block above,
-   e.g. an unplanned extra run). */
+/* actual block sits under a divider — a plan row above for matched sessions,
+   the "extra" tag for unplanned ones (so the divider always shows). */
 .tx-session__actual {
   display: flex;
   flex-direction: column;
@@ -262,21 +262,13 @@
   border-top: 1px solid color-mix(in srgb, var(--tx-cat) 25%, var(--border));
 }
 
-.tx-session__actual--bare {
-  padding-top: 0;
-  border-top: none;
-}
-
-/* actual summary is ink-colored; the ✓ marks status — green when the run
-   matches a planned session, orange when it's an unplanned extra. Pending
-   (planned but not yet run) shows muted text with no ✓. */
+/* actual summary is ink-colored; the ✓/✗ reuses the global .tx-met (green) /
+   .tx-miss (orange) — same met/miss rule as the mesocycle view. Pending
+   (planned but not yet run) shows muted text with no mark. */
 .tx-session__actual--pending .tx-session__stats {
   color: var(--muted);
   font-weight: 600;
 }
-
-.tx-session__check--done { color: var(--green); }
-.tx-session__check--extra { color: var(--orange); }
 
 /* the actual block already draws the divider; drop the pace chart's own */
 .tx-session .tx-pace {
