@@ -135,64 +135,90 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- workout boxes (day view) ---------- */
+/* ---------- session cards (day view) ----------
+   One card per training session: a plan block paired with its actual (Strava)
+   run + pace chart. Cards pair plan/actual by count + order, not AM/PM slot. */
 
-.tx-workouts {
+.tx-sessions {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.5rem;
-  padding: 0.625rem;
-  align-items: start;
+  gap: 0.625rem;
 }
 
-.tx-workout {
+.tx-session {
   --tx-cat: var(--muted);
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-height: 3.5rem;
-  padding: 0.6875rem;
+  gap: 0.5rem;
+  padding: 0.75rem;
   border-radius: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--tx-cat) 35%, var(--border));
-  background: color-mix(in srgb, var(--tx-cat) 12%, var(--background));
+  background: color-mix(in srgb, var(--tx-cat) 10%, var(--background));
   color: var(--foreground);
 }
 
-.tx-workout--specific { --tx-cat: var(--pink); }
-.tx-workout--special { --tx-cat: var(--purple); }
-.tx-workout--fundamental { --tx-cat: var(--indigo); }
-.tx-workout--regeneration { --tx-cat: var(--mint); }
+.tx-session--specific { --tx-cat: var(--pink); }
+.tx-session--special { --tx-cat: var(--purple); }
+.tx-session--fundamental { --tx-cat: var(--indigo); }
+.tx-session--regeneration { --tx-cat: var(--mint); }
+.tx-session--race { --tx-cat: var(--yellow); }
+.tx-session--extra { --tx-cat: var(--orange); }
 
-.tx-workout--race { --tx-cat: var(--yellow); }
-
-.tx-workout--rest {
+.tx-session--rest {
   --tx-cat: var(--muted);
   background: var(--background);
   border-color: var(--border);
 }
 
-.tx-workout__period {
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: var(--muted);
+.tx-session__top {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.tx-workout__title {
+.tx-session__stats {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-session__statsline {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Strava deep-link on the right of the summary line (brand orange). */
+.tx-session__strava {
+  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fc5200;
+  white-space: nowrap;
+}
+
+.tx-session__strava:hover {
+  text-decoration: underline;
+}
+
+.tx-session__title {
   font-size: 0.8125rem;
   font-weight: 800;
   line-height: 1.25;
   word-break: break-word;
 }
 
-.tx-workout--rest .tx-workout__title {
+.tx-session--rest .tx-session__title {
   color: var(--muted);
   font-weight: 600;
 }
 
-.tx-workout__meta {
+.tx-session__desc {
   font-size: 0.6875rem;
   line-height: 1.4;
   color: var(--muted);
@@ -202,25 +228,61 @@
   overflow: hidden;
 }
 
-.tx-workout__meta.dim {
-  opacity: 0.8;
+.tx-session__plan {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
 }
 
-a.tx-workout {
-  text-decoration: none;
-  color: inherit;
+/* plan header: workout text on the left, category chip on the right */
+.tx-session__planrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
-a.tx-workout:hover {
-  border-color: var(--accent);
+.tx-session__planrow .tx-session__title {
+  flex: 1;
+  min-width: 0;
 }
 
-.tx-workout--done .tx-workout__title {
-  color: var(--green);
+.tx-session__planrow .tx-tag {
+  flex-shrink: 0;
+  margin-left: 0;
 }
 
-.tx-workout--done {
-  justify-content: flex-start;
+/* actual block sits under a divider; --bare drops it (no plan block above,
+   e.g. an unplanned extra run). */
+.tx-session__actual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--tx-cat) 25%, var(--border));
+}
+
+.tx-session__actual--bare {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* actual summary is ink-colored; the ✓ marks status — green when the run
+   matches a planned session, orange when it's an unplanned extra. Pending
+   (planned but not yet run) shows muted text with no ✓. */
+.tx-session__actual--pending .tx-session__stats {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tx-session__check--done { color: var(--green); }
+.tx-session__check--extra { color: var(--orange); }
+
+/* the actual block already draws the divider; drop the pace chart's own */
+.tx-session .tx-pace {
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: none;
 }
 
 /* ---------- pace chart (inside a done workout) ----------

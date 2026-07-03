@@ -28,19 +28,7 @@ const ui = translations[lang].training;
     <button class="tx-navbtn" id="tx-next" aria-label={ui.nextDay}>›</button>
   </div>
 
-  <section class="tx-section">
-    <div class="tx-section__head">
-      {ui.plannedSection}<span class="sub">{ui.plannedSectionSub}</span>
-    </div>
-    <div class="tx-workouts" id="tx-plan"></div>
-  </section>
-
-  <section class="tx-section">
-    <div class="tx-section__head">
-      {ui.actualSection}<span class="sub">{ui.actualSectionSub}</span>
-    </div>
-    <div class="tx-workouts" id="tx-actual"></div>
-  </section>
+  <div class="tx-sessions" id="tx-sessions"></div>
 </div>
 
 <script>
@@ -167,13 +155,6 @@ const ui = translations[lang].training;
 
     function goMesocycle() {
       location.href = `${base}/running/calendar/mesocycle/?phase=${phaseIndex}&mesocycle=${mesocycleIndex}&day=${dayIndex}`;
-    }
-
-    function planBoxHtml(w: Workout | null, label: string): string {
-      if (!w || !w.text) {
-        return `<div class="tx-workout tx-workout--rest"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.rest}</div></div>`;
-      }
-      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label} · ${ui.plannedKm(w.planned_km || 0)}</div><div class="tx-workout__title">${esc(w.text)}</div></div>`;
     }
 
     // Catmull-Rom → cubic Bézier: a smooth path through every point.
@@ -345,37 +326,82 @@ const ui = translations[lang].training;
       </div>`;
     }
 
-    function activityBoxHtml(w: Workout | null, act: Activity, label: string): string {
-      const extra =
-        !w || !w.text
-          ? `<span class="tx-tag tx-tag--extra">${ui.extra}</span>`
-          : "";
-      const cat = categoryClass(w);
-      const p = paceOf(act.distance_km, act.moving_time);
-      const desc = (act.description || "").trim();
-      const meta = desc
-        ? `<div class="tx-workout__meta">${esc(desc)}</div>`
-        : "";
-      const inner = `<div class="tx-workout__period">${label}${extra}</div>
-          <div class="tx-workout__title">✓ ${act.distance_km}km${p ? " @ " + p : ""}</div>${meta}${paceChartHtml(w, act.splits_metric || [])}`;
-      if (act.id) {
-        return `<a class="tx-workout tx-workout--${cat} tx-workout--done" href="https://www.strava.com/activities/${act.id}" target="_blank" rel="noopener">${inner}</a>`;
+    // ---- session container: plan + actual paired in one card ----
+
+    const catLabel = (cat: string): string =>
+      ({
+        regeneration: ui.filterRegeneration,
+        fundamental: ui.filterFundamental,
+        special: ui.filterSpecial,
+        specific: ui.filterSpecific,
+        race: ui.filterRace,
+        rest: ui.rest,
+        extra: ui.extra,
+      })[cat] ?? cat;
+
+    /** moving_time (s) → "1h51m" / "34m". */
+    const fmtDur = (sec: number): string => {
+      const m = Math.round(sec / 60);
+      const h = Math.floor(m / 60);
+      return h ? `${h}h${m % 60}m` : `${m}m`;
+    };
+
+    /** One session card pairing a plan workout with its actual (either may be
+     *  null). plan+act=null is handled by the caller (rest card). */
+    function sessionHtml(
+      plan: Workout | null,
+      act: Activity | null,
+      pendingLabel: string
+    ): string {
+      // unplanned run — neutral extra card, no plan block
+      if (!plan) {
+        const cat = "extra";
+        const tag = `<div class="tx-session__top"><span class="tx-tag tx-tag--extra">${ui.extra}</span></div>`;
+        return `<div class="tx-session tx-session--${cat}">${tag}${actualBlockHtml(null, act, pendingLabel, false)}</div>`;
       }
-      return `<div class="tx-workout tx-workout--${cat} tx-workout--done">${inner}</div>`;
+
+      const cat = categoryClass(plan);
+      const planBlock = `<div class="tx-session__plan">
+          <div class="tx-session__planrow">
+            <span class="tx-session__title">${esc(plan.text)}</span>
+            <span class="tx-tag">${catLabel(cat)}</span>
+          </div>
+        </div>`;
+      return `<div class="tx-session tx-session--${cat}">${planBlock}${actualBlockHtml(plan, act, pendingLabel, true)}</div>`;
     }
 
-    function actualSlotsHtml(w: Workout | null, periodActs: Activity[], label: string, pendingLabel: string): string {
-      if (periodActs.length > 0) {
-        return periodActs.map(a => activityBoxHtml(w, a, label)).join("");
+    /** Actual block: distance @ pace · duration · elev with a status ✓, the
+     *  Strava desc, and the pace chart. The divider shows only when a plan
+     *  block precedes it (hasPlan). */
+    function actualBlockHtml(
+      plan: Workout | null,
+      act: Activity | null,
+      pendingLabel: string,
+      hasPlan: boolean
+    ): string {
+      if (!act) {
+        return `<div class="tx-session__actual tx-session__actual--pending${hasPlan ? "" : " tx-session__actual--bare"}">
+            <div class="tx-session__stats">${pendingLabel}</div>
+          </div>`;
       }
-      if (!w || !w.text) {
-        return `<div class="tx-workout tx-workout--rest"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${ui.rest}</div></div>`;
-      }
-      return `<div class="tx-workout tx-workout--${categoryClass(w)}"><div class="tx-workout__period">${label}</div><div class="tx-workout__title">${pendingLabel}</div></div>`;
+      const p = paceOf(act.distance_km, act.moving_time);
+      const elev = act.elev_m ? ` · ↑${Math.round(act.elev_m)}m` : "";
+      const desc = (act.description || "").trim();
+      const descHtml = desc ? `<div class="tx-session__desc">${esc(desc)}</div>` : "";
+      // ✓ is green when the run matches a planned session, orange when it's an
+      // unplanned extra (no plan workout); the summary text stays ink-colored.
+      const check = plan ? "done" : "extra";
+      const strava = act.id
+        ? `<a class="tx-session__strava" href="https://www.strava.com/activities/${act.id}" target="_blank" rel="noopener">Strava ↗</a>`
+        : "";
+      const inner = `<div class="tx-session__stats"><span class="tx-session__statsline">${act.distance_km}km${p ? " @ " + p : ""} · ${fmtDur(act.moving_time)}${elev} <span class="tx-session__check tx-session__check--${check}">✓</span></span>${strava}</div>
+          ${descHtml}${paceChartHtml(plan, act.splits_metric || [])}`;
+      const klass = `tx-session__actual${hasPlan ? "" : " tx-session__actual--bare"}`;
+      return `<div class="${klass}">${inner}</div>`;
     }
 
     function render() {
-      const planEl = $("tx-plan");
+      const planEl = $("tx-sessions");
       if (!planEl) return;
       const list = entries();
       if (dayIndex >= list.length) dayIndex = 0;
@@ -397,18 +423,25 @@ const ui = translations[lang].training;
       $("tx-title")!.innerHTML =
         `${phaseName} · ${ui.microcycleLabel} ${microcycleIndex(microcycle)} · ${dayName} ${tag}`;
       $("tx-date")!.textContent = fmtFull(day.date);
-      const amActs = acts.filter(
-        a => a.date === day.date && parseInt((a.time || "12").slice(0, 2)) < 12
-      );
-      const pmActs = acts.filter(
-        a => a.date === day.date && parseInt((a.time || "12").slice(0, 2)) >= 12
-      );
       const pendingLabel = todayISO() > day.date ? ui.incomplete : ui.pending;
-      planEl.innerHTML =
-        planBoxHtml(day.am, ui.am) + planBoxHtml(day.pm, ui.pm);
-      $("tx-actual")!.innerHTML =
-        actualSlotsHtml(day.am, amActs, ui.am, pendingLabel) +
-        actualSlotsHtml(day.pm, pmActs, ui.pm, pendingLabel);
+      // Pair plan workouts with actuals by COUNT and order, not by AM/PM slot —
+      // a plan written in the AM slot but run in the afternoon (e.g. 6/05) then
+      // lands in ONE container instead of being split across mismatched boxes.
+      const planWs = [day.am, day.pm].filter(
+        (w): w is Workout => !!w && !!w.text
+      );
+      const dayActs = acts
+        .filter(a => a.date === day.date)
+        .slice()
+        .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+      const n = Math.max(planWs.length, dayActs.length);
+      const html =
+        n === 0
+          ? `<div class="tx-session tx-session--rest"><div class="tx-session__title">${ui.rest}</div></div>`
+          : Array.from({ length: n }, (_, i) =>
+              sessionHtml(planWs[i] || null, dayActs[i] || null, pendingLabel)
+            ).join("");
+      planEl.innerHTML = html;
     }
 
     // wire navigation

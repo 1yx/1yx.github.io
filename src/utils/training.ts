@@ -246,7 +246,8 @@ export const parseTargetPace = (
   text: string | null | undefined
 ): { fast: number; slow: number } | null => {
   if (!text) return null;
-  const m = text.match(/@(\d+)[′'](\d+)[″"](?:\s*-\s*(\d+)[′'](\d+)[″"])?/);
+  // The closing ″ is optional — some plan entries omit it (e.g. "@5′05").
+  const m = text.match(/@(\d+)[′'](\d+)[″"]?(?:\s*-\s*(\d+)[′'](\d+)[″"]?)?/);
   if (!m) return null;
   const a = +m[1] * 60 + +m[2];
   if (m[3] !== undefined && m[4] !== undefined) {
@@ -290,7 +291,7 @@ export const findToday = (): { phaseIndex: number; mesocycleIndex: number; dayIn
   return null;
 };
 
-// ---- category → themed class hook (see training.css .tx-workout--*) ----
+// ---- category → themed class hook (see training.css .tx-session--*) ----
 
 export const categoryClass = (w: Workout | null): string => {
   if (!w || !w.text) return "rest";
