@@ -327,7 +327,7 @@ const microcyclesOfMesocycle = (
 </div>
 
 <script>
-  import { translations, type Locale } from "@/i18n";
+  import { translations, getLocalePath, type Locale } from "@/i18n";
   import {
     todayISO,
     mondayOf,
@@ -402,6 +402,9 @@ const microcyclesOfMesocycle = (
     function buildCalendar() {
       const container = app.querySelector<HTMLElement>(".tx-weekly");
       if (!container) return;
+      // Each in-month cell links into the day view via ?date= (the day view's
+      // findByDate resolves phase/mesocycle/dayIndex from the ISO date).
+      const dayPath = getLocalePath(lang, "running/calendar/day/");
       calMonths = calendarMonths();
       let html = "";
       for (const month of calMonths) {
@@ -421,8 +424,8 @@ const microcyclesOfMesocycle = (
               html += '<div class="tx-wkday tx-wkday--empty"></div>';
             } else {
               html +=
-                `<div class="tx-wkday"><div class="tx-wkday__date">${fmtShort(cell.day.date)}</div>` +
-                `${dayCellHtml(cell.day.am)}${dayCellHtml(cell.day.pm)}</div>`;
+                `<a class="tx-wkday" href="${dayPath}?date=${cell.day.date}"><div class="tx-wkday__date">${fmtShort(cell.day.date)}</div>` +
+                `${dayCellHtml(cell.day.am)}${dayCellHtml(cell.day.pm)}</a>`;
             }
           }
           html += `<div class="tx-wkday__total"><strong></strong></div>`;

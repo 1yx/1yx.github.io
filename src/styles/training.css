@@ -628,6 +628,10 @@ a.tx-workout:hover {
   flex-direction: column;
   gap: 0.1875rem;
 }
+/* In-month day cells are <a> links into the day view: deep-blue border on hover
+   (empty placeholders stay <div>, so they don't get the effect). */
+a.tx-wkday { transition: border-color 0.15s ease; }
+a.tx-wkday:hover { border-color: var(--accent); }
 .tx-wkday__date { font-size: 0.5625rem; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tx-wkday .tx-cell { font-size: 0.5625rem; height: 0.9375rem; padding: 0 0.1875rem; line-height: 0.9375rem; border-radius: 0.25rem; overflow: hidden; }
 
