@@ -366,6 +366,9 @@ const microcyclesOfMesocycle = (
     fmtShort,
     categoryClass,
     simplifyWorkoutText,
+    phases,
+    phaseKm,
+    phaseKmByCategory,
     type Workout,
     type PlanDay,
   } from "@/utils/training";
@@ -376,7 +379,8 @@ const microcyclesOfMesocycle = (
     | "regeneration"
     | "fundamental"
     | "special"
-    | "specific";
+    | "specific"
+    | "race";
 
   function init() {
     const app = document.querySelector<HTMLElement>(".tx-app")!;
@@ -405,7 +409,7 @@ const microcyclesOfMesocycle = (
           );
         });
       app
-        .querySelectorAll<HTMLButtonElement>("[data-filter-toggle]")
+        .querySelectorAll<HTMLButtonElement>("button[data-filter-toggle]")
         .forEach(btn => {
           btn.setAttribute(
             "aria-pressed",
@@ -471,6 +475,33 @@ const microcyclesOfMesocycle = (
       container.innerHTML = html;
     }
 
+    // Display name for each filter value (chips + phase header reuse these).
+    const FILTER_LABELS: Record<Filter, string> = {
+      none: ui.filterAll,
+      regeneration: ui.filterRegeneration,
+      fundamental: ui.filterFundamental,
+      special: ui.filterSpecial,
+      specific: ui.filterSpecific,
+      race: ui.filterRace,
+    };
+
+    // Swap each phase header total: full planned volume when no filter is
+    // active, or the active category's volume behind a colored chip otherwise.
+    function updatePhaseTotals() {
+      phases().forEach((phase, pi) => {
+        const total = app.querySelector<HTMLElement>(
+          `#phase-${pi + 1} .tx-phase__total`
+        );
+        if (!total) return;
+        if (state.filter === "none") {
+          total.innerHTML = `${ui.plannedVolume} <strong>${phaseKm(phase)}km</strong>`;
+        } else {
+          const km = phaseKmByCategory(phase, state.filter);
+          total.innerHTML = `<div class="tx-chip" data-filter-toggle="${state.filter}">${FILTER_LABELS[state.filter]}</div> ${ui.volumeLabel} <strong>${km}km</strong>`;
+        }
+      });
+    }
+
     // Apply state -> DOM, wrapped in a View Transition when available.
     function commit() {
       if (state.view === "weekly" && !weeklyBuilt) {
@@ -479,6 +510,7 @@ const microcyclesOfMesocycle = (
       }
       renderAttrs();
       updateToggleActive();
+      updatePhaseTotals();
     }
 
     function applyState(next: Partial<typeof state>) {
@@ -541,7 +573,7 @@ const microcyclesOfMesocycle = (
         );
       });
     app
-      .querySelectorAll<HTMLButtonElement>("[data-filter-toggle]")
+      .querySelectorAll<HTMLButtonElement>("button[data-filter-toggle]")
       .forEach(btn => {
         btn.addEventListener("click", () => {
           const filter = btn.dataset.filterToggle as Filter;

@@ -132,6 +132,22 @@ export const phaseKm = (phase: Phase): number =>
     })
   );
 
+/** Total planned km of a phase, optionally restricted to one category
+ *  (sums per-workout planned_km, since microcycle totals are all-category). */
+export const phaseKmByCategory = (phase: Phase, category?: string): number => {
+  const kms: number[] = [];
+  for (const { microcycle } of allMicrocycles(phase)) {
+    for (const day of microcycle.days || []) {
+      for (const w of [day.am, day.pm]) {
+        if (!w || !w.text) continue;
+        if (category && categoryClass(w) !== category) continue;
+        kms.push(w.planned_km || 0);
+      }
+    }
+  }
+  return sumKm(kms);
+};
+
 // ---- activities aggregation ----
 
 export interface AggregatedActual {
