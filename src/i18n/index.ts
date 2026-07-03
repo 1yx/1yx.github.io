@@ -145,13 +145,16 @@ export const translations = {
       },
       plannedVolume: "计划总量",
       volumeLabel: "总量",
-      weeklyVolume: "周跑量",
       actualLabel: "实际",
       position: (n: number, total: number) => `${n} / ${total}`,
       paceFastest: (pace: string) => `最快 ${pace}/km`,
       paceSlowest: (pace: string) => `最慢 ${pace}/km`,
       completed: (km: number | string) => `完成 ${km}km`,
       plannedKm: (km: number | string) => `计划 ${km}km`,
+      weekVolumeTitle: (month: string, week: number, cat: string | null) =>
+        `${month}第${["一", "二", "三", "四", "五", "六"][week - 1]}周 ${cat ? cat + "跑量" : "总跑量"}`,
+      monthVolumeTitle: (month: string, cat: string | null) =>
+        `${month} ${cat ? cat + "跑量" : "总跑量"}`,
     },
   },
   en: {
@@ -243,13 +246,16 @@ export const translations = {
       },
       plannedVolume: "Planned volume",
       volumeLabel: "Volume",
-      weeklyVolume: "Weekly",
       actualLabel: "Actual",
       position: (n: number, total: number) => `${n} / ${total}`,
       paceFastest: (pace: string) => `Fastest ${pace}/km`,
       paceSlowest: (pace: string) => `Slowest ${pace}/km`,
       completed: (km: number | string) => `Done ${km}km`,
       plannedKm: (km: number | string) => `Planned ${km}km`,
+      weekVolumeTitle: (month: string, week: number, cat: string | null) =>
+        `${month} Week ${week} ${cat ? cat + " Volume" : "Total Volume"}`,
+      monthVolumeTitle: (month: string, cat: string | null) =>
+        `${month} ${cat ? cat + " Volume" : "Total Volume"}`,
     },
   },
 } as const;

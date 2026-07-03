@@ -425,7 +425,7 @@ const microcyclesOfMesocycle = (
                 `${dayCellHtml(cell.day.am)}${dayCellHtml(cell.day.pm)}</div>`;
             }
           }
-          html += `<div class="tx-wkday__total" title="${ui.weeklyVolume}"><strong></strong></div>`;
+          html += `<div class="tx-wkday__total"><strong></strong></div>`;
           html += `</div>`;
         }
         html += `</section>`;
@@ -434,24 +434,35 @@ const microcyclesOfMesocycle = (
       updateCalendarTotals();
     }
 
-    // Fill each month/week total with planned km — all categories, or just the
-    // active filter's category (mirrors the phase-header totals).
+    // Fill each month/week total with planned km and a contextual title — all
+    // categories, or just the active filter's category (mirrors the phase-header
+    // totals). Titles read e.g. "六月第一周 总跑量" / "六月 总跑量", switching the
+    // tail to "<category>跑量" when a filter chip is active.
     function updateCalendarTotals() {
       if (!calMonths) return;
       const cat = state.filter === "none" ? undefined : state.filter;
+      const catName = state.filter === "none" ? null : FILTER_LABELS[state.filter];
       for (const month of calMonths) {
         const monthEl = app.querySelector<HTMLElement>(
           `.tx-cal__month[data-ym="${month.ym}"]`
         );
         if (!monthEl) continue;
-        const mTotal = monthEl.querySelector<HTMLElement>(".tx-cal__monthtotal strong");
-        if (mTotal) mTotal.textContent = `${monthKm(month, cat)}km`;
-        for (const week of month.weeks) {
-          const wTotal = monthEl.querySelector<HTMLElement>(
-            `.tx-weekly__week[data-monday="${week.monday}"] .tx-wkday__total strong`
-          );
-          if (wTotal) wTotal.textContent = `${weekKm(week, cat)}km`;
+        const mName = monthLabel(month.ym, lang);
+        const mCell = monthEl.querySelector<HTMLElement>(".tx-cal__monthtotal");
+        if (mCell) {
+          mCell.title = ui.monthVolumeTitle(mName, catName);
+          const mTotal = mCell.querySelector<HTMLElement>("strong");
+          if (mTotal) mTotal.textContent = `${monthKm(month, cat)}km`;
         }
+        month.weeks.forEach((week, i) => {
+          const wCell = monthEl.querySelector<HTMLElement>(
+            `.tx-weekly__week[data-monday="${week.monday}"] .tx-wkday__total`
+          );
+          if (!wCell) return;
+          wCell.title = ui.weekVolumeTitle(mName, i + 1, catName);
+          const wTotal = wCell.querySelector<HTMLElement>("strong");
+          if (wTotal) wTotal.textContent = `${weekKm(week, cat)}km`;
+        });
       }
     }
 
