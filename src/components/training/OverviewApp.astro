@@ -14,6 +14,7 @@ import {
   categoryClass,
   fmtShort,
   allDays,
+  monthLabel,
   type Mesocycle,
   type Microcycle,
   type Phase,
@@ -52,39 +53,7 @@ const weekday = (iso: string) => {
   return `${lang === "zh-CN" ? "周" : ""}${ui.weekdayShort[wd]}`;
 };
 
-const ZH_ORDINALS = [
-  "一",
-  "二",
-  "三",
-  "四",
-  "五",
-  "六",
-  "七",
-  "八",
-  "九",
-  "十",
-  "十一",
-  "十二",
-];
-const EN_SHORT = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 const months = [...new Set(allDays().map(d => d.date.slice(0, 7)))].sort();
-const monthLabel = (ym: string) => {
-  const m = parseInt(ym.split("-")[1]);
-  return lang === "zh-CN" ? `${ZH_ORDINALS[m - 1]}月` : EN_SHORT[m - 1];
-};
 
 // Microcycle label, marking cutback weeks — the 4th microcycle of each mesocycle.
 const mcLabel = (m: Microcycle) =>
@@ -142,7 +111,7 @@ const microcyclesOfMesocycle = (
           </a>
           {months.map(ym => (
             <a href="#" class="tx-tab" data-month={ym}>
-              {monthLabel(ym)}
+              {monthLabel(ym, lang)}
             </a>
           ))}
         </div>
@@ -361,7 +330,6 @@ const microcyclesOfMesocycle = (
   import { translations, type Locale } from "@/i18n";
   import {
     todayISO,
-    allDays,
     mondayOf,
     fmtShort,
     categoryClass,
@@ -369,8 +337,12 @@ const microcyclesOfMesocycle = (
     phases,
     phaseKm,
     phaseKmByCategory,
+    calendarMonths,
+    weekKm,
+    monthKm,
+    monthLabel,
     type Workout,
-    type PlanDay,
+    type CalendarMonth,
   } from "@/utils/training";
 
   type View = "microcycle" | "weekly";
@@ -393,6 +365,7 @@ const microcyclesOfMesocycle = (
       filter: (app.dataset.filter as Filter) || "none",
     };
     let weeklyBuilt = false;
+    let calMonths: CalendarMonth[] | null = null;
 
     function renderAttrs() {
       app.dataset.view = state.view;
@@ -422,57 +395,64 @@ const microcyclesOfMesocycle = (
       return `<div class="tx-cell tx-cell--${categoryClass(w)}">${simplifyWorkoutText(w)}</div>`;
     }
 
-    // Build the Mon–Sun weekly grid (whole plan) into .tx-weekly, once.
-    function buildWeekly() {
+    // Build the month-sectioned Mon–Sun calendar (whole plan) into .tx-weekly, once.
+    // Each month is its own section: month title (centered over Mon–Sun) + monthly
+    // total in the 8th column, a weekday header row, then week rows whose 8th
+    // column holds the weekly total. Totals are filled by updateCalendarTotals().
+    function buildCalendar() {
       const container = app.querySelector<HTMLElement>(".tx-weekly");
       if (!container) return;
-      const byMonday = new Map<string, { [wd: number]: PlanDay }>();
-      for (const day of allDays()) {
-        const mon = mondayOf(day.date);
-        const wd = (new Date(day.date + "T00:00:00Z").getUTCDay() + 6) % 7; // Mon=0 … Sun=6
-        let slots = byMonday.get(mon);
-        if (!slots) {
-          slots = {};
-          byMonday.set(mon, slots);
-        }
-        slots[wd] = day;
-      }
-      const mondays = [...byMonday.keys()].sort();
-      let html =
-        '<div class="tx-weekly__head">' +
-        ui.weekdayShort
-          .map(d => `<div class="tx-weekly__dow">${d}</div>`)
-          .join("") +
-        "</div>";
-      for (const mon of mondays) {
-        const slots = byMonday.get(mon)!;
-        const hasMonthStart = Object.values(slots).some(
-          d => d && new Date(d.date + "T00:00:00Z").getUTCDate() === 1
-        );
-        const isFirst = mon === mondays[0];
-        const monthCls =
-          hasMonthStart && !isFirst ? " tx-weekly__week--month-start" : "";
-        const weekMonths = [
-          ...new Set(
-            Object.values(slots)
-              .filter(Boolean)
-              .map(d => d.date.slice(0, 7))
-          ),
-        ].join(" ");
-        html += `<div class="tx-weekly__week${monthCls}" data-monday="${mon}" data-months="${weekMonths}">`;
-        for (let wd = 0; wd < 7; wd++) {
-          const day = slots[wd];
-          if (!day) {
-            html += '<div class="tx-wkday tx-wkday--empty"></div>';
-          } else {
-            html +=
-              `<div class="tx-wkday"><div class="tx-wkday__date">${fmtShort(day.date)}</div>` +
-              `${dayCellHtml(day.am)}${dayCellHtml(day.pm)}</div>`;
+      calMonths = calendarMonths();
+      let html = "";
+      for (const month of calMonths) {
+        html += `<section class="tx-cal__month" data-ym="${month.ym}">`;
+        html += `<div class="tx-cal__monthhead">`;
+        html += `<div class="tx-cal__monthname">${monthLabel(month.ym, lang)}</div>`;
+        html += `<div class="tx-cal__monthtotal"><strong></strong></div>`;
+        html += `</div>`;
+        html += `<div class="tx-weekly__head">`;
+        for (const d of ui.weekdayShort) html += `<div class="tx-weekly__dow">${d}</div>`;
+        html += `<div class="tx-weekly__dow"></div>`; // 8th column: no label (alignment only)
+        html += `</div>`;
+        for (const week of month.weeks) {
+          html += `<div class="tx-weekly__week" data-monday="${week.monday}" data-ym="${month.ym}">`;
+          for (const cell of week.cells) {
+            if (!cell.inMonth || !cell.day) {
+              html += '<div class="tx-wkday tx-wkday--empty"></div>';
+            } else {
+              html +=
+                `<div class="tx-wkday"><div class="tx-wkday__date">${fmtShort(cell.day.date)}</div>` +
+                `${dayCellHtml(cell.day.am)}${dayCellHtml(cell.day.pm)}</div>`;
+            }
           }
+          html += `<div class="tx-wkday__total" title="${ui.weeklyVolume}"><strong></strong></div>`;
+          html += `</div>`;
         }
-        html += "</div>";
+        html += `</section>`;
       }
       container.innerHTML = html;
+      updateCalendarTotals();
+    }
+
+    // Fill each month/week total with planned km — all categories, or just the
+    // active filter's category (mirrors the phase-header totals).
+    function updateCalendarTotals() {
+      if (!calMonths) return;
+      const cat = state.filter === "none" ? undefined : state.filter;
+      for (const month of calMonths) {
+        const monthEl = app.querySelector<HTMLElement>(
+          `.tx-cal__month[data-ym="${month.ym}"]`
+        );
+        if (!monthEl) continue;
+        const mTotal = monthEl.querySelector<HTMLElement>(".tx-cal__monthtotal strong");
+        if (mTotal) mTotal.textContent = `${monthKm(month, cat)}km`;
+        for (const week of month.weeks) {
+          const wTotal = monthEl.querySelector<HTMLElement>(
+            `.tx-weekly__week[data-monday="${week.monday}"] .tx-wkday__total strong`
+          );
+          if (wTotal) wTotal.textContent = `${weekKm(week, cat)}km`;
+        }
+      }
     }
 
     // Display name for each filter value (chips + phase header reuse these).
@@ -505,12 +485,13 @@ const microcyclesOfMesocycle = (
     // Apply state -> DOM, wrapped in a View Transition when available.
     function commit() {
       if (state.view === "weekly" && !weeklyBuilt) {
-        buildWeekly();
+        buildCalendar();
         weeklyBuilt = true;
       }
       renderAttrs();
       updateToggleActive();
       updatePhaseTotals();
+      updateCalendarTotals();
     }
 
     function applyState(next: Partial<typeof state>) {
@@ -538,8 +519,9 @@ const microcyclesOfMesocycle = (
     function jumpToCurrent() {
       const today = todayISO();
       if (state.view === "weekly") {
+        const ym = today.slice(0, 7);
         const wk = app.querySelector<HTMLElement>(
-          `.tx-weekly__week[data-monday="${mondayOf(today)}"]`
+          `.tx-cal__month[data-ym="${ym}"] .tx-weekly__week[data-monday="${mondayOf(today)}"]`
         );
         if (wk) scrollToEl(wk, 0.15); // tight: single week, minimal gap
         return;
@@ -627,15 +609,10 @@ const microcyclesOfMesocycle = (
           const firstDate =
             phaseEl?.querySelector<HTMLElement>(".tx-table")?.dataset.first;
           if (!firstDate) return;
-          const week = Array.from(
-            app.querySelectorAll<HTMLElement>(".tx-weekly__week")
-          ).find(w => {
-            const diff =
-              (new Date(firstDate + "T00:00:00Z").getTime() -
-                new Date(w.dataset.monday! + "T00:00:00Z").getTime()) /
-              86400000;
-            return diff >= 0 && diff <= 6;
-          });
+          // The week containing the phase's first day, in that day's month section.
+          const week = app.querySelector<HTMLElement>(
+            `.tx-cal__month[data-ym="${firstDate.slice(0, 7)}"] .tx-weekly__week[data-monday="${mondayOf(firstDate)}"]`
+          );
           if (week) {
             if (hadFilter) setTimeout(() => scrollToEl(week, 0.15), 400);
             else scrollToEl(week, 0.15);
@@ -648,10 +625,10 @@ const microcyclesOfMesocycle = (
         e.preventDefault();
         const ym = btn.dataset.month!;
         if (state.view === "weekly") {
-          const wk = app.querySelector<HTMLElement>(
-            `.tx-weekly__week[data-months~="${ym}"]`
+          const monthEl = app.querySelector<HTMLElement>(
+            `.tx-cal__month[data-ym="${ym}"]`
           );
-          if (wk) scrollToEl(wk, 2); // wider gap to show the month separator
+          if (monthEl) scrollToEl(monthEl, 1); // gap to show the month title
         } else {
           const ms = `${ym}-01`;
           Array.from(app.querySelectorAll<HTMLElement>(".tx-table"))

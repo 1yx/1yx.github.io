@@ -571,16 +571,53 @@ a.tx-workout:hover {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-/* ---------- weekly view (Mon–Sun grid) ---------- */
+/* ---------- weekly view (month-sectioned Mon–Sun grid + totals column) ---------- */
 
-.tx-weekly { display: grid; gap: 0; }
+/* 8 equal columns: Mon–Sun (7) + totals (1). The month title spans cols 1–7 and
+   is centered over the day columns; col 8 holds the monthly/weekly total. */
+.tx-weekly { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.tx-cal__month { display: grid; gap: 0.25rem; scroll-margin-top: 1rem; }
+
+.tx-cal__monthhead {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.25rem;
+  align-items: baseline;
+  margin-bottom: 0.125rem;
+}
+.tx-cal__monthname {
+  grid-column: 1 / span 7;
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--muted);
+}
+.tx-cal__monthtotal {
+  font-size: 0.75rem; /* 12px */
+  color: var(--muted);
+  text-align: left;
+  padding-left: 2.5rem; /* 40px gap from the column's left edge */
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tx-cal__monthtotal strong { font-weight: 800; color: var(--muted); }
+
 .tx-weekly__head,
-.tx-weekly__week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.25rem; }
+.tx-weekly__week { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0.25rem; }
 .tx-weekly__dow { font-size: 0.625rem; font-weight: 800; color: var(--muted); text-align: center; padding-bottom: 0.25rem; }
 .tx-weekly__week { scroll-margin-top: 0.15rem; }
-.tx-weekly__head { margin-bottom: 0.75rem; }
-.tx-weekly__week + .tx-weekly__week { margin-top: 0.25rem; }
-.tx-weekly__week + .tx-weekly__week--month-start { margin-top: 2rem; }
+
+.tx-wkday__total {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2.5rem; /* 40px gap from the column's left edge */
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
 .tx-wkday {
   min-height: 3.5rem;
   padding: 0.25rem;

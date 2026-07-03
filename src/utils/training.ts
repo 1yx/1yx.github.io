@@ -303,3 +303,99 @@ export const mondayOf = (iso: string): string => {
   d.setUTCDate(d.getUTCDate() - diff);
   return d.toISOString().slice(0, 10);
 };
+
+const addDaysISO = (iso: string, n: number): string => {
+  const d = new Date(iso + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+
+// ---- calendar (month-sectioned Mon–Sun grid) ----
+
+export interface CalendarCell {
+  date: string; // YYYY-MM-DD of this grid slot
+  day: PlanDay | null; // the plan day, or null if not in plan / out of month
+  inMonth: boolean; // whether this slot's date falls in the section's month
+}
+
+export interface CalendarWeek {
+  monday: string;
+  cells: CalendarCell[]; // exactly 7, Mon … Sun
+}
+
+export interface CalendarMonth {
+  ym: string; // YYYY-MM
+  weeks: CalendarWeek[];
+}
+
+/** Group the plan into a Mon–Sun calendar bucketed by calendar month.
+ *  A week that straddles two months is rendered in BOTH months — each copy
+ *  shows only its own in-month days; the out-of-month slots are blank cells.
+ *  So 6/29–7/5 appears as June's tail row (6/29,6/30) and July's head row
+ *  (7/1–7/5), matching a real month-per-section calendar. */
+export const calendarMonths = (): CalendarMonth[] => {
+  // Global date → day map so a straddling week's out-of-month cells still carry
+  // their plan day (needed for the full-week total). `inMonth` alone decides
+  // whether a cell renders in a given month's section.
+  const byDate = new Map<string, PlanDay>();
+  const yms = new Set<string>();
+  for (const day of allDays()) {
+    byDate.set(day.date, day);
+    yms.add(day.date.slice(0, 7));
+  }
+  const months: CalendarMonth[] = [];
+  for (const ym of [...yms].sort()) {
+    const mondays = [
+      ...new Set(
+        [...byDate.keys()].filter(d => d.slice(0, 7) === ym).map(mondayOf)
+      ),
+    ].sort();
+    months.push({
+      ym,
+      weeks: mondays.map(mon => ({
+        monday: mon,
+        cells: Array.from({ length: 7 }, (_, off) => {
+          const date = addDaysISO(mon, off);
+          return { date, day: byDate.get(date) ?? null, inMonth: date.slice(0, 7) === ym };
+        }),
+      })),
+    });
+  }
+  return months;
+};
+
+const plannedKmOfDay = (day: PlanDay, category?: string): number => {
+  let km = 0;
+  for (const w of [day.am, day.pm]) {
+    if (!w || !w.text) continue;
+    if (category && categoryClass(w) !== category) continue;
+    km += w.planned_km || 0;
+  }
+  return km;
+};
+
+/** Planned km of a FULL Mon–Sun week — every plan day in the row, including the
+ *  out-of-month days of a straddling week. So June's tail row and July's head row
+ *  (the same underlying week) report the same total. Optionally category-restricted. */
+export const weekKm = (week: CalendarWeek, category?: string): number =>
+  sumKm(week.cells.map(c => (c.day ? plannedKmOfDay(c.day, category) : 0)));
+
+/** Planned km of a calendar month — only its own in-month days (1st → month-end),
+ *  so straddling weeks aren't double-counted. Optionally category-restricted. */
+export const monthKm = (month: CalendarMonth, category?: string): number =>
+  sumKm(
+    month.weeks.flatMap(w =>
+      w.cells.map(c => (c.inMonth && c.day ? plannedKmOfDay(c.day, category) : 0))
+    )
+  );
+
+// ---- month labels ----
+
+const ZH_ORDINALS = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+const EN_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Display label for a YYYY-MM, e.g. "六月" / "Jun". */
+export const monthLabel = (ym: string, lang: "zh-CN" | "en"): string => {
+  const m = parseInt(ym.split("-")[1], 10);
+  return lang === "zh-CN" ? `${ZH_ORDINALS[m - 1]}月` : EN_SHORT[m - 1];
+};
