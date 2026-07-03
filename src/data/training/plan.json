@@ -4548,8 +4548,8 @@
                   "date": "2027-01-07",
                   "am": {
                     "text": "8km@4′30″-4′40″ +8km@3′45″",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
+                    "category": "Specific",
+                    "color": "#F6A9EE",
                     "planned_km": 16.0,
                     "actual": null
                   },
@@ -4670,8 +4670,8 @@
                   "date": "2027-01-13",
                   "am": {
                     "text": "3km wu +3*(1km@3′45″+1km@easy)",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
+                    "category": "Specific",
+                    "color": "#F6A9EE",
                     "planned_km": 9.0,
                     "actual": null
                   },

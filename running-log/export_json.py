@@ -47,18 +47,21 @@ def cycle_to_mesocycle_set(cycle):
     return (cycle - 1) // 4 + 1, (cycle - 1) % 4 + 1
 
 
-# Race days are flagged in the Excel with a solid yellow fill (CATEGORY_COLORS["Race"]).
-# Any cell marked this way is categorized as a Race, independent of its text — so a
-# one-off race (e.g. a 10km on a base-building day) just needs its cell turned yellow.
-RACE_FILL_RGB = "FFD700"
+# A cell whose solid fill matches a CATEGORY_COLORS value is categorized by that
+# color, overriding the phase/day/cycle rules. Mark a cell in the Excel with the
+# category color to reclassify a single session — e.g. Race yellow for a one-off
+# race, Specific pink for a hard session on an otherwise-base day.
+FILL_TO_CATEGORY = {rgb[1:].upper(): cat for cat, rgb in CATEGORY_COLORS.items()}
 
 
-def is_race_fill(cell):
+def category_from_fill(cell):
     fill = getattr(cell, "fill", None)
     if not fill or fill.fill_type != "solid":
-        return False
+        return None
     rgb = fill.fgColor.rgb
-    return isinstance(rgb, str) and rgb.upper().endswith(RACE_FILL_RGB)
+    if not isinstance(rgb, str):
+        return None
+    return FILL_TO_CATEGORY.get(rgb.upper()[-6:])
 
 
 def normalize_text(value):
@@ -79,7 +82,10 @@ def parse_planned_km(text):
 def workout_category(phase_name, text, cycle, day, period, cell=None):
     if not text:
         return "Rest"
-    if (cell is not None and is_race_fill(cell)) or "marathon race" in text.lower():
+    fill_cat = category_from_fill(cell) if cell is not None else None
+    if fill_cat:
+        return fill_cat
+    if "marathon race" in text.lower():
         return "Race"
     if "Recovery" in text or "Shakeout" in text or "Walk / Jog" in text:
         return "Regeneration"
