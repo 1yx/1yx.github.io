@@ -2326,8 +2326,8 @@
                   "date": "2026-09-21",
                   "am": {
                     "text": "2km Warm Up +4*3km@3′55″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 14.0,
                     "actual": null
                   },
@@ -2407,8 +2407,8 @@
                   "date": "2026-09-25",
                   "am": {
                     "text": "2km Warm Up +2*5.5km@3′55″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 13.0,
                     "actual": null
                   },
@@ -2488,8 +2488,8 @@
                   "date": "2026-09-29",
                   "am": {
                     "text": "2km Warm Up +10km@3′55″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 12.0,
                     "actual": null
                   },
@@ -2569,8 +2569,8 @@
                   "date": "2026-10-03",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -2655,8 +2655,8 @@
                   "date": "2026-10-07",
                   "am": {
                     "text": "2km Warm Up +4*3km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 14.0,
                     "actual": null
                   },
@@ -2736,8 +2736,8 @@
                   "date": "2026-10-11",
                   "am": {
                     "text": "2km Warm Up +2*5.5km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 13.0,
                     "actual": null
                   },
@@ -2817,8 +2817,8 @@
                   "date": "2026-10-15",
                   "am": {
                     "text": "2km Warm Up +10km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 12.0,
                     "actual": null
                   },
@@ -2898,8 +2898,8 @@
                   "date": "2026-10-19",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -2984,8 +2984,8 @@
                   "date": "2026-10-23",
                   "am": {
                     "text": "2km Warm Up +4*3km@3′35″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 14.0,
                     "actual": null
                   },
@@ -3065,8 +3065,8 @@
                   "date": "2026-10-27",
                   "am": {
                     "text": "2km Warm Up +2*5.5km@3′35″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 13.0,
                     "actual": null
                   },
@@ -3146,8 +3146,8 @@
                   "date": "2026-10-31",
                   "am": {
                     "text": "2km Warm Up +10km@3′35″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Special",
+                    "color": "#C5A6FF",
                     "planned_km": 12.0,
                     "actual": null
                   },
@@ -3227,8 +3227,8 @@
                   "date": "2026-11-04",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -3561,8 +3561,8 @@
                   "date": "2026-11-20",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -3890,8 +3890,8 @@
                   "date": "2026-12-06",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -4219,8 +4219,8 @@
                   "date": "2026-12-22",
                   "am": {
                     "text": "18km Medium Long Run",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 18.0,
                     "actual": null
                   },
@@ -4548,8 +4548,8 @@
                   "date": "2027-01-07",
                   "am": {
                     "text": "8km@4′30″-4′40″ +8km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
                     "planned_km": 16.0,
                     "actual": null
                   },

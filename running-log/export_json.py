@@ -47,6 +47,20 @@ def cycle_to_mesocycle_set(cycle):
     return (cycle - 1) // 4 + 1, (cycle - 1) % 4 + 1
 
 
+# Race days are flagged in the Excel with a solid yellow fill (CATEGORY_COLORS["Race"]).
+# Any cell marked this way is categorized as a Race, independent of its text — so a
+# one-off race (e.g. a 10km on a base-building day) just needs its cell turned yellow.
+RACE_FILL_RGB = "FFD700"
+
+
+def is_race_fill(cell):
+    fill = getattr(cell, "fill", None)
+    if not fill or fill.fill_type != "solid":
+        return False
+    rgb = fill.fgColor.rgb
+    return isinstance(rgb, str) and rgb.upper().endswith(RACE_FILL_RGB)
+
+
 def normalize_text(value):
     if value is None:
         return None
@@ -62,35 +76,40 @@ def parse_planned_km(text):
     return round(parse_km(text), 1)
 
 
-def workout_category(phase_name, text, day, period):
+def workout_category(phase_name, text, cycle, day, period, cell=None):
     if not text:
         return "Rest"
-    if "marathon race" in text.lower():
+    if (cell is not None and is_race_fill(cell)) or "marathon race" in text.lower():
         return "Race"
     if "Recovery" in text or "Shakeout" in text or "Walk / Jog" in text:
         return "Regeneration"
+    cutback = cycle % 4 == 0   # Set 4 of each mesocycle = cutback
     if phase_name == "Aerobic Phase":
         if period == "AM" and day in (1, 3):
             return "Fundamental"
     if phase_name == "Threshold Phase":
         if day == 1 and period == "AM":
-            return "Specific"
+            # cutback Day1 AM is an 18km Medium Long Run → Fundamental;
+            # the threshold-interval Day1 AM sessions are Special (was Specific).
+            return "Fundamental" if cutback else "Special"
         if (day == 1 and period == "PM") or (day == 3 and period == "PM"):
             return "Special"
         if period == "AM" and day in (2, 3):
             return "Fundamental"
     if phase_name == "Marathon Phase":
         if day == 1 and period == "AM":
-            return "Specific"
+            # cutback Day1 AM is an 18km Medium Long Run → Fundamental (same as Threshold).
+            return "Fundamental" if cutback else "Specific"
         if period == "AM" and day in (2, 3):
             return "Fundamental"
     return "Regeneration"
 
 
-def workout_obj(text, phase_name, cycle, day, period):
-    """构造单个 workout 对象：文本 + 配色 + 计划里程 + actual 占位(留给 Strava)。"""
-    text = normalize_text(text)
-    category = workout_category(phase_name, text, day, period)
+def workout_obj(cell, phase_name, cycle, day, period):
+    """构造单个 workout 对象：文本 + 配色 + 计划里程 + actual 占位(留给 Strava)。
+    传入 cell（而非文本）以便按填充色识别 Race。"""
+    text = normalize_text(cell.value)
+    category = workout_category(phase_name, text, cycle, day, period, cell)
     return {
         "text": text,
         "category": category,
@@ -137,8 +156,8 @@ def build_phase_from_sheet(ws):
             days.append({
                 "day": day,
                 "date": iso_date(ws.cell(row=header_row, column=col).value),
-                "am": workout_obj(ws.cell(row=am_row, column=col).value, display_name, cycle, day, "AM"),
-                "pm": workout_obj(ws.cell(row=pm_row, column=col).value, display_name, cycle, day, "PM"),
+                "am": workout_obj(ws.cell(row=am_row, column=col), display_name, cycle, day, "AM"),
+                "pm": workout_obj(ws.cell(row=pm_row, column=col), display_name, cycle, day, "PM"),
             })
         vals = [d["am"]["text"] for d in days] + [d["pm"]["text"] for d in days]
         total_cell = normalize_text(ws.cell(row=header_row, column=6).value)
