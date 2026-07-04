@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11
       - name: Setup Node
@@ -31,7 +31,7 @@ jobs:
       - name: Build Astro
         run: pnpm build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
