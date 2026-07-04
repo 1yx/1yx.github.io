@@ -369,7 +369,7 @@ const ui = translations[lang].training;
       // unplanned run — neutral extra card, no plan block
       if (!plan) {
         const cat = "extra";
-        const tag = `<div class="tx-session__top"><span class="tx-tag tx-tag--extra">${ui.extra}</span></div>`;
+        const tag = `<div class="tx-session__plan"><div class="tx-session__planrow"><span class="tx-session__title">${ui.noPlan}</span><span class="tx-tag tx-tag--extra">${ui.extra}</span></div></div>`;
         return `<div class="tx-session tx-session--${cat}">${tag}${actualBlockHtml(null, act, pendingLabel, isPast)}</div>`;
       }
 
@@ -398,7 +398,7 @@ const ui = translations[lang].training;
         // The plan-only pace chart (target band, no actual curve) still draws.
         const mark = isPast ? ` <span class="tx-miss">✗</span>` : "";
         return `<div class="tx-session__actual tx-session__actual--pending">
-            <div class="tx-session__stats">${pendingLabel}${mark}</div>
+            <div class="tx-session__stats"><span class="tx-session__statsline">${pendingLabel}${mark}</span></div>
             ${paceChartHtml(plan, [])}
           </div>`;
       }
