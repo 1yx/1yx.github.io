@@ -13,10 +13,11 @@ on:
         description: "拉取最近 N 天（默认 30）"
         required: false
         default: "30"
-  # 每天两次：北京时间 09:05 与 19:05（= UTC 01:05 / 11:05）。
-  # 错开整点以避开 GitHub Actions 调度高峰。
+  # 每天两次。GitHub Actions schedule 在 UTC 凌晨（北京上午）有 3-4h 拥塞延迟，
+  # 故上午轮改到北京 06:00 排队，实际触发落在 09-10:00。
   schedule:
-    - cron: "5 1,11 * * *"
+    - cron: "0 22 * * *"  # UTC 22:00 = 北京 06:00（上午轮）
+    - cron: "5 11 * * *"  # UTC 11:05 = 北京 19:05（晚间轮）
 
 permissions:
   contents: write
