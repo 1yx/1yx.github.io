@@ -30,8 +30,8 @@ const ui = translations[lang].training;
 const phaseList = phases();
 
 const mesocyclePath = getLocalePath(lang, "running/calendar/mesocycle/");
-const mesocycleHref = (pi: number, bi: number, day: number) =>
-  `${mesocyclePath}?phase=${pi}&mesocycle=${bi}&day=${day}`;
+const mesocycleHref = (pi: number, bi: number) =>
+  `${mesocyclePath}?phase=${pi + 1}&mesocycle=${bi + 1}`;
 
 const cycleTotal = (microcycle: Microcycle): string => {
   if (!microcycle.total_km) {
@@ -72,7 +72,17 @@ const microcyclesOfMesocycle = (
 };
 ---
 
-<div class="tx-app" data-lang={lang} data-view="microcycle" data-filter="none">
+<div class="tx-app" data-lang={lang} data-view="weekly" data-filter="none">
+  <script is:inline>
+    // Set ?view= on the root before children paint (static SSR can't read query
+    // params, so we correct it here to avoid a flash of the wrong view).
+    (() => {
+      const v = new URLSearchParams(location.search).get("view");
+      if (v === "circle" || v === "weekly") {
+        document.currentScript.parentElement.dataset.view = v;
+      }
+    })();
+  </script>
   <h1 class="text-xl font-semibold tracking-wide sm:text-2xl">
     {ui.overviewTitle}
   </h1>
@@ -83,11 +93,11 @@ const microcyclesOfMesocycle = (
       <nav class="tx-tabs" aria-label={ui.calendarNav}>
         <div class="tx-tabs__row">
           <button
-            class="tx-tab tx-tab--active"
+            class="tx-tab"
             type="button"
-            data-view-toggle="microcycle"
+            data-view-toggle="circle"
           >
-            {ui.microcycleView}
+            {ui.circleView}
           </button>
           <a href="#" id="tx-current" class="tx-tab">
             {ui.current}
@@ -100,7 +110,7 @@ const microcyclesOfMesocycle = (
         </div>
         <div class="tx-tabs__row">
           <button
-            class="tx-tab tx-toggle-weekly"
+            class="tx-tab tx-toggle-weekly tx-tab--active"
             type="button"
             data-view-toggle="weekly"
           >
@@ -203,7 +213,7 @@ const microcyclesOfMesocycle = (
                     class="tx-table"
                     data-first={firstDays[0]?.date}
                     data-last={lastDays[lastDays.length - 1]?.date}
-                    data-href={mesocycleHref(pi, bi, 0)}
+                    data-href={mesocycleHref(pi, bi)}
                   >
                     <table>
                       <colgroup>
@@ -271,7 +281,7 @@ const microcyclesOfMesocycle = (
                 const lastDays = ments[ments.length - 1]?.microcycle.days ?? [];
                 const first = firstDays[0]?.date;
                 const last = lastDays[lastDays.length - 1]?.date;
-                return ments.map(({ microcycle, dayIndex }) => {
+                return ments.map(({ microcycle }) => {
                   const cls = microcycle.taper
                     ? " tx-cyclehead--taper"
                     : microcycle.cutback
@@ -280,7 +290,7 @@ const microcyclesOfMesocycle = (
                   return (
                     <a
                       class="tx-cyclecard"
-                      href={mesocycleHref(pi, bi, dayIndex)}
+                      href={mesocycleHref(pi, bi)}
                       data-first={first}
                       data-last={last}
                     >
@@ -345,7 +355,7 @@ const microcyclesOfMesocycle = (
     type CalendarMonth,
   } from "@/utils/training";
 
-  type View = "microcycle" | "weekly";
+  type View = "circle" | "weekly";
   type Filter =
     | "none"
     | "regeneration"
@@ -361,7 +371,7 @@ const microcyclesOfMesocycle = (
     const ui = translations[lang].training;
 
     const state = {
-      view: (app.dataset.view as View) || "microcycle",
+      view: (app.dataset.view as View) || "circle",
       filter: (app.dataset.filter as Filter) || "none",
     };
     let weeklyBuilt = false;
@@ -510,6 +520,10 @@ const microcyclesOfMesocycle = (
 
     function applyState(next: Partial<typeof state>) {
       Object.assign(state, next);
+      // keep ?view= in sync with the active tab (shareable / reload-stable)
+      const vu = new URL(location.href);
+      vu.searchParams.set("view", state.view);
+      history.replaceState(null, "", vu);
       if (typeof document.startViewTransition === "function") {
         document.startViewTransition(commit);
       } else {
@@ -581,7 +595,7 @@ const microcyclesOfMesocycle = (
                 app.querySelectorAll<HTMLElement>(`.tx-cell--${filter}`)
               ).find(c => c.offsetParent !== null);
               if (!cell) return;
-              if (state.view === "microcycle") {
+              if (state.view === "circle") {
                 // scroll to the mesocycle containing the first match, 1rem gap
                 const mesocycle = cell.closest<HTMLElement>(".tx-table");
                 if (mesocycle) scrollToEl(mesocycle, 1);
@@ -615,7 +629,7 @@ const microcyclesOfMesocycle = (
         btn.addEventListener("click", e => {
           const hadFilter = state.filter !== "none";
           if (hadFilter) applyState({ filter: "none" });
-          if (state.view !== "weekly") return; // microcycle: native anchor works
+          if (state.view !== "weekly") return; // circle: native anchor works
           e.preventDefault();
           const phaseEl = document.getElementById(
             btn.getAttribute("href")!.slice(1)
@@ -651,6 +665,9 @@ const microcyclesOfMesocycle = (
         }
       });
     });
+
+    // weekly view is JS-built (SSR ships an empty container); build on init.
+    commit();
   }
 
   document.addEventListener("astro:after-swap", init);

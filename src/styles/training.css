@@ -570,7 +570,7 @@
 .tx-cyclehead--taper th, .tx-cyclehead--taper td { background: color-mix(in srgb, var(--purple) 8%, var(--tx-surface)); }
 
 .tx-table .tx-date { font-variant-numeric: tabular-nums; padding: 0.5rem; color: var(--muted); }
-.tx-table .tx-date__wd { float: right; }
+.tx-table .tx-date__wd { margin-left: 0.35rem; }
 
 .tx-cell {
   padding: 0.5rem 0.5625rem;
@@ -728,11 +728,11 @@ a.tx-wkday:hover { border-color: var(--accent); }
 .tx-mc-view { display: flex; flex-direction: column; gap: 1rem; }
 
 /* hide the inactive view (data-view on .tx-app root) */
-.tx-app[data-view="microcycle"] .tx-weekly,
+.tx-app[data-view="circle"] .tx-weekly,
 .tx-app[data-view="weekly"] .tx-mc-view { display: none; }
 
 /* view-transition: only the active view carries the shared name */
-.tx-app[data-view="microcycle"] .tx-mc-view,
+.tx-app[data-view="circle"] .tx-mc-view,
 .tx-app[data-view="weekly"] .tx-weekly { view-transition-name: tx-cal; }
 
 /* ---------- responsive ---------- */

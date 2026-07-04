@@ -86,19 +86,22 @@ const ui = translations[lang].training;
 
     function applyRoute() {
       const params = new URLSearchParams(location.search);
+      // URL params are 1-indexed for user intuition; internal indices are 0-based.
       const p = Number.parseInt(params.get("phase") || "", 10);
-      if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
+      if (Number.isInteger(p) && p >= 1 && p <= phaseList.length) phaseIndex = p - 1;
       const b = Number.parseInt(params.get("mesocycle") || "", 10);
-      if (Number.isInteger(b) && b >= 0 && b < phase().mesocycles.length)
-        mesocycleIndex = b;
-      const list = dayEntriesOf(mesocycle());
-      const d = Number.parseInt(params.get("day") || "", 10);
-      if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
+      if (
+        Number.isInteger(b) &&
+        b >= 1 &&
+        b <= phase().mesocycles.length
+      )
+        mesocycleIndex = b - 1;
     }
 
     function goDay(index: number) {
-      dayIndex = index;
-      location.href = `${base}/running/calendar/day/?phase=${phaseIndex}&mesocycle=${mesocycleIndex}&day=${dayIndex}`;
+      const entry = dayEntriesOf(mesocycle())[index];
+      if (!entry) return;
+      location.href = `${base}/running/calendar/day/?date=${entry.day.date}`;
     }
 
     function stepMesocycle(direction: number) {
@@ -201,6 +204,13 @@ const ui = translations[lang].training;
         first && last ? `${fmtShort(first)} - ${fmtShort(last)}` : "";
       $("tx-subtitle")!.textContent =
         `${micros.length} ${ui.microcycles} · ${list.length} ${ui.days}`;
+
+      // Keep ?phase=&mesocycle= in sync with the mesocycle shown after prev/next.
+      const mUrl = new URL(location.href);
+      mUrl.searchParams.set("phase", String(phaseIndex + 1));
+      mUrl.searchParams.set("mesocycle", String(mesocycleIndex + 1));
+      mUrl.searchParams.delete("day");
+      history.replaceState(null, "", mUrl);
 
       // mesocycle-level planned vs actual totals
       const mesocyclePlanned = list.reduce(

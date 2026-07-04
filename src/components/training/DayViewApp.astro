@@ -113,18 +113,6 @@ const ui = translations[lang].training;
         }
         return;
       }
-      const p = Number.parseInt(params.get("phase") || "", 10);
-      if (Number.isInteger(p) && p >= 0 && p < phaseList.length) phaseIndex = p;
-      const b = Number.parseInt(params.get("mesocycle") || "", 10);
-      if (
-        Number.isInteger(b) &&
-        b >= 0 &&
-        b < phaseList[phaseIndex].mesocycles.length
-      )
-        mesocycleIndex = b;
-      const list = entries();
-      const d = Number.parseInt(params.get("day") || "", 10);
-      if (Number.isInteger(d) && d >= 0 && d < list.length) dayIndex = d;
     }
 
     function step(delta: number) {
@@ -154,7 +142,7 @@ const ui = translations[lang].training;
     }
 
     function goMesocycle() {
-      location.href = `${base}/running/calendar/mesocycle/?phase=${phaseIndex}&mesocycle=${mesocycleIndex}&day=${dayIndex}`;
+      location.href = `${base}/running/calendar/mesocycle/?phase=${phaseIndex + 1}&mesocycle=${mesocycleIndex + 1}`;
     }
 
     // Catmull-Rom → cubic Bézier: a smooth path through every point.
@@ -428,6 +416,10 @@ const ui = translations[lang].training;
         'nav[aria-label="breadcrumb"] [aria-current="page"]'
       );
       if (crumb) crumb.textContent = day.date === todayISO() ? "Today" : "Day";
+      // Keep ?date= in sync with the day shown after prev/next, without a page jump.
+      const dayUrl = new URL(location.href);
+      dayUrl.searchParams.set("date", day.date);
+      history.replaceState(null, "", dayUrl);
       const tag = microcycle.taper
         ? `<span class="tx-tag tx-tag--taper">${ui.taper}</span>`
         : microcycle.cutback
