@@ -1369,10 +1369,10 @@
                   "day": 3,
                   "date": "2026-08-06",
                   "am": {
-                    "text": "23km Medium-Long Run @4′34″",
+                    "text": "22km Medium-Long Run @4′34″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1450,10 +1450,10 @@
                   "day": 3,
                   "date": "2026-08-10",
                   "am": {
-                    "text": "23km Medium-Long Run @4′30″",
+                    "text": "22km Medium-Long Run @4′30″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1531,10 +1531,10 @@
                   "day": 3,
                   "date": "2026-08-14",
                   "am": {
-                    "text": "17km@4′25″-4′30″ +6km@4′15″-4′20″",
+                    "text": "17km@4′25″-4′30″ +5km@4′15″-4′20″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1662,10 +1662,10 @@
                   "day": 1,
                   "date": "2026-08-20",
                   "am": {
-                    "text": "28km Long Run @4′38″",
+                    "text": "29km Long Run @4′38″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 28.0,
+                    "planned_km": 29.0,
                     "actual": null
                   },
                   "pm": {
@@ -1698,10 +1698,10 @@
                   "day": 3,
                   "date": "2026-08-22",
                   "am": {
-                    "text": "23km Medium-Long Run @4′30″",
+                    "text": "22km Medium-Long Run @4′30″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1743,10 +1743,10 @@
                   "day": 1,
                   "date": "2026-08-24",
                   "am": {
-                    "text": "28km Long Run @4′34″",
+                    "text": "29km Long Run @4′34″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 28.0,
+                    "planned_km": 29.0,
                     "actual": null
                   },
                   "pm": {
@@ -1779,10 +1779,10 @@
                   "day": 3,
                   "date": "2026-08-26",
                   "am": {
-                    "text": "23km Medium-Long Run @4′25″-4′30″",
+                    "text": "22km Medium-Long Run @4′25″-4′30″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1824,10 +1824,10 @@
                   "day": 1,
                   "date": "2026-08-28",
                   "am": {
-                    "text": "20km@4′30″-4′35″ +8km@4′15″-4′25″",
+                    "text": "21km@4′30″-4′35″ +8km@4′15″-4′25″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 28.0,
+                    "planned_km": 29.0,
                     "actual": null
                   },
                   "pm": {
@@ -1860,10 +1860,10 @@
                   "day": 3,
                   "date": "2026-08-30",
                   "am": {
-                    "text": "15km@4′22″-4′27″ +8km@4′12″-4′18″",
+                    "text": "17km@4′22″-4′27″ +5km@4′12″-4′18″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 23.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -1991,10 +1991,10 @@
                   "day": 1,
                   "date": "2026-09-05",
                   "am": {
-                    "text": "29km Long Run @4′35″-4′40″",
+                    "text": "30km Long Run @4′35″-4′40″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 29.0,
+                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -2027,10 +2027,10 @@
                   "day": 3,
                   "date": "2026-09-07",
                   "am": {
-                    "text": "24km Medium-Long Run @4′25″-4′30″",
+                    "text": "22km Medium-Long Run @4′25″-4′30″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 24.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -2072,10 +2072,10 @@
                   "day": 1,
                   "date": "2026-09-09",
                   "am": {
-                    "text": "29km Long Run @4′30″-4′35″",
+                    "text": "30km Long Run @4′30″-4′35″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 29.0,
+                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -2108,10 +2108,10 @@
                   "day": 3,
                   "date": "2026-09-11",
                   "am": {
-                    "text": "24km Medium-Long Run @4′22″-4′27″",
+                    "text": "22km Medium-Long Run @4′22″-4′27″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 24.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -2153,10 +2153,10 @@
                   "day": 1,
                   "date": "2026-09-13",
                   "am": {
-                    "text": "19km@4′30″ +10km@4′15″-4′25″",
+                    "text": "21km@4′30″ +9km@4′15″-4′25″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 29.0,
+                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -2189,10 +2189,10 @@
                   "day": 3,
                   "date": "2026-09-15",
                   "am": {
-                    "text": "16km@4′20″-4′25″ +8km@4′10″-4′18″",
+                    "text": "17km@4′20″-4′25″ +5km@4′10″-4′18″",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 24.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
