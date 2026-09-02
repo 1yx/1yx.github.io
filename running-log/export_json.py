@@ -43,8 +43,13 @@ CATEGORY_COLORS = {
 }
 
 
-def cycle_to_mesocycle_set(cycle):
-    return (cycle - 1) // 4 + 1, (cycle - 1) % 4 + 1
+CUTBACK_GRAY = "808080"   # 减量周表头灰色（Excel 中手动标记）
+
+
+def header_is_cutback(ws, header_row):
+    fill = ws.cell(row=header_row, column=1).fill
+    rgb = fill.fgColor.rgb if fill is not None and fill.fill_type == "solid" else None
+    return isinstance(rgb, str) and rgb.upper()[-6:] == CUTBACK_GRAY
 
 
 # A cell whose solid fill matches a CATEGORY_COLORS value is categorized by that
@@ -74,7 +79,10 @@ def normalize_text(value):
 def parse_planned_km(text):
     if not text:
         return 0.0
-    if "marathon race" in text.lower():
+    lowered = text.lower()
+    if "half-marathon race" in lowered:
+        return 21.1
+    if "marathon race" in lowered:
         return 42.2
     return round(parse_km(text), 1)
 
@@ -89,18 +97,18 @@ def workout_category(phase_name, text, cycle, day, period, cell=None):
         return "Race"
     if "Recovery" in text or "Shakeout" in text or "Walk / Jog" in text:
         return "Regeneration"
+    if "Aerobic" in text:   # 计划自身标注的纯有氧课（如 “10km Aerobic”）
+        return "Fundamental"
     cutback = cycle % 4 == 0   # Set 4 of each mesocycle = cutback
     if phase_name == "Aerobic Phase":
         if period == "AM" and day in (1, 3):
             return "Fundamental"
     if phase_name == "Threshold Phase":
-        if day == 1 and period == "AM":
-            # cutback Day1 AM is an 18km Medium Long Run → Fundamental;
-            # the threshold-interval Day1 AM sessions are Special (was Specific).
-            return "Fundamental" if cutback else "Special"
-        if (day == 1 and period == "PM") or (day == 3 and period == "PM"):
+        # 按课表内容识别（位置规则在课程重排后会错位）：
+        # 热身接主课 / 上坡冲刺 = Special；Long/Medium Run = Fundamental。
+        if "Warm Up +" in text or "Up Hill" in text:
             return "Special"
-        if period == "AM" and day in (2, 3):
+        if "Long Run" in text or "Medium Run" in text:
             return "Fundamental"
     if phase_name == "Marathon Phase":
         if day == 1 and period == "AM":
@@ -149,11 +157,20 @@ def build_phase_from_sheet(ws):
     display_name = ws.title
     mesocycles = {}
     cycle = 0
-    for header_row in range(1, ws.max_row + 1, ROWS_PER_CYCLE):
+    mesocycle_idx = 0
+    in_mesocycle = 0
+    prev_header_row = None
+    # 扫描全部行：周期块之间的空行 = 中周期分界（各 sheet 已显式标注全部分界）。
+    for header_row in range(1, ws.max_row + 1):
         if not row_has_cycle(ws, header_row):
             continue
         cycle += 1
-        mesocycle_idx, microcycle_in_mesocycle = cycle_to_mesocycle_set(cycle)
+        if prev_header_row is None or header_row - prev_header_row > ROWS_PER_CYCLE:
+            mesocycle_idx += 1
+            in_mesocycle = 0
+        in_mesocycle += 1
+        prev_header_row = header_row
+        microcycle_in_mesocycle = in_mesocycle
         am_row = header_row + 1
         pm_row = header_row + 2
         days = []
@@ -169,11 +186,16 @@ def build_phase_from_sheet(ws):
         total_cell = normalize_text(ws.cell(row=header_row, column=6).value)
         total = sum(parse_planned_km(v) for v in vals)
         is_marathon = display_name == "Marathon Phase"
+        gray = header_is_cutback(ws, header_row)
+        day1_am = days[0]["am"]["text"] or ""
+        # Marathon 阶段：灰色表头且 Day1 AM 非 Medium Long Run = 赛前减量(taper)，
+        # 其余灰色表头 = 减量周。位置硬编码（如 cycle>=16）在周期增删后会错位。
+        is_taper = is_marathon and gray and "Long Run" not in day1_am
         microcycle_obj = {
-            "index": cycle,                       # 绝对 microcycle 序号
-            "in_mesocycle": microcycle_in_mesocycle,      # Mesocycle 内第几个 Microcycle (1-4)
-            "cutback": microcycle_in_mesocycle == 4,   # 每个 Mesocycle 的第 4 个 Microcycle = 减量
-            "taper": is_marathon and cycle >= 16,
+            "index": cycle,                       # sheet 内 microcycle 序号
+            "in_mesocycle": microcycle_in_mesocycle,      # Mesocycle 内第几个 Microcycle
+            "cutback": gray and not is_taper,
+            "taper": is_taper,
             "total_km": total_cell or (f"{total:g}km" if total else None),
             "days": days,
         }

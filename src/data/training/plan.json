@@ -17,7 +17,7 @@
                   "day": 1,
                   "date": "2026-06-01",
                   "am": {
-                    "text": "20km Long Run @5′10″",
+                    "text": "20km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 20.0,
@@ -53,7 +53,7 @@
                   "day": 3,
                   "date": "2026-06-03",
                   "am": {
-                    "text": "15km Medium-Long Run @5′00″",
+                    "text": "15km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 15.0,
@@ -98,7 +98,7 @@
                   "day": 1,
                   "date": "2026-06-05",
                   "am": {
-                    "text": "22km Long Run @5′05″",
+                    "text": "22km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -134,7 +134,7 @@
                   "day": 3,
                   "date": "2026-06-07",
                   "am": {
-                    "text": "17km Medium-Long Run @4′55″",
+                    "text": "17km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 17.0,
@@ -179,7 +179,7 @@
                   "day": 1,
                   "date": "2026-06-09",
                   "am": {
-                    "text": "24km Long Run @5′00″",
+                    "text": "24km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 24.0,
@@ -215,7 +215,7 @@
                   "day": 3,
                   "date": "2026-06-11",
                   "am": {
-                    "text": "19km Medium-Long Run @4′50″",
+                    "text": "19km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 19.0,
@@ -260,7 +260,7 @@
                   "day": 1,
                   "date": "2026-06-13",
                   "am": {
-                    "text": "18km Medium-Long Run @5′10″-5′20″",
+                    "text": "18km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 18.0,
@@ -296,7 +296,7 @@
                   "day": 3,
                   "date": "2026-06-15",
                   "am": {
-                    "text": "13km Medium Run @4′45″-4′55″",
+                    "text": "13km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 13.0,
@@ -346,7 +346,7 @@
                   "day": 1,
                   "date": "2026-06-17",
                   "am": {
-                    "text": "24km Long Run @5′00″",
+                    "text": "24km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 24.0,
@@ -382,7 +382,7 @@
                   "day": 3,
                   "date": "2026-06-19",
                   "am": {
-                    "text": "21km Medium-Long Run @4′50″",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -427,7 +427,7 @@
                   "day": 1,
                   "date": "2026-06-21",
                   "am": {
-                    "text": "26km Long Run @4′55″",
+                    "text": "26km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 26.0,
@@ -463,7 +463,7 @@
                   "day": 3,
                   "date": "2026-06-23",
                   "am": {
-                    "text": "21km Medium-Long Run @4′45″",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -508,7 +508,7 @@
                   "day": 1,
                   "date": "2026-06-25",
                   "am": {
-                    "text": "26km Long Run @4′50″",
+                    "text": "26km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 26.0,
@@ -544,7 +544,7 @@
                   "day": 3,
                   "date": "2026-06-27",
                   "am": {
-                    "text": "21km Medium-Long Run @4′40″",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -589,7 +589,7 @@
                   "day": 1,
                   "date": "2026-06-29",
                   "am": {
-                    "text": "18km Medium-Long Run @5′05″-5′15″",
+                    "text": "18km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 18.0,
@@ -625,7 +625,7 @@
                   "day": 3,
                   "date": "2026-07-01",
                   "am": {
-                    "text": "13km Medium Run @4′40″-4′50″",
+                    "text": "13km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 13.0,
@@ -675,7 +675,7 @@
                   "day": 1,
                   "date": "2026-07-03",
                   "am": {
-                    "text": "27km Long Run @4′55″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -711,7 +711,7 @@
                   "day": 3,
                   "date": "2026-07-05",
                   "am": {
-                    "text": "22km Medium-Long Run @4′45″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -756,7 +756,7 @@
                   "day": 1,
                   "date": "2026-07-07",
                   "am": {
-                    "text": "27km Long Run @4′50″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -792,7 +792,7 @@
                   "day": 3,
                   "date": "2026-07-09",
                   "am": {
-                    "text": "22km Medium-Long Run @4′40″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -837,7 +837,7 @@
                   "day": 1,
                   "date": "2026-07-11",
                   "am": {
-                    "text": "27km Long Run @4′45″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -873,7 +873,7 @@
                   "day": 3,
                   "date": "2026-07-13",
                   "am": {
-                    "text": "22km Medium-Long Run @4′35″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -918,7 +918,7 @@
                   "day": 1,
                   "date": "2026-07-15",
                   "am": {
-                    "text": "19km Medium-Long Run @5′00″-5′10″",
+                    "text": "19km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 19.0,
@@ -954,7 +954,7 @@
                   "day": 3,
                   "date": "2026-07-17",
                   "am": {
-                    "text": "14km Medium Run @4′35″-4′45″",
+                    "text": "14km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 14.0,
@@ -1004,7 +1004,7 @@
                   "day": 1,
                   "date": "2026-07-19",
                   "am": {
-                    "text": "27km Long Run @4′48″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -1040,7 +1040,7 @@
                   "day": 3,
                   "date": "2026-07-21",
                   "am": {
-                    "text": "22km Medium-Long Run @4′38″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1085,7 +1085,7 @@
                   "day": 1,
                   "date": "2026-07-23",
                   "am": {
-                    "text": "27km Long Run @4′43″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -1121,7 +1121,7 @@
                   "day": 3,
                   "date": "2026-07-25",
                   "am": {
-                    "text": "22km Medium-Long Run @4′34″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1166,7 +1166,7 @@
                   "day": 1,
                   "date": "2026-07-27",
                   "am": {
-                    "text": "22km@4′38″ +5km@4′25″-4′30″",
+                    "text": "27km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 27.0,
@@ -1202,7 +1202,7 @@
                   "day": 3,
                   "date": "2026-07-29",
                   "am": {
-                    "text": "17km@4′30″ +5km@4′20″-4′25″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1247,7 +1247,7 @@
                   "day": 1,
                   "date": "2026-07-31",
                   "am": {
-                    "text": "19km Medium-Long Run @4′55″-5′05″",
+                    "text": "19km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 19.0,
@@ -1283,7 +1283,7 @@
                   "day": 3,
                   "date": "2026-08-02",
                   "am": {
-                    "text": "14km Medium Run @4′30″-4′40″",
+                    "text": "14km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 14.0,
@@ -1333,7 +1333,7 @@
                   "day": 1,
                   "date": "2026-08-04",
                   "am": {
-                    "text": "28km Long Run @4′42″",
+                    "text": "28km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 28.0,
@@ -1369,7 +1369,7 @@
                   "day": 3,
                   "date": "2026-08-06",
                   "am": {
-                    "text": "22km Medium-Long Run @4′34″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1414,7 +1414,7 @@
                   "day": 1,
                   "date": "2026-08-08",
                   "am": {
-                    "text": "28km Long Run @4′38″",
+                    "text": "28km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 28.0,
@@ -1450,7 +1450,7 @@
                   "day": 3,
                   "date": "2026-08-10",
                   "am": {
-                    "text": "22km Medium-Long Run @4′30″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1495,7 +1495,7 @@
                   "day": 1,
                   "date": "2026-08-12",
                   "am": {
-                    "text": "22km@4′35″ +6km@4′20″-4′25″",
+                    "text": "28km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 28.0,
@@ -1531,7 +1531,7 @@
                   "day": 3,
                   "date": "2026-08-14",
                   "am": {
-                    "text": "17km@4′25″-4′30″ +5km@4′15″-4′20″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1576,7 +1576,7 @@
                   "day": 1,
                   "date": "2026-08-16",
                   "am": {
-                    "text": "20km Medium-Long Run @4′50″-5′00″",
+                    "text": "20km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 20.0,
@@ -1612,7 +1612,7 @@
                   "day": 3,
                   "date": "2026-08-18",
                   "am": {
-                    "text": "15km Medium Run @4′25″-4′35″",
+                    "text": "15km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 15.0,
@@ -1662,7 +1662,7 @@
                   "day": 1,
                   "date": "2026-08-20",
                   "am": {
-                    "text": "29km Long Run @4′38″",
+                    "text": "29km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 29.0,
@@ -1698,7 +1698,7 @@
                   "day": 3,
                   "date": "2026-08-22",
                   "am": {
-                    "text": "22km Medium-Long Run @4′30″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1743,7 +1743,7 @@
                   "day": 1,
                   "date": "2026-08-24",
                   "am": {
-                    "text": "29km Long Run @4′34″",
+                    "text": "29km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 29.0,
@@ -1779,7 +1779,7 @@
                   "day": 3,
                   "date": "2026-08-26",
                   "am": {
-                    "text": "22km Medium-Long Run @4′25″-4′30″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1824,7 +1824,7 @@
                   "day": 1,
                   "date": "2026-08-28",
                   "am": {
-                    "text": "21km@4′30″-4′35″ +8km@4′15″-4′25″",
+                    "text": "29km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 29.0,
@@ -1860,7 +1860,7 @@
                   "day": 3,
                   "date": "2026-08-30",
                   "am": {
-                    "text": "17km@4′22″-4′27″ +5km@4′12″-4′18″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -1905,7 +1905,7 @@
                   "day": 1,
                   "date": "2026-09-01",
                   "am": {
-                    "text": "21km Medium-Long Run @4′45″-4′55″",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -1941,7 +1941,7 @@
                   "day": 3,
                   "date": "2026-09-03",
                   "am": {
-                    "text": "16km Medium Run @4′18″-4′28″",
+                    "text": "16km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 16.0,
@@ -1991,7 +1991,7 @@
                   "day": 1,
                   "date": "2026-09-05",
                   "am": {
-                    "text": "30km Long Run @4′35″-4′40″",
+                    "text": "30km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 30.0,
@@ -2027,7 +2027,7 @@
                   "day": 3,
                   "date": "2026-09-07",
                   "am": {
-                    "text": "22km Medium-Long Run @4′25″-4′30″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -2072,7 +2072,7 @@
                   "day": 1,
                   "date": "2026-09-09",
                   "am": {
-                    "text": "30km Long Run @4′30″-4′35″",
+                    "text": "30km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 30.0,
@@ -2108,7 +2108,7 @@
                   "day": 3,
                   "date": "2026-09-11",
                   "am": {
-                    "text": "22km Medium-Long Run @4′22″-4′27″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -2153,7 +2153,7 @@
                   "day": 1,
                   "date": "2026-09-13",
                   "am": {
-                    "text": "21km@4′30″ +9km@4′15″-4′25″",
+                    "text": "30km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 30.0,
@@ -2189,7 +2189,7 @@
                   "day": 3,
                   "date": "2026-09-15",
                   "am": {
-                    "text": "17km@4′20″-4′25″ +5km@4′10″-4′18″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 22.0,
@@ -2222,22 +2222,27 @@
                   }
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "microcycles": [
             {
               "index": 28,
-              "in_mesocycle": 4,
-              "cutback": true,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
-              "total_km": "61km",
+              "total_km": "77km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-09-17",
                   "am": {
-                    "text": "21km Medium-Long Run @4′45″-4′55″",
+                    "text": "30km Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 21.0,
+                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -2270,10 +2275,10 @@
                   "day": 3,
                   "date": "2026-09-19",
                   "am": {
-                    "text": "16km Medium Run @4′10″-4′20″",
+                    "text": "22km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 16.0,
+                    "planned_km": 22.0,
                     "actual": null
                   },
                   "pm": {
@@ -2303,6 +2308,168 @@
                   }
                 }
               ]
+            },
+            {
+              "index": 29,
+              "in_mesocycle": 2,
+              "cutback": false,
+              "taper": false,
+              "total_km": "80km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-09-21",
+                  "am": {
+                    "text": "30km Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 30.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-09-22",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-09-23",
+                  "am": {
+                    "text": "22km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 22.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-09-24",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 30,
+              "in_mesocycle": 3,
+              "cutback": true,
+              "taper": false,
+              "total_km": "40km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-09-25",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-09-26",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-09-27",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-09-28",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
             }
           ]
         }
@@ -2319,11 +2486,29 @@
               "in_mesocycle": 1,
               "cutback": false,
               "taper": false,
-              "total_km": "72km",
+              "total_km": "82km",
               "days": [
                 {
                   "day": 1,
-                  "date": "2026-09-21",
+                  "date": "2026-09-29",
+                  "am": {
+                    "text": "10km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-09-30",
                   "am": {
                     "text": "2km Warm Up +4*3km@3′55″",
                     "category": "Special",
@@ -2340,28 +2525,28 @@
                   }
                 },
                 {
-                  "day": 2,
-                  "date": "2026-09-22",
+                  "day": 3,
+                  "date": "2026-10-01",
                   "am": {
-                    "text": "10km Medium Run",
+                    "text": "12km Aerobic",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 12.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "10km Aerobic",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 10.0,
                     "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
                   }
                 },
                 {
-                  "day": 3,
-                  "date": "2026-09-23",
+                  "day": 4,
+                  "date": "2026-10-02",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -2372,24 +2557,6 @@
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 7.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-09-24",
-                  "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
                     "actual": null
                   }
                 }
@@ -2400,185 +2567,23 @@
               "in_mesocycle": 2,
               "cutback": false,
               "taper": false,
-              "total_km": "71km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-09-25",
-                  "am": {
-                    "text": "2km Warm Up +2*5.5km@3′55″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 13.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "5km Warm Up +3*1km@3′45″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 8.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-09-26",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-09-27",
-                  "am": {
-                    "text": "21km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 21.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Warm Up +5*200m Up Hill",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 7.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-09-28",
-                  "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 3,
-              "in_mesocycle": 3,
-              "cutback": false,
-              "taper": false,
-              "total_km": "70km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-09-29",
-                  "am": {
-                    "text": "2km Warm Up +10km@3′55″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 12.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "5km Warm Up +3*1km@3′45″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 8.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-09-30",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-10-01",
-                  "am": {
-                    "text": "21km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 21.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Warm Up +5*200m Up Hill",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 7.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-10-02",
-                  "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 4,
-              "in_mesocycle": 4,
-              "cutback": true,
-              "taper": false,
-              "total_km": "55km",
+              "total_km": "72km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-03",
                   "am": {
-                    "text": "18km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 18.0,
+                    "text": "2km Warm Up +3*4km@3′55″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 14.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
+                    "text": "5km Warm Up +3*1km@3′45″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
                     "actual": null
                   }
                 },
@@ -2586,10 +2591,10 @@
                   "day": 2,
                   "date": "2026-10-04",
                   "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -2604,17 +2609,17 @@
                   "day": 3,
                   "date": "2026-10-05",
                   "am": {
-                    "text": "13km Medium Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 13.0,
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
                     "actual": null
                   }
                 },
@@ -2637,31 +2642,26 @@
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "microcycles": [
+            },
             {
-              "index": 5,
-              "in_mesocycle": 1,
+              "index": 3,
+              "in_mesocycle": 3,
               "cutback": false,
               "taper": false,
-              "total_km": "72km",
+              "total_km": "71km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-07",
                   "am": {
-                    "text": "2km Warm Up +4*3km@3′45″",
+                    "text": "2km Warm Up +2*5.5km@3′55″",
                     "category": "Special",
                     "color": "#C5A6FF",
-                    "planned_km": 14.0,
+                    "planned_km": 13.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Warm Up +3*1km@3′35″",
+                    "text": "5km Warm Up +3*1km@3′45″",
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 8.0,
@@ -2690,7 +2690,7 @@
                   "day": 3,
                   "date": "2026-10-09",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -2725,24 +2725,24 @@
               ]
             },
             {
-              "index": 6,
-              "in_mesocycle": 2,
+              "index": 4,
+              "in_mesocycle": 4,
               "cutback": false,
               "taper": false,
-              "total_km": "71km",
+              "total_km": "70km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-11",
                   "am": {
-                    "text": "2km Warm Up +2*5.5km@3′45″",
+                    "text": "2km Warm Up +10km@3′55″",
                     "category": "Special",
                     "color": "#C5A6FF",
-                    "planned_km": 13.0,
+                    "planned_km": 12.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Warm Up +3*1km@3′35″",
+                    "text": "5km Warm Up +3*1km@3′45″",
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 8.0,
@@ -2771,7 +2771,7 @@
                   "day": 3,
                   "date": "2026-10-13",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -2806,27 +2806,27 @@
               ]
             },
             {
-              "index": 7,
-              "in_mesocycle": 3,
-              "cutback": false,
+              "index": 5,
+              "in_mesocycle": 5,
+              "cutback": true,
               "taper": false,
-              "total_km": "70km",
+              "total_km": "55km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-15",
                   "am": {
-                    "text": "2km Warm Up +10km@3′45″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 12.0,
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Warm Up +3*1km@3′35″",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 8.0,
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
                     "actual": null
                   }
                 },
@@ -2834,10 +2834,10 @@
                   "day": 2,
                   "date": "2026-10-16",
                   "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
                     "actual": null
                   },
                   "pm": {
@@ -2852,17 +2852,17 @@
                   "day": 3,
                   "date": "2026-10-17",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "10km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 21.0,
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "6km Warm Up +5*200m Up Hill",
-                    "category": "Special",
-                    "color": "#C5A6FF",
-                    "planned_km": 7.0,
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
                     "actual": null
                   }
                 },
@@ -2885,29 +2885,34 @@
                   }
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "microcycles": [
             {
-              "index": 8,
-              "in_mesocycle": 4,
-              "cutback": true,
+              "index": 6,
+              "in_mesocycle": 1,
+              "cutback": false,
               "taper": false,
-              "total_km": "55km",
+              "total_km": "72km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-19",
                   "am": {
-                    "text": "18km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 18.0,
+                    "text": "2km Warm Up +4*3km@3′45″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 14.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
+                    "text": "5km Warm Up +3*1km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
                     "actual": null
                   }
                 },
@@ -2915,10 +2920,10 @@
                   "day": 2,
                   "date": "2026-10-20",
                   "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -2933,17 +2938,17 @@
                   "day": 3,
                   "date": "2026-10-21",
                   "am": {
-                    "text": "13km Medium Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 13.0,
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
                     "actual": null
                   }
                 },
@@ -2966,34 +2971,29 @@
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "microcycles": [
+            },
             {
-              "index": 9,
-              "in_mesocycle": 1,
+              "index": 7,
+              "in_mesocycle": 2,
               "cutback": false,
               "taper": false,
-              "total_km": "69.5km",
+              "total_km": "72km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-23",
                   "am": {
-                    "text": "2km Warm Up +4*3km@3′35″",
+                    "text": "2km Warm Up +3*4km@3′45″",
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 14.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Recovery +5*100m strides",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 5.5,
+                    "text": "5km Warm Up +3*1km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
                     "actual": null
                   }
                 },
@@ -3019,7 +3019,7 @@
                   "day": 3,
                   "date": "2026-10-25",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -3054,27 +3054,27 @@
               ]
             },
             {
-              "index": 10,
-              "in_mesocycle": 2,
+              "index": 8,
+              "in_mesocycle": 3,
               "cutback": false,
               "taper": false,
-              "total_km": "68.5km",
+              "total_km": "71km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-27",
                   "am": {
-                    "text": "2km Warm Up +2*5.5km@3′35″",
+                    "text": "2km Warm Up +2*5.5km@3′45″",
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 13.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Recovery +5*100m strides",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 5.5,
+                    "text": "5km Warm Up +3*1km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
                     "actual": null
                   }
                 },
@@ -3100,7 +3100,7 @@
                   "day": 3,
                   "date": "2026-10-29",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -3135,27 +3135,27 @@
               ]
             },
             {
-              "index": 11,
-              "in_mesocycle": 3,
+              "index": 9,
+              "in_mesocycle": 4,
               "cutback": false,
               "taper": false,
-              "total_km": "67.5km",
+              "total_km": "76km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-10-31",
                   "am": {
-                    "text": "2km Warm Up +10km@3′35″",
+                    "text": "2km Warm Up +10km@3′45″",
                     "category": "Special",
                     "color": "#C5A6FF",
                     "planned_km": 12.0,
                     "actual": null
                   },
                   "pm": {
-                    "text": "5km Recovery +5*100m strides",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 5.5,
+                    "text": "5km Warm Up +3*1km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
                     "actual": null
                   }
                 },
@@ -3181,7 +3181,7 @@
                   "day": 3,
                   "date": "2026-11-02",
                   "am": {
-                    "text": "21km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
                     "planned_km": 21.0,
@@ -3206,18 +3206,18 @@
                     "actual": null
                   },
                   "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
                     "actual": null
                   }
                 }
               ]
             },
             {
-              "index": 12,
-              "in_mesocycle": 4,
+              "index": 10,
+              "in_mesocycle": 5,
               "cutback": true,
               "taper": false,
               "total_km": "55km",
@@ -3226,10 +3226,10 @@
                   "day": 1,
                   "date": "2026-11-04",
                   "am": {
-                    "text": "18km Medium Long Run",
+                    "text": "21km Medium-Long Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 18.0,
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
@@ -3262,10 +3262,10 @@
                   "day": 3,
                   "date": "2026-11-06",
                   "am": {
-                    "text": "13km Medium Run",
+                    "text": "10km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 13.0,
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -3279,6 +3279,497 @@
                 {
                   "day": 4,
                   "date": "2026-11-07",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "microcycles": [
+            {
+              "index": 11,
+              "in_mesocycle": 1,
+              "cutback": true,
+              "taper": false,
+              "total_km": "55km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-08",
+                  "am": {
+                    "text": "Half-Marathon Race",
+                    "category": "Race",
+                    "color": "#FFD700",
+                    "planned_km": 21.1,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-09",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-10",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-11-11",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 12,
+              "in_mesocycle": 2,
+              "cutback": false,
+              "taper": false,
+              "total_km": "72km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-12",
+                  "am": {
+                    "text": "2km Warm Up +4*3km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 14.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "5km Warm Up +3*1km@3′25″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-13",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-14",
+                  "am": {
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-11-15",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 13,
+              "in_mesocycle": 3,
+              "cutback": false,
+              "taper": false,
+              "total_km": "72km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-16",
+                  "am": {
+                    "text": "2km Warm Up +3*4km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 14.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "5km Warm Up +3*1km@3′25″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-17",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-18",
+                  "am": {
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-11-19",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 14,
+              "in_mesocycle": 4,
+              "cutback": false,
+              "taper": false,
+              "total_km": "71km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-20",
+                  "am": {
+                    "text": "2km Warm Up +2*5.5km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 13.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "5km Warm Up +3*1km@3′25″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-21",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-22",
+                  "am": {
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-11-23",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 15,
+              "in_mesocycle": 5,
+              "cutback": false,
+              "taper": false,
+              "total_km": "70km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-24",
+                  "am": {
+                    "text": "2km Warm Up +10km@3′35″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 12.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "5km Warm Up +3*1km@3′25″",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 8.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-25",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-26",
+                  "am": {
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Warm Up +5*200m Up Hill",
+                    "category": "Special",
+                    "color": "#C5A6FF",
+                    "planned_km": 7.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-11-27",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                }
+              ]
+            },
+            {
+              "index": 16,
+              "in_mesocycle": 6,
+              "cutback": true,
+              "taper": false,
+              "total_km": "55km",
+              "days": [
+                {
+                  "day": 1,
+                  "date": "2026-11-28",
+                  "am": {
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": null,
+                    "category": "Rest",
+                    "color": "#9AA7BA",
+                    "planned_km": 0.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 2,
+                  "date": "2026-11-29",
+                  "am": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 3,
+                  "date": "2026-11-30",
+                  "am": {
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
+                    "actual": null
+                  },
+                  "pm": {
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
+                    "actual": null
+                  }
+                },
+                {
+                  "day": 4,
+                  "date": "2026-12-01",
                   "am": {
                     "text": "6km Recovery",
                     "category": "Regeneration",
@@ -3315,503 +3806,12 @@
               "days": [
                 {
                   "day": 1,
-                  "date": "2026-11-08",
+                  "date": "2026-12-02",
                   "am": {
                     "text": "2km@wu+6*(4km@3′41″+1km@4′13″)",
                     "category": "Specific",
                     "color": "#F6A9EE",
                     "planned_km": 32.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-09",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-10",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-11-11",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 2,
-              "in_mesocycle": 2,
-              "cutback": false,
-              "taper": false,
-              "total_km": "71km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-11-12",
-                  "am": {
-                    "text": "2km@wu+5*(5km@3′43″+1km@4′13″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 32.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-13",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-14",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-11-15",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 3,
-              "in_mesocycle": 3,
-              "cutback": false,
-              "taper": false,
-              "total_km": "71km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-11-16",
-                  "am": {
-                    "text": "4km@wu+4*(6km@3′44″+1km@4′13″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 32.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-17",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-18",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-11-19",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 4,
-              "in_mesocycle": 4,
-              "cutback": true,
-              "taper": false,
-              "total_km": "55km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-11-20",
-                  "am": {
-                    "text": "18km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 18.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-21",
-                  "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-22",
-                  "am": {
-                    "text": "13km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 13.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-11-23",
-                  "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "microcycles": [
-            {
-              "index": 5,
-              "in_mesocycle": 1,
-              "cutback": false,
-              "taper": false,
-              "total_km": "71km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-11-24",
-                  "am": {
-                    "text": "4*(1km@4′07″+7km@3′47″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 32.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-25",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-26",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-11-27",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 6,
-              "in_mesocycle": 2,
-              "cutback": false,
-              "taper": false,
-              "total_km": "74km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-11-28",
-                  "am": {
-                    "text": "5*(5km@4′07″+2km@3′34″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 35.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2026-11-29",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2026-11-30",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2026-12-01",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 7,
-              "in_mesocycle": 3,
-              "cutback": false,
-              "taper": false,
-              "total_km": "69km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2026-12-02",
-                  "am": {
-                    "text": "30km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -3879,20 +3879,20 @@
               ]
             },
             {
-              "index": 8,
-              "in_mesocycle": 4,
-              "cutback": true,
+              "index": 2,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
-              "total_km": "55km",
+              "total_km": "71km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-12-06",
                   "am": {
-                    "text": "18km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 18.0,
+                    "text": "2km@wu+5*(5km@3′43″+1km@4′13″)",
+                    "category": "Specific",
+                    "color": "#F6A9EE",
+                    "planned_km": 32.0,
                     "actual": null
                   },
                   "pm": {
@@ -3907,10 +3907,10 @@
                   "day": 2,
                   "date": "2026-12-07",
                   "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -3925,10 +3925,10 @@
                   "day": 3,
                   "date": "2026-12-08",
                   "am": {
-                    "text": "13km Medium Run",
+                    "text": "10km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 13.0,
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -3943,10 +3943,10 @@
                   "day": 4,
                   "date": "2026-12-09",
                   "am": {
-                    "text": "6km Recovery",
+                    "text": "7km Recovery",
                     "category": "Regeneration",
                     "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "planned_km": 7.0,
                     "actual": null
                   },
                   "pm": {
@@ -3958,15 +3958,10 @@
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "microcycles": [
+            },
             {
-              "index": 9,
-              "in_mesocycle": 1,
+              "index": 3,
+              "in_mesocycle": 3,
               "cutback": false,
               "taper": false,
               "total_km": "71km",
@@ -3975,7 +3970,7 @@
                   "day": 1,
                   "date": "2026-12-10",
                   "am": {
-                    "text": "2km@wu+6*(4km@3′41″+1km@4′13″)",
+                    "text": "4km@wu+4*(6km@3′44″+1km@4′13″)",
                     "category": "Specific",
                     "color": "#F6A9EE",
                     "planned_km": 32.0,
@@ -4046,20 +4041,20 @@
               ]
             },
             {
-              "index": 10,
-              "in_mesocycle": 2,
-              "cutback": false,
+              "index": 4,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
-              "total_km": "71km",
+              "total_km": "55km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-12-14",
                   "am": {
-                    "text": "2km@wu+5*(5km@3′43″+1km@4′13″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 32.0,
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
@@ -4074,10 +4069,10 @@
                   "day": 2,
                   "date": "2026-12-15",
                   "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
                     "actual": null
                   },
                   "pm": {
@@ -4110,10 +4105,10 @@
                   "day": 4,
                   "date": "2026-12-17",
                   "am": {
-                    "text": "7km Recovery",
+                    "text": "6km Recovery",
                     "category": "Regeneration",
                     "color": "#CFEDE4",
-                    "planned_km": 7.0,
+                    "planned_km": 6.0,
                     "actual": null
                   },
                   "pm": {
@@ -4125,10 +4120,15 @@
                   }
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "microcycles": [
             {
-              "index": 11,
-              "in_mesocycle": 3,
+              "index": 5,
+              "in_mesocycle": 1,
               "cutback": false,
               "taper": false,
               "total_km": "71km",
@@ -4137,7 +4137,7 @@
                   "day": 1,
                   "date": "2026-12-18",
                   "am": {
-                    "text": "4km@wu+4*(6km@3′44″+1km@4′13″)",
+                    "text": "4*(1km@4′07″+7km@3′47″)",
                     "category": "Specific",
                     "color": "#F6A9EE",
                     "planned_km": 32.0,
@@ -4208,20 +4208,20 @@
               ]
             },
             {
-              "index": 12,
-              "in_mesocycle": 4,
-              "cutback": true,
+              "index": 6,
+              "in_mesocycle": 2,
+              "cutback": false,
               "taper": false,
-              "total_km": "55km",
+              "total_km": "74km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-12-22",
                   "am": {
-                    "text": "18km Medium Long Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 18.0,
+                    "text": "5*(5km@4′07″+2km@3′34″)",
+                    "category": "Specific",
+                    "color": "#F6A9EE",
+                    "planned_km": 35.0,
                     "actual": null
                   },
                   "pm": {
@@ -4236,10 +4236,10 @@
                   "day": 2,
                   "date": "2026-12-23",
                   "am": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "text": "10km Medium Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -4254,10 +4254,10 @@
                   "day": 3,
                   "date": "2026-12-24",
                   "am": {
-                    "text": "13km Medium Run",
+                    "text": "10km Medium Run",
                     "category": "Fundamental",
                     "color": "#74DDFF",
-                    "planned_km": 13.0,
+                    "planned_km": 10.0,
                     "actual": null
                   },
                   "pm": {
@@ -4272,10 +4272,10 @@
                   "day": 4,
                   "date": "2026-12-25",
                   "am": {
-                    "text": "6km Recovery",
+                    "text": "7km Recovery",
                     "category": "Regeneration",
                     "color": "#CFEDE4",
-                    "planned_km": 6.0,
+                    "planned_km": 7.0,
                     "actual": null
                   },
                   "pm": {
@@ -4287,27 +4287,22 @@
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "microcycles": [
+            },
             {
-              "index": 13,
-              "in_mesocycle": 1,
+              "index": 7,
+              "in_mesocycle": 3,
               "cutback": false,
               "taper": false,
-              "total_km": "71km",
+              "total_km": "69km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-12-26",
                   "am": {
-                    "text": "4*(1km@4′07″+7km@3′47″)",
+                    "text": "30km@3′45″",
                     "category": "Specific",
                     "color": "#F6A9EE",
-                    "planned_km": 32.0,
+                    "planned_km": 30.0,
                     "actual": null
                   },
                   "pm": {
@@ -4375,20 +4370,20 @@
               ]
             },
             {
-              "index": 14,
-              "in_mesocycle": 2,
-              "cutback": false,
+              "index": 8,
+              "in_mesocycle": 4,
+              "cutback": true,
               "taper": false,
-              "total_km": "74km",
+              "total_km": "55km",
               "days": [
                 {
                   "day": 1,
                   "date": "2026-12-30",
                   "am": {
-                    "text": "5*(5km@4′07″+2km@3′34″)",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 35.0,
+                    "text": "21km Medium-Long Run",
+                    "category": "Fundamental",
+                    "color": "#74DDFF",
+                    "planned_km": 21.0,
                     "actual": null
                   },
                   "pm": {
@@ -4403,10 +4398,10 @@
                   "day": 2,
                   "date": "2026-12-31",
                   "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
+                    "text": "6km Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 6.0,
                     "actual": null
                   },
                   "pm": {
@@ -4439,168 +4434,6 @@
                   "day": 4,
                   "date": "2027-01-02",
                   "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 15,
-              "in_mesocycle": 3,
-              "cutback": false,
-              "taper": false,
-              "total_km": "74km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2027-01-03",
-                  "am": {
-                    "text": "35km@3′52″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 35.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2027-01-04",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2027-01-05",
-                  "am": {
-                    "text": "10km Medium Run",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 10.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "6km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 6.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2027-01-06",
-                  "am": {
-                    "text": "7km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 7.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                }
-              ]
-            },
-            {
-              "index": 16,
-              "in_mesocycle": 4,
-              "cutback": true,
-              "taper": true,
-              "total_km": "47.5km",
-              "days": [
-                {
-                  "day": 1,
-                  "date": "2027-01-07",
-                  "am": {
-                    "text": "8km@4′30″-4′40″ +8km@3′45″",
-                    "category": "Specific",
-                    "color": "#F6A9EE",
-                    "planned_km": 16.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 2,
-                  "date": "2027-01-08",
-                  "am": {
-                    "text": "8km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 8.0,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": null,
-                    "category": "Rest",
-                    "color": "#9AA7BA",
-                    "planned_km": 0.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 3,
-                  "date": "2027-01-09",
-                  "am": {
-                    "text": "12km@4′15″-4′25″ +5*100m strides",
-                    "category": "Fundamental",
-                    "color": "#74DDFF",
-                    "planned_km": 12.5,
-                    "actual": null
-                  },
-                  "pm": {
-                    "text": "5km Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 5.0,
-                    "actual": null
-                  }
-                },
-                {
-                  "day": 4,
-                  "date": "2027-01-10",
-                  "am": {
                     "text": "6km Recovery",
                     "category": "Regeneration",
                     "color": "#CFEDE4",
@@ -4620,10 +4453,10 @@
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "microcycles": [
             {
-              "index": 17,
+              "index": 9,
               "in_mesocycle": 1,
               "cutback": false,
               "taper": true,
@@ -4631,7 +4464,7 @@
               "days": [
                 {
                   "day": 1,
-                  "date": "2027-01-11",
+                  "date": "2027-01-03",
                   "am": {
                     "text": "7km@4′30″-4′40″ +5km@3′45″",
                     "category": "Specific",
@@ -4649,7 +4482,7 @@
                 },
                 {
                   "day": 2,
-                  "date": "2027-01-12",
+                  "date": "2027-01-04",
                   "am": {
                     "text": "7km Recovery +5*100m strides",
                     "category": "Regeneration",
@@ -4667,7 +4500,7 @@
                 },
                 {
                   "day": 3,
-                  "date": "2027-01-13",
+                  "date": "2027-01-05",
                   "am": {
                     "text": "3km wu +3*(1km@3′45″+1km@easy)",
                     "category": "Specific",
@@ -4685,7 +4518,7 @@
                 },
                 {
                   "day": 4,
-                  "date": "2027-01-14",
+                  "date": "2027-01-06",
                   "am": {
                     "text": "6km Recovery",
                     "category": "Regeneration",
@@ -4704,7 +4537,7 @@
               ]
             },
             {
-              "index": 18,
+              "index": 10,
               "in_mesocycle": 2,
               "cutback": false,
               "taper": true,
@@ -4712,7 +4545,7 @@
               "days": [
                 {
                   "day": 1,
-                  "date": "2027-01-15",
+                  "date": "2027-01-07",
                   "am": {
                     "text": "6km Recovery +4*100m strides",
                     "category": "Regeneration",
@@ -4730,7 +4563,7 @@
                 },
                 {
                   "day": 2,
-                  "date": "2027-01-16",
+                  "date": "2027-01-08",
                   "am": {
                     "text": "4km Shakeout",
                     "category": "Regeneration",
@@ -4748,12 +4581,12 @@
                 },
                 {
                   "day": 3,
-                  "date": "2027-01-17",
+                  "date": "2027-01-09",
                   "am": {
-                    "text": "Marathon Race @3′45″",
-                    "category": "Race",
-                    "color": "#FFD700",
-                    "planned_km": 42.2,
+                    "text": "2km Walk / Jog Recovery",
+                    "category": "Regeneration",
+                    "color": "#CFEDE4",
+                    "planned_km": 2.0,
                     "actual": null
                   },
                   "pm": {
@@ -4766,12 +4599,12 @@
                 },
                 {
                   "day": 4,
-                  "date": "2027-01-18",
+                  "date": "2027-01-10",
                   "am": {
-                    "text": "2km Walk / Jog Recovery",
-                    "category": "Regeneration",
-                    "color": "#CFEDE4",
-                    "planned_km": 2.0,
+                    "text": "Marathon Race",
+                    "category": "Race",
+                    "color": "#FFD700",
+                    "planned_km": 42.2,
                     "actual": null
                   },
                   "pm": {

@@ -55,7 +55,7 @@ const weekday = (iso: string) => {
 
 const months = [...new Set(allDays().map(d => d.date.slice(0, 7)))].sort();
 
-// Microcycle label, marking cutback weeks — the 4th microcycle of each mesocycle.
+// Microcycle label, marking cutback weeks (gray header row in the xlsx; see export_json.py).
 const mcLabel = (m: Microcycle) =>
   `${ui.microcycleLabel} ${microcycleIndex(m)}${m.taper ? ` (${ui.taper})` : m.cutback ? ` (${ui.cutback})` : ""}`;
 
