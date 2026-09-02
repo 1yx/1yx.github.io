@@ -25,7 +25,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import strava_client
-from strava_feed import build_feed_entry
+from strava_feed import build_feed_entry, dedup_activities, dedup_feed
 
 ROOT = Path(__file__).resolve().parent          # running-log/
 REPO = ROOT.parent                               # 博客仓库根
@@ -67,7 +67,8 @@ def main():
     # 3. 拉取窗口内跑步活动
     after = int((datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)).timestamp())
     acts = strava_client.list_activities(after_epoch=after)
-    runs = [a for a in acts if a.get("sport_type") in strava_client.RUN_SPORTS]
+    # 双表重复记录（时间重叠）去重：保留距离最长者
+    runs = dedup_activities([a for a in acts if a.get("sport_type") in strava_client.RUN_SPORTS])
     print(f"最近 {WINDOW_DAYS} 天：活动 {len(acts)} 条，跑步 {len(runs)} 条")
 
     # 4. 逐个取详情，合并（窗口内覆盖以捕获编辑；详情失败时已存在的不覆盖）
@@ -85,8 +86,9 @@ def main():
             existing[aid] = entry
             updated += 1
 
-    # 5. 写出
-    feed = sorted(existing.values(), key=lambda x: x["date"] + x["time"], reverse=True)
+    # 5. 写出（光去重一次全部条目，历史双表重复也会被滚动清掉）
+    feed = dedup_feed(existing.values())
+    feed = sorted(feed, key=lambda x: x["date"] + x["time"], reverse=True)
     ACTIVITIES_OUT.parent.mkdir(parents=True, exist_ok=True)
     ACTIVITIES_OUT.write_text(
         json.dumps(feed, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"

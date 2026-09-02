@@ -21,7 +21,7 @@ from pathlib import Path
 import openpyxl
 
 from generate_plan import parse_km
-from strava_feed import build_feed_entry
+from strava_feed import build_feed_entry, dedup_activities
 
 # 路径都以本脚本所在目录 (running-log/) 为基准，CWD 无关。
 ROOT = Path(__file__).resolve().parent          # running-log/
@@ -235,7 +235,10 @@ def fill_actual_from_strava(data):
     before = int((datetime.fromisoformat(d1) + timedelta(days=2)).timestamp())
     print(f"拉取 Strava 活动 {d0} ~ {d1} ...")
     acts = strava_client.list_activities(after_epoch=after, before_epoch=before)
-    runs = [a for a in acts if a.get("sport_type") in strava_client.RUN_SPORTS]
+    # 双表重复记录（时间重叠）去重：保留距离最长者，避免 feed 与 actual 双计
+    runs = dedup_activities([a for a in acts if a.get("sport_type") in strava_client.RUN_SPORTS])
+    if len(runs) < len(acts):
+        print(f"去重：活动 {len(acts)} 条 → 保留 {len(runs)} 条跑步（重叠双表记录已丢弃）")
     # 按 (日期, AM/PM) 聚合
     agg = {}
     for a in runs:

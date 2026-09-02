@@ -6,7 +6,46 @@ strava_feed.py — Strava 活动到 activities.json 条目的共享映射（纯�
 被 export_json.py（本地，含 openpyxl）和 sync_strava.py（CI，无第三方依赖）共用，
 因此本模块不得 import openpyxl 或任何第三方包。
 """
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+def _keep_longest_overlapping(records):
+    """records: [(start_dt|None, duration_sec, distance, item)]。
+    时间区间 [start, start+duration] 有重叠的一组视为同一次训练（双表重复），
+    保留距离最长者；无起止信息的条目无条件保留。"""
+    spans, kept = [], []
+    for dt, dur, dist, item in sorted(records, key=lambda r: -r[2]):
+        if dt is None:
+            kept.append(item)
+            continue
+        end = dt + timedelta(seconds=dur)
+        if any(dt < e and s < end for s, e in spans):
+            continue
+        spans.append((dt, end))
+        kept.append(item)
+    return kept
+
+
+def dedup_activities(activities):
+    """Strava summary activity 去重（用 elapsed_time 判重叠，缺失时用 moving_time）。"""
+    records = []
+    for a in activities:
+        dt = _local_dt(a)
+        dur = a.get("elapsed_time") or a.get("moving_time") or 0
+        records.append((dt, dur, a.get("distance") or 0, a))
+    return _keep_longest_overlapping(records)
+
+
+def dedup_feed(entries):
+    """activities.json 条目去重（仅有 date/time/moving_time，用其近似区间判重叠）。"""
+    records = []
+    for e in entries:
+        try:
+            dt = datetime.fromisoformat(f"{e['date']}T{e['time']}:00")
+        except (KeyError, ValueError, TypeError):
+            dt = None
+        records.append((dt, e.get("moving_time") or 0, e.get("distance_km") or 0, e))
+    return _keep_longest_overlapping(records)
 
 
 def pace_seconds_per_km(split):
